@@ -1,635 +1,932 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Saraaaa❤️ — For You (Fixed Final)</title>
-<style>
-  :root{
-    --bg:#fff5f6;
-    --card:#fff;
-    --accent:#ff7a98;
-    --muted:#ffeef2;
-    --text:#3b2f2f;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;}
-  body{
-    background: linear-gradient(180deg,#fff8f9 0%, #fff2f4 100%);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-  }
-  .app{
-    max-width:1100px;margin:20px auto;padding:18px;
-    border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255, 244, 246, 0.6));
-    box-shadow: 0 6px 30px rgba(245,200,220,0.25);
-    min-height:85vh;
-  }
-  header{display:flex;align-items:center;gap:16px;padding-bottom:8px;}
-  header h1{margin:0;font-size:28px;color:var(--accent);letter-spacing:0.5px}
-  header .subtitle{color:#7a565e;font-size:13px}
-  nav{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px;}
-  nav button{background:transparent;border:1px solid transparent;padding:8px 12px;border-radius:10px;font-weight:600; cursor:pointer;}
-  nav button.active{background:var(--accent);color:white;box-shadow:0 4px 18px rgba(255,122,152,0.15)}
-  .page{display:none;padding:14px;border-radius:12px;background:var(--card);box-shadow: 0 2px 14px rgba(0,0,0,0.03);}
-  .page.visible{display:block}
-  .media-9-16{width:100%;max-width:420px;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:9/16;display:block;}
-  video.media-9-16, img.media-9-16{width:100%;height:100%;object-fit:cover;display:block;}
-  #puzzle{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
-  .puzzle-piece{touch-action:none;border-radius:8px;overflow:hidden;background:#ddd;cursor:grab;user-select:none;position:relative;}
-  .notepad {max-width:720px;margin:0 auto;background:linear-gradient(180deg,#fff,#fffaf3);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.04)}
-  textarea#note{width:100%;height:320px;border:0;outline:none;padding:12px;font-size:16px;background:linear-gradient(#fff,#fff);resize:vertical;border-radius:8px;box-shadow: inset 0 1px 0 rgba(0,0,0,0.03)}
-  .small {font-size:13px;color:#8b6b6f}
-  .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
-  .polaroid{background:#fff;padding:8px;border-radius:6px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.06);transform-origin:center;transition:transform .25s,box-shadow .25s}
-  .polaroid img{width:100%;height:220px;object-fit:cover;border-radius:4px}
-  .polaroid:hover{transform:translateY(-6px) rotate(-2deg);box-shadow:0 18px 40px rgba(0,0,0,0.08)}
-  .timeline {max-width:820px;margin:0 auto;padding:10px}
-  .timeline-card{display:flex;gap:12px;align-items:center;margin:14px 0}
-  .timeline-heart{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--muted);color:var(--accent);font-weight:700;box-shadow:inset 0 -6px 12px rgba(255,122,152,0.06)}
-  .timeline-text{background:linear-gradient(180deg,#fff,#fff);padding:10px;border-radius:10px;box-shadow:0 6px 20px rgba(255,130,150,0.04)}
-  .row{display:flex;gap:10px;align-items:center}
-  .muted{color:#8b6b6f}
-  .btn{background:var(--accent);color:white;padding:8px 12px;border-radius:8px;border:0;font-weight:700;cursor:pointer}
-  footer{margin-top:18px;text-align:center;color:#8b6b6f;font-size:13px}
-  .board{display:grid;gap:8px;margin:12px auto; touch-action:none}
-  .cell{display:flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(180deg,white,#fff7fb);font-weight:800;font-size:20px;box-shadow:0 6px 12px rgba(255,122,152,0.06);cursor:pointer;user-select:none}
-  .score{display:flex;gap:10px;align-items:center}
-  @media(min-width:900px){.media-9-16{max-width:320px}.polaroid img{height:260px}}
-  #modal .modal-card{max-width:92%;width:420px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saraaaa❤️ - A Romantic Journey</title>
+    <style>
+        /* Global Styles: Soft peach/cream/pink glow, romantic minimal elegant */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #fff8e1 0%, #fce4ec 50%, #f8bbd9 100%);
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body { font-size: 16px; }
+        }
+        /* Navigation */
+        #nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 248, 225, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(244, 143, 177, 0.3);
+        }
+        #nav a {
+            text-decoration: none;
+            color: #e91e63;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(255, 105, 180, 0.2);
+            transition: all 0.3s ease;
+        }
+        #nav a:hover {
+            background: rgba(255, 105, 180, 0.4);
+            transform: scale(1.05);
+        }
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #page1, #page2, #page3, #page4, #page5, #heart-maze, #connect-hearts { display: none; }
+        /* 9:16 Media Containers */
+        .media-container {
+            aspect-ratio: 9 / 16;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(244, 143, 177, 0.3);
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Unlock Screen / SOS Game */
+        #unlock-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        #sos-board {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 5px;
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #f8bbd9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            background: white;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .cell:hover { background: #fce4ec; }
+        .cell.selected { background: #f8bbd9; }
+        #sos-status {
+            font-size: 18px;
+            margin: 1rem 0;
+            color: #e91e63;
+        }
+        #sos-controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            background: #f8bbd9;
+            color: #e91e63;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover { background: #e91e63; color: white; transform: scale(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Page 1: Video + Message */
+        #page1 .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 248, 225, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            color: #e91e63;
+            max-width: 80%;
+        }
+        /* Page 2: Jigsaw Puzzle */
+        #jigsaw-canvas {
+            aspect-ratio: 9 / 16;
+            width: 100%;
+            max-width: 400px;
+            margin: 2rem auto;
+            border: 2px solid #f8bbd9;
+            border-radius: 10px;
+            cursor: grab;
+        }
+        #jigsaw-canvas:active { cursor: grabbing; }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1001;
+            animation: bounce 0.5s;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            40% { transform: translate(-50%, -50%) translateY(-10px); }
+            60% { transform: translate(-50%, -50%) translateY(-5px); }
+        }
+        /* Page 3: Notepad */
+        #notepad {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: linear-gradient(to bottom, #fff8e1, #fce4ec);
+            border: 2px solid #f8bbd9;
+            border-radius: 10px;
+            padding: 2rem;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            min-height: 300px;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+        /* Page 4: Timeline */
+        #timeline {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        #timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #f8bbd9, #e91e63);
+            transform: translateX(-50%);
+        }
+        .milestone {
+            position: relative;
+            margin: 2rem 0;
+            opacity: 0;
+            animation: slideIn 0.5s forwards;
+        }
+        .milestone:nth-child(even) { text-align: right; }
+        .milestone:nth-child(even) .card { margin-left: 50%; }
+        .milestone:nth-child(odd) .card { margin-right: 50%; }
+        .card {
+            background: rgba(255, 248, 225, 0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(244, 143, 177, 0.2);
+            max-width: 45%;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: scale(1.05); }
+        .heart {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #e91e63;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: heartbeat 1s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Page 5: Polaroid Gallery */
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .polaroid {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transform: rotate(var(--rotation));
+            cursor: pointer;
+            transition: transform 0.3s;
+            border-radius: 5px;
+        }
+        .polaroid:hover { transform: rotate(var(--rotation)) scale(1.05); }
+        .polaroid img {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            display: block;
+        }
+        #enlarge-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        #enlarge-img {
+            max-width: 90%;
+            max-height: 90%;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            transform: rotate(0deg);
+            transition: transform 0.3s;
+        }
+        /* Additional Games */
+        #heart-maze, #connect-hearts {
+            max-width: 400px;
+            margin: 2rem auto;
+        }
+        #maze-canvas, #dots-canvas {
+            aspect-ratio: 9 / 16;
+            width: 100%;
+            border: 2px solid #f8bbd9;
+            border-radius: 10px;
+            display: block;
+        }
+        /* Responsive */
+        @media (max-width: 480px) {
+            #sos-board { grid-template-columns: repeat(3, 50px); }
+            .cell { width: 50px; height: 50px; font-size: 20px; }
+            #timeline::before { left: 20px; }
+            .milestone:nth-child(even) .card { margin-left: 0; }
+            .milestone:nth-child(odd) .card { margin-right: 0; }
+            .card { max-width: 100%; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="app">
-  <header>
-    <div style="width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#ffdbe6,#fff6f8);display:flex;align-items:center;justify-content:center;font-size:26px">💖</div>
-    <div>
-      <h1>Saraaaa ❤️</h1>
-      <div class="subtitle small">A surprise — unlock pages by playing SOS</div>
-    </div>
-  </header>
+    <!-- hide-game --> <!-- Uncomment this line to disable the unlock system entirely -->
 
-  <nav id="nav">
-    <button data-page="game" class="active">Play (SOS)</button>
-    <button data-page="video">Video & Message</button>
-    <button data-page="puzzle">Mini Jigsaw</button>
-    <button data-page="note">Notepad</button>
-    <button data-page="timeline">Love Timeline</button>
-    <button data-page="gallery">Polaroid Gallery</button>
-  </nav>
-
-  <!-- === Toggle this flag to true to hide the SOS game instantly (in code) === -->
-  <!-- Also you can remove the game by commenting the "page-game" div out if you want permanent removal -->
-  <script>const HIDE_GAME = false; /* set true to hide the game */</script>
-
-  <!-- SOS Game -->
-  <div id="page-game" class="page visible" aria-live="polite">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-      <div>
-        <h3 style="margin:0;color:var(--accent)">Play SOS vs AI</h3>
-        <div class="small muted">Win 3 consecutive rounds to unlock pages.</div>
-      </div>
-      <div class="score">
-        <div class="small">Consecutive wins: <strong id="consec">0</strong></div>
-        <div class="small">Human rounds: <strong id="humanTotal">0</strong></div>
-        <div class="small">AI rounds: <strong id="aiTotal">0</strong></div>
-      </div>
+    <!-- Unlock Screen -->
+    <div id="unlock-screen">
+        <h1 style="color: #e91e63; margin-bottom: 1rem; font-size: 2rem;">Welcome, Saraaaa❤️</h1>
+        <p style="text-align: center; max-width: 300px; margin-bottom: 2rem;">To unlock our memories, win 3 consecutive SOS games against me. Choose S or O, and let's play! 💕</p>
+        
+        <div id="sos-board"></div>
+        <div id="sos-status">Your turn! Wins in a row: <span id="win-counter">0</span>/3</div>
+        <div id="sos-controls">
+            <button id="place-s">Place S</button>
+            <button id="place-o">Place O</button>
+            <button id="new-game">New Game</button>
+        </div>
+        <div id="scores">You: 0 | AI: 0</div>
     </div>
 
-    <div style="margin-top:12px">
-      <label class="small">Board size:
-        <select id="boardSize"><option value="5">5×5 (default)</option><option value="4">4×4</option><option value="6">6×6</option></select>
-      </label>
-      <label class="small" style="margin-left:10px">Turn:
-        <select id="playerStarts"><option value="human">You</option><option value="ai">AI</option></select>
-      </label>
-      <label style="margin-left:10px" class="small">AI mistake:
-        <input id="chanceMistake" type="range" min="0" max="0.9" step="0.01" value="0.35"><span id="chanceVal">0.35</span>
-      </label>
-      <button class="btn" id="resetScores" style="margin-left:8px">Reset</button>
-    </div>
+    <!-- Navigation (Hidden Initially) -->
+    <nav id="nav">
+        <a href="#page1">Video Memory</a>
+        <a href="#page2">Puzzle Heart</a>
+        <a href="#page3">Your Note</a>
+        <a href="#page4">Our Timeline</a>
+        <a href="#page5">Polaroids</a>
+        <a href="#heart-maze">Heart Maze</a>
+        <a href="#connect-hearts">Connect Hearts</a>
+    </nav>
 
-    <div id="controls" style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <div class="small">Place letter:
-        <label><input type="radio" name="letter" value="S" checked> S</label>
-        <label><input type="radio" name="letter" value="O"> O</label>
-      </div>
-      <div class="small" style="margin-left:8px">AI chooses S/O automatically on its turn.</div>
-      <button id="newGameBtn" class="btn" style="margin-left:auto">New Round</button>
-    </div>
+    <!-- Page 1: Video + Message -->
+    <section id="page1" class="page">
+        <div style="position: relative; margin: 2rem auto; max-width: 400px;">
+            <div class="media-container">
+                <video autoplay loop muted playsinline>
+                    <source src="videos/romantic-moment.mp4" type="video/mp4">
+                    Your browser doesn't support video. <!-- Placeholder: Add your 9:16 video here -->
+                </video>
+            </div>
+            <div class="message">
+                Saraaaa, every moment with you feels like this—endless love looping forever. ❤️
+            </div>
+        </div>
+    </section>
 
-    <div id="boardWrap" style="margin-top:16px;display:flex;flex-direction:column;align-items:center">
-      <div id="board" class="board" aria-label="SOS board"></div>
-      <div style="margin-top:12px"><small class="muted">Tip: creating "SOS" gives points and another move.</small></div>
-    </div>
-  </div>
-  <!-- end game -->
+    <!-- Page 2: Mini Jigsaw Puzzle -->
+    <section id="page2" class="page">
+        <h2>Piece Together Our Love</h2>
+        <canvas id="jigsaw-canvas" width="360" height="640"></canvas> <!-- 9:16 at 40px scale -->
+        <p>Drag the pieces to solve the puzzle!</p>
+        <div id="winner-popup" class="popup" style="display:none;">
+            <h3>❤️ Perfect Fit! ❤️</h3>
+            <p>Just like us.</p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </section>
 
-  <!-- Video & Message Page -->
-  <div id="page-video" class="page">
-    <div class="center">
-      <div class="media-9-16">
-        <!-- Replace src with your own 9:16 video file -->
-        <video id="mainVideo" class="media-9-16" autoplay muted loop playsinline>
-          <source src="/videos/video_9_16.mp4" type="video/mp4">
-          <!-- fallback poster if no video available -->
-          <img src="/mnt/data/f2725155-ccc1-4b7c-afc3-661219a0f45e.png" alt="video poster" style="width:100%;height:100%;object-fit:cover;">
-        </video>
-      </div>
-      <div style="margin-top:12px;max-width:720px;margin-left:auto;margin-right:auto;">
-        <p style="font-size:16px;margin:8px 0">Hi <strong class="muted">Saraaaa ❤️</strong>,</p>
-        <p class="small">This page holds a looping 9:16 video — replace the video file path with yours for the real clip.</p>
-      </div>
-    </div>
-  </div>
+    <!-- Page 3: Notepad -->
+    <section id="page3" class="page">
+        <h2>Write Me a Note</h2>
+        <div id="notepad" contenteditable="true" placeholder="Dear [Your Name], ..."></div>
+        <button onclick="downloadNote()">Download My Message 💌</button>
+    </section>
 
-  <!-- Mini Jigsaw Puzzle Page -->
-  <div id="page-puzzle" class="page">
-    <h3 style="color:var(--accent);margin-top:0">Mini Jigsaw (9–16 pieces)</h3>
-    <div class="small muted">Drag pieces to reconstruct the image (sliced tiles). Uses your 9:16 image.</div>
-    <div style="margin:12px auto;max-width:420px">
-      <img id="puzzleSrc" src="/mnt/data/f2725155-ccc1-4b7c-afc3-661219a0f45e.png" alt="puzzle source" style="display:none">
-      <div id="puzzle" aria-hidden="true"></div>
-      <div style="text-align:center;margin-top:10px">
-        <label>Pieces:
-          <select id="pCount"><option value="9">9</option><option value="12">12</option><option value="16" selected>16</option></select>
-        </label>
-        <button class="btn" id="shuffleBtn">Shuffle / New</button>
-      </div>
-    </div>
-  </div>
+    <!-- Page 4: Love Timeline -->
+    <section id="page4" class="page">
+        <h2>Our Love Timeline</h2>
+        <div id="timeline">
+            <div class="milestone">
+                <div class="heart"></div>
+                <div class="card">
+                    <h3>First Glance</h3>
+                    <p>That coffee shop smile stole my heart. ☕❤️</p>
+                    <!-- Optional: <img src="images/milestone1.jpg" style="aspect-ratio:9/16; width:100%;"> -->
+                </div>
+            </div>
+            <div class="milestone">
+                <div class="heart"></div>
+                <div class="card">
+                    <h3>First Date</h3>
+                    <p>Starry night walks and endless talks. 🌌</p>
+                </div>
+            </div>
+            <div class="milestone">
+                <div class="heart"></div>
+                <div class="card">
+                    <h3>Today & Forever</h3>
+                    <p>Here's to us, always. 💍</p>
+                </div>
+            </div>
+            <!-- Add more milestones as needed -->
+        </div>
+    </section>
 
-  <!-- Notepad Page -->
-  <div id="page-note" class="page">
-    <h3 style="color:var(--accent);margin-top:0">Notepad — Write for me</h3>
-    <div class="small muted">Write anything. Long text becomes scrollable. Download full text via button.</div>
-    <div class="notepad">
-      <input id="noteTitle" placeholder="Title (optional)" style="width:100%;padding:8px;border-radius:6px;border:1px solid #f0d9df;margin-bottom:8px" />
-      <textarea id="note" placeholder="Write your message..."></textarea>
-      <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-        <button class="btn" id="downloadNote">Download</button>
-        <button id="clearNote" style="background:#fff;border:1px solid #ffd3dd;padding:8px 10px;border-radius:8px">Clear</button>
-        <div class="small muted" style="margin-left:auto">Size: <span id="noteSize">0</span> chars</div>
-      </div>
-    </div>
-  </div>
+    <!-- Page 5: Polaroid Gallery -->
+    <section id="page5" class="page">
+        <h2>Our Polaroid Moments</h2>
+        <div id="gallery">
+            <div class="polaroid" style="--rotation: -2deg;" onclick="enlargePhoto('images/photo1.jpg')">
+                <img src="images/photo1.jpg" alt="Moment 1"> <!-- Placeholder 9:16 image -->
+            </div>
+            <div class="polaroid" style="--rotation: 1deg;" onclick="enlargePhoto('images/photo2.jpg')">
+                <img src="images/photo2.jpg" alt="Moment 2">
+            </div>
+            <div class="polaroid" style="--rotation: -1deg;" onclick="enlargePhoto('images/photo3.jpg')">
+                <img src="images/photo3.jpg" alt="Moment 3">
+            </div>
+            <!-- Add more polaroids -->
+        </div>
+        <div id="enlarge-modal">
+            <img id="enlarge-img" src="" alt="Enlarged">
+            <button onclick="closeEnlarge()" style="position: absolute; top: 10px; right: 10px;">✕</button>
+        </div>
+    </section>
 
-  <!-- Love Timeline Page -->
-  <div id="page-timeline" class="page">
-    <h3 style="color:var(--accent);margin-top:0">Love Timeline</h3>
-    <div class="small muted">Milestones & memories. Use 9:16 images if you add photos here.</div>
-    <div class="timeline" id="timeline">
-      <div style="margin:8px auto;max-width:360px;border-radius:12px;overflow:hidden">
-        <img src="/mnt/data/6fe45b40-5b37-445e-b562-10ee0e21e681.png" style="width:100%;height:360px;object-fit:cover;border-radius:12px" alt="timeline">
-      </div>
-      <div class="timeline-card"><div class="timeline-heart">01</div><div class="timeline-text"><strong>First time to meet</strong><div class="muted small">Date: 2009.01.07</div></div></div>
-      <div class="timeline-card"><div class="timeline-heart">02</div><div class="timeline-text"><strong>First date</strong><div class="muted small">Date: 2009.01.25</div></div></div>
-      <div class="timeline-card"><div class="timeline-heart">03</div><div class="timeline-text"><strong>First kiss</strong><div class="muted small">Date: 2009.06.15</div></div></div>
-      <div style="text-align:center;margin-top:8px"><button class="btn" id="addMilestone">Add milestone (demo)</button></div>
-    </div>
-  </div>
+    <!-- Additional: Heart Maze -->
+    <section id="heart-maze" class="page">
+        <h2>Navigate Our Heart Maze</h2>
+        <canvas id="maze-canvas" width="360" height="640"></canvas>
+        <p>Swipe or tilt to guide the heart to the center! 📱</p>
+    </section>
 
-  <!-- Polaroid Gallery Page -->
-  <div id="page-gallery" class="page">
-    <h3 style="color:var(--accent);margin-top:0">Polaroid Gallery</h3>
-    <div class="small muted">Tap a photo to enlarge — all images shown in polaroid frames (9:16).</div>
-    <div style="margin-top:12px" class="polaroid-grid" id="polaroidGrid">
-      <!-- Use your local 9:16 images here -->
-      <div class="polaroid"><img src="/mnt/data/f2725155-ccc1-4b7c-afc3-661219a0f45e.png" alt=""><div class="small muted">Us</div></div>
-      <div class="polaroid"><img src="/mnt/data/f2725155-ccc1-4b7c-afc3-661219a0f45e.png" alt=""><div class="small muted">Memory</div></div>
-      <div class="polaroid"><img src="/mnt/data/f2725155-ccc1-4b7c-afc3-661219a0f45e.png" alt=""><div class="small muted">Moments</div></div>
-      <div class="polaroid"><img src="/mnt/data/f2725155-ccc1-4b7c-afc3-661219a0f45e.png" alt=""><div class="small muted">Smile</div></div>
-    </div>
-  </div>
+    <!-- Additional: Connect Hearts -->
+    <section id="connect-hearts" class="page">
+        <h2>Connect the Dots to My Heart</h2>
+        <canvas id="dots-canvas" width="360" height="640"></canvas>
+        <p>Tap numbered dots to draw our story.</p>
+    </section>
 
-  <footer>Made with care 💖 — All media set to 9:16 for mobile-friendly look.</footer>
-</div>
+    <script>
+        // Unlock System
+        const UNLOCK_KEY = 'sara-unlock-wins';
+        const HIDE_GAME_COMMENT = document.querySelector('<!-- hide-game -->');
+        let unlocked = localStorage.getItem(UNLOCK_KEY) >= 3;
+        let consecutiveWins = parseInt(localStorage.getItem(UNLOCK_KEY) || 0);
 
-<!-- Modal -->
-<div id="modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);z-index:9999">
-  <div class="modal-card" style="background:white;padding:18px;border-radius:12px;max-width:420px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35)">
-    <div id="modalMsg" style="font-size:18px;color:var(--accent);font-weight:800"></div>
-    <div style="margin-top:10px"><button class="btn" id="modalClose">Close</button></div>
-  </div>
-</div>
+        if (HIDE_GAME_COMMENT || unlocked) {
+            document.getElementById('unlock-screen').style.display = 'none';
+            document.getElementById('nav').style.display = 'flex';
+            showPage('page1'); // Default to first page
+        }
 
-<script>
-/* ===========================
-   Configuration
-   =========================== */
-const CHANCE_TO_MISTAKE_DEFAULT = 0.35;
-let CHANCE_TO_MISTAKE = CHANCE_TO_MISTAKE_DEFAULT;
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId).style.display = 'block';
+            if (pageId === 'page4') animateTimeline(); // Trigger animations
+        }
 
-/* Optionally hide game immediately (in runtime) using HIDE_GAME var declared in <script> earlier */
-try {
-  if(typeof HIDE_GAME !== 'undefined' && HIDE_GAME){
-    const g = document.getElementById('page-game');
-    if(g) g.remove();
-  }
-} catch(e){ console.warn(e); }
+        // Navigation
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1) || 'page1';
+            showPage(hash);
+        });
+        if (unlocked) showPage('page1');
 
-/* ===========================
-   Helpers: localStorage safe wrapper
-   =========================== */
-const storage = {
-  get(key, fallback=0){
-    try{ const v = localStorage.getItem(key); return v===null?fallback:JSON.parse(v); }catch(e){ return fallback; }
-  },
-  set(key, val){
-    try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
-  },
-  remove(key){ try{ localStorage.removeItem(key);}catch(e){} }
-};
+        // SOS Game Implementation
+        let board = Array(9).fill(null); // 3x3 flat array
+        let currentPlayer = 'human'; // Human starts
+        let humanScore = 0, aiScore = 0;
+        let selectedCell = -1;
+        let gameActive = true;
 
-/* ===========================
-   Page Navigation
-   =========================== */
-const nav = document.getElementById('nav');
-const pages = {
-  game: document.getElementById('page-game'),
-  video: document.getElementById('page-video'),
-  puzzle: document.getElementById('page-puzzle'),
-  note: document.getElementById('page-note'),
-  timeline: document.getElementById('page-timeline'),
-  gallery: document.getElementById('page-gallery')
-};
-nav.addEventListener('click', e=>{
-  const btn = e.target.closest('button');
-  if(!btn) return;
-  const key = btn.dataset.page;
-  if(!key) return;
-  // if game exists and not unlocked, block other pages
-  if(pages.game && !isUnlocked() && key !== 'game'){
-    alert('Win 3 consecutive rounds to unlock the pages. Good luck!');
-    return;
-  }
-  nav.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  Object.values(pages).forEach(p=>p && p.classList.remove('visible'));
-  if(pages[key]) pages[key].classList.add('visible');
-});
+        const cells = document.querySelectorAll('.cell'); // Will create dynamically
 
-/* ===========================
-   Modal helpers
-   =========================== */
-const modal = document.getElementById('modal');
-const modalMsg = document.getElementById('modalMsg');
-const modalCloseBtn = document.getElementById('modalClose');
-function showModal(msg, allowClose=true){
-  modalMsg.innerHTML = msg;
-  modal.style.display = 'flex';
-  modalCloseBtn.style.display = allowClose? 'inline-block' : 'none';
-}
-function hideModal(){ modal.style.display = 'none'; }
-modalCloseBtn.addEventListener('click', hideModal);
-modal.addEventListener('click', (e)=>{ if(e.target === modal) hideModal(); });
+        function initBoard() {
+            const boardEl = document.getElementById('sos-board');
+            boardEl.innerHTML = '';
+            board = Array(9).fill(null);
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.onclick = () => selectCell(i);
+                boardEl.appendChild(cell);
+            }
+            document.getElementById('place-s').disabled = false;
+            document.getElementById('place-o').disabled = false;
+            updateStatus();
+        }
 
-/* ===========================
-   Unlock system helpers
-   =========================== */
-function getConsecutive(){ return Number(storage.get('sara_consec', 0)); }
-function setConsecutive(v){ storage.set('sara_consec', v); const el=document.getElementById('consec'); if(el) el.textContent = v; }
-function getTotals(){ return { human: Number(storage.get('sara_human', 0)), ai: Number(storage.get('sara_ai', 0)) }; }
-function setTotals(h, a){ storage.set('sara_human', h); storage.set('sara_ai', a); const ht=document.getElementById('humanTotal'); const at=document.getElementById('aiTotal'); if(ht) ht.textContent = h; if(at) at.textContent = a; }
-function isUnlocked(){ return getConsecutive() >= 3; }
-function unlockAllPages(){
-  // hide game UI if present
-  const gameEl = document.getElementById('page-game');
-  if(gameEl) gameEl.style.display = 'none';
-  showModal('All pages unlocked! ❤️', true);
-  // set nav active to video
-  nav.querySelectorAll('button').forEach(b=>{ if(b.dataset.page === 'video') b.classList.add('active'); else b.classList.remove('active'); });
-  Object.values(pages).forEach(p=>p && p.classList.remove('visible'));
-  if(pages.video) pages.video.classList.add('visible');
-}
+        function selectCell(index) {
+            if (board[index] || currentPlayer !== 'human' || !gameActive) return;
+            selectedCell = index;
+            document.querySelectorAll('.cell').forEach((c, i) => {
+                c.classList.toggle('selected', i === index);
+            });
+        }
 
-/* Initialize UI totals */
-const totals = getTotals(); setTotals(totals.human, totals.ai);
-document.getElementById('consec').textContent = getConsecutive();
+        function placeLetter(letter) {
+            if (selectedCell === -1 || board[selectedCell]) return;
+            board[selectedCell] = letter;
+            document.querySelector(`[data-index="${selectedCell}"]`).textContent = letter;
+            document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
 
-/* ===========================
-   SOS Game implementation
-   =========================== */
-let boardSize = 5;
-let board = [];
-let humanScore = 0, aiScore = 0;
-let currentPlayer = 'human';
-const boardEl = document.getElementById('board');
-const boardSizeSelect = document.getElementById('boardSize');
-const playerStarts = document.getElementById('playerStarts');
-const chanceRange = document.getElementById('chanceMistake');
-const chanceVal = document.getElementById('chanceVal');
+            if (checkSOS('human')) {
+                humanScore++;
+                if (humanScore >= 3) endGame('human'); // Win condition: first to 3
+                else currentPlayer = 'human'; // Extra turn
+            } else {
+                currentPlayer = 'ai';
+                aiTurn();
+            }
+            updateDisplay();
+        }
 
-boardSizeSelect.addEventListener('change', ()=>{ boardSize = Number(boardSizeSelect.value); buildBoard(); });
-chanceRange.addEventListener('input', ()=>{ CHANCE_TO_MISTAKE = Number(chanceRange.value); chanceVal.textContent = CHANCE_TO_MISTAKE.toFixed(2); });
-chanceRange.value = CHANCE_TO_MISTAKE_DEFAULT; chanceVal.textContent = CHANCE_TO_MISTAKE_DEFAULT.toFixed(2); CHANCE_TO_MISTAKE = CHANCE_TO_MISTAKE_DEFAULT;
+        document.getElementById('place-s').onclick = () => placeLetter('S');
+        document.getElementById('place-o').onclick = () => placeLetter('O');
 
-document.getElementById('resetScores').addEventListener('click', ()=>{
-  if(!confirm('Reset rounds and consecutive wins?')) return;
-  storage.remove('sara_consec'); storage.remove('sara_human'); storage.remove('sara_ai');
-  setConsecutive(0); setTotals(0,0);
-  humanScore = aiScore = 0; buildBoard();
-});
+        function checkSOS(player) {
+            // Simple adjacent check: horizontal/vertical only for brevity
+            const directions = [[0,1],[1,0]]; // Right, down
+            for (let i = 0; i < 9; i++) {
+                if (!board[i]) continue;
+                for (let [dx, dy] of directions) {
+                    let x = i % 3, y = Math.floor(i / 3);
+                    let nx = x + dx, ny = y + dy;
+                    if (nx < 3 && ny < 3 && board[i] === 'S' && board[ny*3 + nx] === 'O') {
+                        let nnx = nx + dx, nny = ny + dy;
+                        if (nnx < 3 && nny < 3 && board[nny*3 + nnx] === 'S' && board[i] !== board[nny*3 + nnx]) {
+                            return true; // SOS completed
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
-/* board helpers */
-function inb(r,c){ return r>=0 && c>=0 && r<board.length && c<board.length; }
-function countSOS(board, r, c){
-  const ch = board[r][c];
-  if(!ch) return 0;
-  const dirs = [[0,1],[1,0],[1,1],[1,-1]];
-  let cnt = 0;
-  for(const [dr,dc] of dirs){
-    if(ch === 'O'){
-      const r1=r-dr, c1=c-dc, r2=r+dr, c2=c+dc;
-      if(inb(r1,c1) && inb(r2,c2) && board[r1][c1]==='S' && board[r2][c2]==='S') cnt++;
-    } else {
-      const r1=r+dr, c1=c+dc, r2=r+2*dr, c2=c+2*dc;
-      if(inb(r1,c1) && inb(r2,c2) && board[r1][c1]==='O' && board[r2][c2]==='S') cnt++;
-      const r3=r-dr, c3=c-dc, r4=r-2*dr, c4=c-2*dc;
-      if(inb(r3,c3) && inb(r4,c4) && board[r3][c3]==='O' && board[r4][c4]==='S') cnt++;
-    }
-  }
-  return cnt;
-}
-function emptyCells(b){
-  const res=[]; for(let r=0;r<b.length;r++) for(let c=0;c<b.length;c++) if(!b[r][c]) res.push([r,c]); return res;
-}
-function copyBoard(b){ return b.map(row=>row.slice()); }
+        async function aiTurn() {
+            if (!gameActive) return;
+            gameActive = false; // Prevent multi-turn
+            await new Promise(resolve => setTimeout(resolve, 500)); // Delay for UX
 
-function evaluateBoardForPlayer(board, letter){
-  // simple heuristic: favor positions where this player's letters create SOS
-  let score = 0;
-  for(let r=0;r<board.length;r++) for(let c=0;c<board.length;c++){
-    if(board[r][c]){
-      if(board[r][c] === letter) score += countSOS(board,r,c);
-      else score -= countSOS(board,r,c)*0.4;
-    }
-  }
-  return score;
-}
+            // 35% chance to mistake (random move)
+            if (Math.random() < 0.35) {
+                let empty = board.map((v, i) => v ? null : i).filter(i => i !== null);
+                let move = empty[Math.floor(Math.random() * empty.length)];
+                board[move] = Math.random() < 0.5 ? 'S' : 'O';
+                document.querySelector(`[data-index="${move}"]`).textContent = board[move];
+            } else {
+                // Minimax simplified: evaluate best move for score max
+                let bestMove = minimax(board, 0, true)[1];
+                if (bestMove !== -1) {
+                    let letter = minimaxChooseLetter(board, bestMove);
+                    board[bestMove] = letter;
+                    document.querySelector(`[data-index="${bestMove}"]`).textContent = letter;
+                }
+            }
 
-function aiChooseMove(b){
-  const empties = emptyCells(b);
-  if(!empties.length) return null;
-  const moves = [];
-  for(const [r,c] of empties){
-    for(const letter of ['S','O']){
-      const nb = copyBoard(b);
-      nb[r][c] = letter;
-      const immediate = countSOS(nb,r,c);
-      const evalScore = evaluateBoardForPlayer(nb, letter);
-      moves.push({r,c,letter,score: immediate + 0.01*evalScore});
-    }
-  }
-  moves.sort((a,b)=>b.score - a.score);
-  if(Math.random() < CHANCE_TO_MISTAKE){
-    const top = Math.max(1, Math.floor(moves.length * 0.35));
-    return moves[Math.floor(Math.random()*top)];
-  }
-  return moves[0];
-}
+            if (checkSOS('ai')) {
+                aiScore++;
+                if (aiScore >= 3) endGame('ai');
+            } else {
+                currentPlayer = 'human';
+            }
+            gameActive = true;
+            updateDisplay();
+        }
 
-/* build board UI */
-function buildBoard(){
-  boardSize = Number(boardSizeSelect.value || 5);
-  board = Array.from({length:boardSize}, ()=>Array.from({length:boardSize}, ()=>''));
-  boardEl.style.gridTemplateColumns = `repeat(${boardSize}, minmax(40px, ${Math.floor(420/boardSize)}px))`;
-  boardEl.style.width = `${Math.min(420, boardSize*80)}px`;
-  boardEl.innerHTML = '';
-  for(let r=0;r<boardSize;r++){
-    for(let c=0;c<boardSize;c++){
-      const el = document.createElement('div');
-      el.className = 'cell';
-      el.style.minHeight = `${Math.floor(420/boardSize)}px`;
-      el.dataset.r = r; el.dataset.c = c;
-      el.addEventListener('click', onCellClick);
-      el.textContent = '';
-      boardEl.appendChild(el);
-    }
-  }
-  humanScore = aiScore = 0;
-  // if AI starts, let it move after short delay
-  currentPlayer = playerStarts.value === 'human' ? 'human' : 'ai';
-  if(currentPlayer === 'ai') setTimeout(()=>aiPlay(), 350);
-}
-function updateTotalsDisplay(){
-  const t = getTotals(); setTotals(t.human, t.ai);
-}
-function onCellClick(e){
-  const r = Number(e.currentTarget.dataset.r), c = Number(e.currentTarget.dataset.c);
-  if(board[r][c]) return;
-  if(currentPlayer !== 'human') return;
-  const letter = document.querySelector('input[name="letter"]:checked').value;
-  placeLetter(r,c,letter,'human');
-}
-function placeLetter(r,c,letter,who){
-  if(board[r][c]) return;
-  board[r][c] = letter;
-  const idx = r*boardSize + c;
-  const cell = boardEl.children[idx];
-  if(cell) cell.textContent = letter;
-  const formed = countSOS(board,r,c);
-  if(who === 'human') humanScore += formed; else aiScore += formed;
-  if(formed > 0){
-    showTempMessage(`${who==='human'?'You':'AI'} formed ${formed} SOS${formed>1?'es':''}`);
-    if(emptyCells(board).length === 0) finalizeRound();
-    else if(who === 'ai') setTimeout(()=>aiPlay(), 350);
-    // if human formed, they keep turn (no change)
-  } else {
-    currentPlayer = (who === 'human') ? 'ai' : 'human';
-    if(currentPlayer === 'ai') setTimeout(()=>aiPlay(), 350);
-  }
-}
+        function minimax(board, depth, maximizing) {
+            if (humanScore >= 3) return maximizing ? -Infinity : Infinity;
+            if (aiScore >= 3) return maximizing ? Infinity : -Infinity;
+            // Simplified: no full depth, just 1-step lookahead
+            let best = maximizing ? -Infinity : Infinity;
+            let bestMove = -1;
+            let empty = board.map((v, i) => v ? null : i).filter(i => i !== null);
+            for (let move of empty) {
+                for (let letter of ['S', 'O']) {
+                    let tempBoard = [...board];
+                    tempBoard[move] = letter;
+                    let score = checkSOS(maximizing ? 'ai' : 'human') ? (maximizing ? 1 : -1) : 0;
+                    let val = score - depth; // Favor quicker wins
+                    if (maximizing) {
+                        if (val > best) { best = val; bestMove = move; }
+                    } else {
+                        if (val < best) { best = val; bestMove = move; }
+                    }
+                }
+            }
+            return [best, bestMove];
+        }
 
-function aiPlay(){
-  const move = aiChooseMove(board);
-  if(!move){ finalizeRound(); return; }
-  placeLetter(move.r, move.c, move.letter, 'ai');
-}
+        function minimaxChooseLetter(board, move) {
+            // Choose letter that maximizes score
+            let scores = { 'S': 0, 'O': 0 };
+            for (let letter of ['S', 'O']) {
+                let temp = [...board];
+                temp[move] = letter;
+                scores[letter] += checkSOS('ai') ? 1 : 0;
+            }
+            return scores['S'] >= scores['O'] ? 'S' : 'O';
+        }
 
-function finalizeRound(){
-  const h = humanScore, a = aiScore;
-  let totals = getTotals();
-  if(h > a){
-    totals.human += 1;
-    storage.set('sara_human', totals.human);
-    setConsecutive(getConsecutive() + 1);
-    setTotals(totals.human, totals.ai);
-    showModal('You won this round! 💖', true);
-  } else if(a > h){
-    totals.ai += 1;
-    storage.set('sara_ai', totals.ai);
-    setConsecutive(0);
-    setTotals(totals.human, totals.ai);
-    showModal('AI won this round. Try again!', true);
-  } else {
-    setConsecutive(0);
-    showModal('Round tied. Try again!', true);
-  }
-  // unlock check
-  if(isUnlocked()) { unlockAllPages(); return; }
-  // reset board for next round
-  humanScore = aiScore = 0;
-  board = Array.from({length:boardSize}, ()=>Array.from({length:boardSize}, ()=>''));
-  setTimeout(buildBoard, 400);
-}
+        function endGame(winner) {
+            gameActive = false;
+            if (winner === 'human') {
+                consecutiveWins++;
+                localStorage.setItem(UNLOCK_KEY, consecutiveWins);
+                document.getElementById('win-counter').textContent = consecutiveWins;
+                if (consecutiveWins >= 3) {
+                    unlocked = true;
+                    document.getElementById('unlock-screen').style.display = 'none';
+                    document.getElementById('nav').style.display = 'flex';
+                    showPage('page1');
+                    alert('🎉 Congratulations! All memories unlocked forever. 💕');
+                } else {
+                    alert(`You won! Wins: ${consecutiveWins}/3`);
+                }
+            } else {
+                consecutiveWins = 0;
+                localStorage.setItem(UNLOCK_KEY, 0);
+                alert('AI won this round. Try again for consecutive wins! 😘');
+            }
+            document.getElementById('new-game').textContent = 'Next Game';
+        }
 
-/* quick temporary modal message */
-function showTempMessage(msg){
-  modalMsg.textContent = msg; modal.style.display = 'flex';
-  setTimeout(()=>{ if(modal.style.display === 'flex') modal.style.display = 'none'; }, 900);
-}
+        function updateDisplay() {
+            document.getElementById('scores').textContent = `You: ${humanScore} | AI: ${aiScore}`;
+            updateStatus();
+        }
 
-document.getElementById('newGameBtn').addEventListener('click', ()=>{
-  humanScore = aiScore = 0;
-  setConsecutive(0);
-  buildBoard();
-});
+        function updateStatus() {
+            const status = document.getElementById('sos-status');
+            status.textContent = currentPlayer === 'human' ? 'Your turn! Select a cell then S/O.' : 'AI thinking...';
+        }
 
-/* initialize board */
-buildBoard();
-updateTotalsDisplay();
+        document.getElementById('new-game').onclick = () => {
+            humanScore = 0; aiScore = 0; currentPlayer = 'human'; gameActive = true;
+            selectedCell = -1;
+            document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
+            initBoard();
+            document.getElementById('new-game').textContent = 'New Game';
+            updateDisplay();
+        };
 
-/* ===========================
-   Puzzle (slicing + drag + swap)
-   =========================== */
-const puzzleImg = document.getElementById('puzzleSrc');
-const puzzleContainer = document.getElementById('puzzle');
-const shuffleBtn = document.getElementById('shuffleBtn');
-const pCountSelect = document.getElementById('pCount');
+        initBoard();
 
-function createPuzzle(){
-  const pieces = Number(pCountSelect.value || 16);
-  const cols = Math.ceil(Math.sqrt(pieces));
-  const rows = Math.ceil(pieces / cols);
-  const img = puzzleImg;
-  if(!img.complete || img.naturalWidth === 0){ img.onload = createPuzzle; return; }
-  const iw = img.naturalWidth, ih = img.naturalHeight;
-  const pieceW = Math.floor(iw/cols), pieceH = Math.floor(ih/rows);
-  const piecesArr = [];
-  let idx = 0;
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      const canvas = document.createElement('canvas'); canvas.width = pieceW; canvas.height = pieceH;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, c*pieceW, r*pieceH, pieceW, pieceH, 0, 0, pieceW, pieceH);
-      const data = canvas.toDataURL();
-      piecesArr.push({data, origIndex: idx});
-      idx++;
-    }
-  }
-  // shuffle visual array
-  const visual = piecesArr.slice(); shuffleArray(visual);
-  puzzleContainer.innerHTML = '';
-  for(const p of visual){
-    const el = document.createElement('div'); el.className = 'puzzle-piece';
-    el.style.flex = `0 0 calc(${100/cols}% - 6px)`; el.style.minHeight = `${Math.floor(420/rows)}px`;
-    const i = document.createElement('img'); i.draggable = false; i.src = p.data; i.style.width='100%'; i.style.height='100%'; i.style.objectFit='cover';
-    el.appendChild(i);
-    el.dataset.origIndex = p.origIndex;
-    // pointer handlers
-    el.addEventListener('pointerdown', puzzlePointerDown);
-    puzzleContainer.appendChild(el);
-  }
-  checkPuzzleSolved();
-}
-function puzzlePointerDown(e){
-  e.preventDefault();
-  const el = e.currentTarget; el.setPointerCapture(e.pointerId);
-  el.style.zIndex = 1000; el.style.transition = 'none';
-  const startX = e.clientX, startY = e.clientY;
-  function move(evt){ el.style.transform = `translate(${evt.clientX - startX}px, ${evt.clientY - startY}px)`; }
-  function up(evt){
-    el.releasePointerCapture(e.pointerId);
-    el.style.transform = ''; el.style.zIndex = '';
-    // find nearest piece
-    const all = Array.from(document.querySelectorAll('.puzzle-piece'));
-    let nearest=null, dmin=Infinity;
-    for(const a of all){
-      if(a===el) continue;
-      const r = a.getBoundingClientRect();
-      const dx = (r.left + r.width/2) - evt.clientX;
-      const dy = (r.top + r.height/2) - evt.clientY;
-      const d = Math.hypot(dx,dy);
-      if(d<dmin){ dmin=d; nearest=a; }
-    }
-    if(nearest && dmin < 120){
-      // swap: replace positions in DOM
-      const parent = puzzleContainer;
-      const elNext = el.nextSibling;
-      parent.insertBefore(el, nearest);
-      if(elNext) parent.insertBefore(nearest, elNext); else parent.appendChild(nearest);
-    }
-    el.removeEventListener('pointermove', move);
-    window.removeEventListener('pointerup', up);
-    checkPuzzleSolved();
-  }
-  el.addEventListener('pointermove', move);
-  window.addEventListener('pointerup', up);
-}
-function shuffleArray(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
-shuffleBtn.addEventListener('click', createPuzzle);
-pCountSelect.addEventListener('change', createPuzzle);
-if(puzzleImg.complete) createPuzzle(); else puzzleImg.onload = createPuzzle;
+        // Page 2: Jigsaw (Simple 3x3 pieces, drag placeholder - full impl needs image load)
+        const jigsawCanvas = document.getElementById('jigsaw-canvas');
+        const ctx = jigsawCanvas.getContext('2d');
+        let puzzlePieces = [];
+        let isDragging = false;
+        let draggedPiece = null;
+        let offset = { x: 0, y: 0 };
 
-function checkPuzzleSolved(){
-  const parts = Array.from(document.querySelectorAll('#puzzle .puzzle-piece'));
-  if(parts.length===0) return;
-  let solved = true;
-  for(let i=0;i<parts.length;i++){
-    const idx = Number(parts[i].dataset.origIndex);
-    if(idx !== i){ solved = false; break; }
-  }
-  if(solved){
-    showModal('Puzzle solved! Beautiful ❤️', true);
-  }
-}
+        // Placeholder: Draw simple colored pieces (replace with image slicing)
+        function initJigsaw() {
+            const img = new Image();
+            img.src = 'images/puzzle-image.jpg'; // Placeholder 9:16 image
+            img.onload = () => {
+                const pieceWidth = jigsawCanvas.width / 3;
+                const pieceHeight = jigsawCanvas.height / 3;
+                puzzlePieces = [];
+                for (let y = 0; y < 3; y++) {
+                    for (let x = 0; x < 3; x++) {
+                        puzzlePieces.push({
+                            sx: x * pieceWidth, sy: y * pieceHeight,
+                            w: pieceWidth, h: pieceHeight,
+                            x: Math.random() * jigsawCanvas.width, y: Math.random() * jigsawCanvas.height,
+                            correctX: x * pieceWidth, correctY: y * pieceHeight
+                        });
+                    }
+                }
+                drawPuzzle();
+            };
+        }
 
-/* ===========================
-   Notepad download
-   =========================== */
-const noteEl = document.getElementById('note');
-const titleEl = document.getElementById('noteTitle');
-const noteSizeEl = document.getElementById('noteSize');
-noteEl.addEventListener('input', ()=> noteSizeEl.textContent = noteEl.value.length);
-document.getElementById('downloadNote').addEventListener('click', ()=>{
-  const text = (titleEl.value ? titleEl.value + '\n\n' : '') + noteEl.value;
-  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = (titleEl.value?slugify(titleEl.value):'message') + '.txt';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-});
-document.getElementById('clearNote').addEventListener('click', ()=>{ if(confirm('Clear note?')) noteEl.value=''; noteSizeEl.textContent = noteEl.value.length; });
-function slugify(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+        function drawPuzzle() {
+            ctx.clearRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
+            // Draw background grid or image base if needed
+            puzzlePieces.forEach(piece => {
+                ctx.drawImage(img, piece.sx, piece.sy, piece.w, piece.h, piece.x, piece.y, piece.w, piece.h);
+            });
+        }
 
-/* ===========================
-   Timeline add demo
-   =========================== */
-document.getElementById('addMilestone').addEventListener('click', ()=>{
-  const t = prompt('Enter milestone (e.g., "Our roadtrip - 2023.04.01")'); if(!t) return;
-  const container = document.getElementById('timeline');
-  const idx = container.querySelectorAll('.timeline-card').length + 1;
-  const el = document.createElement('div'); el.className='timeline-card';
-  el.innerHTML = `<div class="timeline-heart">${String(idx).padStart(2,'0')}</div><div class="timeline-text"><strong>${escapeHtml(t)}</strong></div>`;
-  container.appendChild(el);
-});
-function escapeHtml(s){ return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+        jigsawCanvas.addEventListener('mousedown', (e) => {
+            const rect = jigsawCanvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            for (let piece of puzzlePieces) {
+                if (mouseX > piece.x && mouseX < piece.x + piece.w && mouseY > piece.y && mouseY < piece.y + piece.h) {
+                    draggedPiece = piece;
+                    isDragging = true;
+                    offset.x = mouseX - piece.x;
+                    offset.y = mouseY - piece.y;
+                    break;
+                }
+            }
+        });
 
-/* ===========================
-   Polaroid enlarge
-   =========================== */
-document.getElementById('polaroidGrid').addEventListener('click', (e)=>{
-  const p = e.target.closest('.polaroid'); if(!p) return;
-  const img = p.querySelector('img').src;
-  modalMsg.innerHTML = `<div style="max-width:420px"><img src="${img}" style="width:100%;border-radius:10px"></div>`;
-  modal.style.display = 'flex';
-});
+        jigsawCanvas.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const rect = jigsawCanvas.getBoundingClientRect();
+            draggedPiece.x = e.clientX - rect.left - offset.x;
+            draggedPiece.y = e.clientY - rect.top - offset.y;
+            drawPuzzle();
+        });
 
-/* ===========================
-   Initialize totals & consec display
-   =========================== */
-document.getElementById('consec').textContent = getConsecutive();
-updateTotalsDisplay();
+        jigsawCanvas.addEventListener('mouseup', () => {
+            if (draggedPiece) {
+                // Snap if close to correct position (tolerance 20px)
+                if (Math.abs(draggedPiece.x - draggedPiece.correctX) < 20 && Math.abs(draggedPiece.y - draggedPiece.correctY) < 20) {
+                    draggedPiece.x = draggedPiece.correctX;
+                    draggedPiece.y = draggedPiece.correctY;
+                }
+                checkWin();
+                drawPuzzle();
+                draggedPiece = null;
+                isDragging = false;
+            }
+        });
 
-</script>
+        // Touch events for mobile
+        jigsawCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', { clientX: touch.clientX, clientY: touch.clientY });
+            jigsawCanvas.dispatchEvent(mouseEvent);
+        });
+        jigsawCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', { clientX: touch.clientX, clientY: touch.clientY });
+            jigsawCanvas.dispatchEvent(mouseEvent);
+        });
+        jigsawCanvas.addEventListener('touchend', () => {
+            const mouseEvent = new MouseEvent('mouseup', {});
+            jigsawCanvas.dispatchEvent(mouseEvent);
+        });
+
+        function checkWin() {
+            if (puzzlePieces.every(p => Math.abs(p.x - p.correctX) < 5 && Math.abs(p.y - p.correctY) < 5)) {
+                document.getElementById('winner-popup').style.display = 'block';
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('winner-popup').style.display = 'none';
+        }
+
+        initJigsaw(); // Call on load for page2, but since hidden, ok
+
+        // Page 3: Notepad Download
+        function downloadNote() {
+            const note = document.getElementById('notepad').innerText;
+            const blob = new Blob([note], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'message-to-you.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Page 4: Timeline Animation
+        function animateTimeline() {
+            document.querySelectorAll('.milestone').forEach((m, i) => {
+                setTimeout(() => m.style.opacity = '1', i * 500);
+            });
+        }
+
+        // Page 5: Polaroid Enlarge
+        let currentPhoto = '';
+        function enlargePhoto(src) {
+            currentPhoto = src;
+            document.getElementById('enlarge-img').src = src;
+            document.getElementById('enlarge-modal').style.display = 'flex';
+            // Tilt on mousemove
+            document.getElementById('enlarge-modal').addEventListener('mousemove', (e) => {
+                const rect = document.getElementById('enlarge-modal').getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                document.getElementById('enlarge-img').style.transform = `rotate(${x * 5 + y * 5}deg)`;
+            });
+        }
+
+        function closeEnlarge() {
+            document.getElementById('enlarge-modal').style.display = 'none';
+            document.getElementById('enlarge-img').style.transform = 'rotate(0deg)';
+        }
+
+        // Heart Maze: Simple canvas path following (placeholder heart path)
+        const mazeCanvas = document.getElementById('maze-canvas');
+        const mazeCtx = mazeCanvas.getContext('2d');
+        let mazePlayer = { x: 180, y: 600, vx: 0, vy: 0 }; // Start bottom center
+        let mazeGoal = { x: 180, y: 100 }; // Top center
+
+        function drawMaze() {
+            mazeCtx.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+            // Draw heart path (simplified lines)
+            mazeCtx.strokeStyle = '#e91e63';
+            mazeCtx.lineWidth = 20;
+            mazeCtx.beginPath();
+            mazeCtx.moveTo(180, 600);
+            mazeCtx.lineTo(100, 400); mazeCtx.lineTo(180, 300); mazeCtx.lineTo(260, 400);
+            mazeCtx.lineTo(180, 600); mazeCtx.lineTo(180, 100); // Stem to goal
+            mazeCtx.stroke();
+
+            // Player heart
+            mazeCtx.fillStyle = '#f8bbd9';
+            mazeCtx.beginPath();
+            mazeCtx.moveTo(mazePlayer.x, mazePlayer.y);
+            mazeCtx.lineTo(mazePlayer.x - 10, mazePlayer.y + 15);
+            mazeCtx.lineTo(mazePlayer.x + 10, mazePlayer.y + 15);
+            mazeCtx.closePath();
+            mazeCtx.fill();
+
+            // Goal
+            if (Math.abs(mazePlayer.x - mazeGoal.x) < 20 && Math.abs(mazePlayer.y - mazeGoal.y) < 20) {
+                alert('❤️ You found the heart! We made it together.');
+            }
+        }
+
+        // Tilt controls (deviceorientation for mobile)
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (e) => {
+                mazePlayer.vx = e.gamma / 10 || 0; // Left/right tilt
+                mazePlayer.vy = -e.beta / 10 || 0; // Forward/back
+                mazePlayer.x = Math.max(0, Math.min(mazeCanvas.width, mazePlayer.x + mazePlayer.vx));
+                mazePlayer.y = Math.max(0, Math.min(mazeCanvas.height, mazePlayer.y + mazePlayer.vy));
+                drawMaze();
+            });
+        } else {
+            // Fallback swipe (simplified, use touch for direction)
+            let touchStartX, touchStartY;
+            mazeCanvas.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            });
+            mazeCanvas.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+                mazePlayer.x += dx / 10;
+                mazePlayer.y += dy / 10;
+                mazePlayer.x = Math.max(0, Math.min(mazeCanvas.width, mazePlayer.x));
+                mazePlayer.y = Math.max(0, Math.min(mazeCanvas.height, mazePlayer.y));
+                drawMaze();
+            });
+        }
+        drawMaze();
+
+        // Connect Hearts: Dot-to-Dot
+        const dotsCanvas = document.getElementById('dots-canvas');
+        const dotsCtx = dotsCanvas.getContext('2d');
+        let dots = [
+            {x: 180, y: 100, num: 1},
+            {x: 100, y: 200, num: 2},
+            {x: 100, y: 300, num: 3},
+            {x: 180, y: 350, num: 4},
+            {x: 260, y: 300, num: 5},
+            {x: 260, y: 200, num: 6},
+            {x: 180, y: 100, num: 7} // Close heart
+        ];
+        let currentDot = 0;
+        let lines = [];
+
+        function drawDots() {
+            dotsCtx.clearRect(0, 0, dotsCanvas.width, dotsCanvas.height);
+            // Draw lines
+            dotsCtx.strokeStyle = '#e91e63';
+            dotsCtx.lineWidth = 3;
+            dotsCtx.beginPath();
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                dotsCtx.moveTo(dots[line.from].x, dots[line.from].y);
+                dotsCtx.lineTo(dots[line.to].x, dots[line.to].y);
+            }
+            dotsCtx.stroke();
+
+            // Draw dots
+            dots.forEach((dot, i) => {
+                dotsCtx.fillStyle = i === currentDot ? '#e91e63' : '#f8bbd9';
+                dotsCtx.beginPath();
+                dotsCtx.arc(dot.x, dot.y, 10, 0, 2 * Math.PI);
+                dotsCtx.fill();
+                dotsCtx.fillStyle = 'white';
+                dotsCtx.font = 'bold 16px Arial';
+                dotsCtx.textAlign = 'center';
+                dotsCtx.textBaseline = 'middle';
+                dotsCtx.fillText(dot.num, dot.x, dot.y);
+            });
+
+            if (currentDot >= dots.length) {
+                alert('💕 Heart connected! Our love story complete.');
+            }
+        }
+
+        dotsCanvas.addEventListener('click', (e) => {
+            const rect = dotsCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const dot = dots[currentDot];
+            if (Math.abs(x - dot.x) < 20 && Math.abs(y - dot.y) < 20) {
+                if (currentDot > 0) {
+                    lines.push({ from: currentDot - 1, to: currentDot });
+                }
+                currentDot++;
+                drawDots();
+            }
+        });
+
+        // Touch for mobile
+        dotsCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('click', { clientX: touch.clientX, clientY: touch.clientY });
+            dotsCanvas.dispatchEvent(mouseEvent);
+        });
+
+        drawDots();
+
+        // Initial load
+        if (unlocked) {
+            window.location.hash = '#page1';
+        }
+    </script>
 </body>
 </html>
