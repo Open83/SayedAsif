@@ -196,7 +196,6 @@
     :root{--max-width:420px}
   }
 </style>
-<!-- Developer shortcut: placing <!-- hide-game --> anywhere in the HTML will bypass the unlock system -->
 </head>
 <body>
 <div class="app" id="app">
@@ -224,7 +223,7 @@
         <button class="btn" id="startSOS">Start SOS Game</button>
         <button class="btn" id="resetSOS">Reset</button>
       </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--muted)">Developer shortcut: include <!-- hide-game --> in the HTML to bypass the game.</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--muted)">Developer shortcut: include the comment <code>&lt;!-- hide-game --&gt;</code> anywhere in this HTML to bypass the SOS unlock.</div>
       <div style="margin-top:10px;font-size:12px;color:var(--muted)">AI mistake chance: <span id="mistakeVal"></span></div>
     </div>
 
@@ -378,7 +377,21 @@ const WINS_REQUIRED = 3;
 /* Utility */
 const $ = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
-const isDevBypass = document.documentElement.innerHTML.includes('<!-- hide-game -->');
+
+/* Robust check for developer bypass: search for a comment node that contains 'hide-game' */
+function hasHideGameComment(){
+  try{
+    const walker = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT, null, false);
+    let n;
+    while(n = walker.nextNode()){
+      if(typeof n.nodeValue === 'string' && n.nodeValue.includes('hide-game')) return true;
+    }
+  }catch(e){
+    return false;
+  }
+  return false;
+}
+const isDevBypass = hasHideGameComment();
 
 /* Navigation */
 const pages = ['welcome','games','timeline','gallery','notepad'];
@@ -405,11 +418,10 @@ function updateWinsUI(){
 
 function unlockAll(){
   unlockScreen.classList.add('hide');
-  // reveal navigation pages (they are already reachable via nav but keep overlay hidden)
+  // pages revealed
 }
 
 if(isDevBypass){
-  // Bypass unlock system on developer request
   consecutiveWins = WINS_REQUIRED;
   winsRemaining = 0;
   updateWinsUI();
@@ -417,15 +429,6 @@ if(isDevBypass){
 }
 
 /* ---------- SOS Game Implementation ---------- */
-/* Simple turns:
-   - Board NxN (5x5)
-   - Players alternate placing either 'S' or 'O' by first selecting letter then cell
-   - Score counts SOS substrings created by the placement (horizontal, vertical, diag)
-   - Player with higher score after board full wins (draw possible)
-   - Minimax: shallow search (depth configurable) enumerates moves and picks best for AI
-   - CHANCE_TO_MISTAKE: with probability pick a random near-best move
-*/
-
 const SOS_SIZE = 5;
 const SOS_CONTAINER = document.createElement('div');
 SOS_CONTAINER.style.position = 'absolute';
@@ -472,33 +475,18 @@ function createSOSUI(){
   }
   SOS_CONTAINER.appendChild(boardWrap);
 
-  // Controls
   const ctrlDiv = document.createElement('div'); ctrlDiv.style.display='flex';ctrlDiv.style.justifyContent='space-between';
   const restart = document.createElement('button'); restart.className='btn small-btn'; restart.innerText='Restart Match';
   const leave = document.createElement('button'); leave.className='btn small-btn'; leave.innerText='Close';
   ctrlDiv.appendChild(restart); ctrlDiv.appendChild(leave);
   SOS_CONTAINER.appendChild(ctrlDiv);
 
-  // Game state and logic
   let board = Array.from({length:SOS_SIZE},()=>Array(SOS_SIZE).fill(''));
   let playerLetter = 'S';
-  let turn = 'player'; // 'player' or 'ai'
+  let turn = 'player';
   let scores = {player:0,ai:0};
   const statusUpdate = ()=> status.innerText = `Turn: ${turn.toUpperCase()}  • Score You:${scores.player} AI:${scores.ai}`;
 
-  function countNewSOS(board, r,c){
-    // count SOS created that involve (r,c) as the last placed char (simplified)
-    const dirs = [[0,1],[1,0],[1,1],[1,-1]];
-    let ch = board[r][c];
-    let cnt=0;
-    for(const [dr,dc] of dirs){
-      // check patterns "SOS" where (r,c) could be start/mid/end; we'll check all three alignments
-      // check mid (S O S) where this is middle (O) -> not likely since we only placed one char, but general sweep:
-      // We'll just scan full line for 'SOS' sequences and count overall board occurrences (inefficient but simple)
-    }
-    // easier: scan whole board for any SOS and return total count difference from previous? We will compute full count outside.
-    return cnt;
-  }
   function totalSOSCount(bd){
     let total=0;
     const dirs = [[0,1],[1,0],[1,1],[1,-1]];
@@ -529,14 +517,6 @@ function createSOSUI(){
     return board.every(row => row.every(cell => cell !== ''));
   }
 
-  // Apply move and update scores
-  function applyMove(who, r,c, letter){
-    board[r][c] = letter;
-    // compute scores by counting total SOS and then attributing new ones to player who played this move
-    // We'll compute score difference: after placing, count total, compare with previousTotal
-  }
-
-  // Minimax-ish simulation: enumerate all (cell,letter) moves for a few plies and evaluate by score difference
   function cloneBoard(bd){
     return bd.map(r=>r.slice());
   }
@@ -551,9 +531,6 @@ function createSOSUI(){
     return moves;
   }
   function scoreBoardFor(bd){
-    // heuristic: total SOS (player) minus total SOS (ai)? But we don't know owner in bd snapshot
-    // We'll use total SOS count as globale val; in simulation we let positive favor AI (since AI maximizes)
-    // Instead, return (#SOS)
     return totalSOSCount(bd);
   }
 
@@ -584,25 +561,20 @@ function createSOSUI(){
   function aiChooseMove(){
     const moves = availableMoves(board);
     if(moves.length===0) return null;
-    // Score each move by running minimax after applying it.
     const scored = moves.map(m=>{
       const nb = cloneBoard(board);
       nb[m.r][m.c]=m.letter;
-      const val = minimax(nb, 3, false); // depth small for performance
+      const val = minimax(nb, 3, false);
       return {m,val};
     });
-    // sort desc because AI maximizes
     scored.sort((a,b)=>b.val-a.val);
-    // With chance to mistake, pick a slightly suboptimal one
     if(Math.random() < CHANCE_TO_MISTAKE && scored.length>1){
-      // pick one of top 3 random (if available)
       const topN = Math.min(3, scored.length);
       return scored[Math.floor(Math.random()*topN)].m;
     }
     return scored[0].m;
   }
 
-  // Event: player picks letter
   letterBtnS.onclick = ()=>{ playerLetter='S'; letterBtnS.style.background='linear-gradient(90deg,#ff9fbf,#ff6b9a)'; letterBtnO.style.background='';}
   letterBtnO.onclick = ()=>{ playerLetter='O'; letterBtnO.style.background='linear-gradient(90deg,#ff9fbf,#ff6b9a)'; letterBtnS.style.background='';}
 
@@ -615,34 +587,29 @@ function createSOSUI(){
     SOS_CONTAINER.style.display = 'block';
   }
 
-  // click cell
   boardWrap.addEventListener('click', e=>{
     const cell = e.target.closest('button');
     if(!cell) return;
     const r = +cell.dataset.r, c = +cell.dataset.c;
     if(board[r][c]) return;
     if(turn !== 'player') return;
-    // place player's pick
     const before = totalSOSCount(board);
     board[r][c] = playerLetter;
     const after = totalSOSCount(board);
     const delta = after - before;
     scores.player += Math.max(0, delta);
-    // check if player earned point(s) -> gets extra turn per classic SOS? Simpler: alternate turns
     turn = 'ai';
     renderBoard();
     if(isBoardFull()){
       endMatch();
       return;
     }
-    // AI move small delay
     setTimeout(()=>{ aiMove(); }, 350);
   });
 
   async function aiMove(){
     const move = aiChooseMove();
     if(!move){ endMatch(); return; }
-    // simulate thinking
     await new Promise(res=>setTimeout(res, 300 + Math.random()*400));
     const before = totalSOSCount(board);
     board[move.r][move.c] = move.letter;
@@ -658,12 +625,10 @@ function createSOSUI(){
   }
 
   function endMatch(){
-    // determine winner by scores
     let result;
     if(scores.player > scores.ai) result = 'player';
     else if(scores.ai > scores.player) result = 'ai';
     else result = 'draw';
-    // update global consecutiveWins logic
     if(result === 'player'){
       consecutiveWins++;
       winsRemaining = Math.max(0, WINS_REQUIRED - consecutiveWins);
@@ -671,14 +636,14 @@ function createSOSUI(){
         unlockAll();
         SOS_CONTAINER.style.display = 'none';
         unlockScreen.classList.add('hide');
-        alert('Congrats! You unlocked the pages ❤️');
+        setTimeout(()=>alert('Congrats! You unlocked the pages ❤️'),10);
       } else {
-        alert('You won this match! Consecutive wins: '+consecutiveWins);
+        setTimeout(()=>alert('You won this match! Consecutive wins: '+consecutiveWins),10);
       }
     } else {
       consecutiveWins = 0;
       winsRemaining = WINS_REQUIRED;
-      alert(result === 'draw' ? 'It\'s a draw.' : 'AI won this match. Try again.');
+      setTimeout(()=>alert(result === 'draw' ? 'It\'s a draw.' : 'AI won this match. Try again.'),10);
     }
     updateWinsUI();
     renderBoard();
@@ -690,7 +655,7 @@ function createSOSUI(){
   leave.onclick = ()=> { SOS_CONTAINER.style.display='none'; unlockScreen.classList.remove('hide'); }
   document.getElementById('startSOS').addEventListener('click', ()=>{
     if(isDevBypass){ unlockAll(); return; }
-    startMatch(); unlockScreen.classList.add('hide'); // show match in overlay
+    startMatch(); unlockScreen.classList.add('hide');
   });
   document.getElementById('resetSOS').addEventListener('click', ()=>{
     consecutiveWins = 0; winsRemaining = WINS_REQUIRED; updateWinsUI();
@@ -701,45 +666,34 @@ function createSOSUI(){
 }
 createSOSUI();
 
-/* If bypassed show pages immediately */
-if(isDevBypass) {
-  unlockScreen.classList.add('hide');
-}
-
 /* ---------- JIGSAW Implementation (drag+snap) ---------- */
 (function jigsawModule(){
-  const fileIn = $('#jigsawFile'), startBtn = $('#startJigsaw');
-  const board = $('#jigsawBoard'), msg = $('#jigsawMsg');
+  const fileIn = document.getElementById('jigsawFile'), startBtn = document.getElementById('startJigsaw');
+  const board = document.getElementById('jigsawBoard'), msg = document.getElementById('jigsawMsg');
   let pieces = [];
   let img = new Image();
-  let cols = 4; let rows = 4; // default 16 pieces
-  let started = false;
-
-  function clearBoard(){ board.innerHTML=''; pieces=[]; board.style.display='none'; msg.innerText=''; started=false; }
+  let cols = 4; let rows = 4;
+  function clearBoard(){ board.innerHTML=''; pieces=[]; board.style.display='none'; msg.innerText=''; }
 
   fileIn.addEventListener('change', e=>{
     const f = e.target.files[0];
     if(!f) return;
     const url = URL.createObjectURL(f);
     img = new Image();
-    img.onload = ()=> {
-      // ok
-    }
+    img.onload = ()=> {};
     img.src = url;
   });
 
   startBtn.addEventListener('click', ()=>{
     const f = fileIn.files[0];
     if(!f){ msg.innerText='Please upload a 9:16 image first.'; return; }
-    const val = +$('#piecesCount').value;
+    const val = +document.getElementById('piecesCount').value;
     if(val<=9) { cols = 3; rows = Math.ceil(val/3); }
     else if(val<=12) { cols = 4; rows = 3; }
     else { cols = 4; rows = 4; }
     const url = URL.createObjectURL(f);
     img = new Image();
-    img.onload = ()=> {
-      makePieces();
-    }
+    img.onload = ()=> { makePieces(); }
     img.src = url;
   });
 
@@ -747,26 +701,19 @@ if(isDevBypass) {
     clearBoard();
     board.style.display='block';
     const W = board.clientWidth, H = board.clientHeight;
-    // determine piece size in px relative to board
     const pW = Math.floor(W/cols), pH = Math.floor(H/rows);
-    // scale image to cover board area
     const scale = Math.max(W / img.width, H / img.height);
     const drawW = img.width * scale, drawH = img.height * scale;
-    // center offset
     const offsetX = (W - drawW) / 2, offsetY = (H - drawH) / 2;
-    // create pieces
     for(let r=0;r<rows;r++){
       for(let c=0;c<cols;c++){
         const piece = document.createElement('div');
         piece.className = 'j-piece';
         piece.style.width = pW+'px'; piece.style.height = pH+'px';
         const posX = c*pW, posY = r*pH;
-        // background image positioning: use the image url but with background positioning to show correct crop
         piece.style.backgroundImage = `url(${img.src})`;
-        // compute bg size and position in percent
         piece.style.backgroundSize = `${drawW}px ${drawH}px`;
         piece.style.backgroundPosition = `${offsetX - posX}px ${offsetY - posY}px`;
-        // random start location
         piece.style.left = (Math.random()*(W-pW)) + 'px';
         piece.style.top = (Math.random()*(H-pH)) + 'px';
         piece.dataset.correctLeft = posX; piece.dataset.correctTop = posY;
@@ -776,17 +723,16 @@ if(isDevBypass) {
         pieces.push(piece);
       }
     }
-    started = true;
     msg.innerText='Drag pieces to assemble the image. Pieces snap when close.';
   }
 
-  function makeDraggable(el, w, h){
+  function makeDraggable(el){
     let startX=0,startY=0,ox=0,oy=0,dragging=false;
     el.addEventListener('pointerdown', e=>{
       el.setPointerCapture(e.pointerId);
       dragging=true;
       startX = e.clientX; startY = e.clientY;
-      ox = parseFloat(el.style.left); oy = parseFloat(el.style.top);
+      ox = parseFloat(el.style.left)||0; oy = parseFloat(el.style.top)||0;
       el.style.transition='none';
     });
     window.addEventListener('pointermove', e=>{
@@ -797,10 +743,9 @@ if(isDevBypass) {
     window.addEventListener('pointerup', e=>{
       if(!dragging) return;
       dragging=false;
-      el.releasePointerCapture && el.releasePointerCapture(e.pointerId);
+      try{ el.releasePointerCapture && el.releasePointerCapture(e.pointerId); }catch(e){}
       el.style.transition='transform .12s, left .12s, top .12s';
-      // snap if close to correct pos
-      const left = parseFloat(el.style.left), top = parseFloat(el.style.top);
+      const left = parseFloat(el.style.left)||0, top = parseFloat(el.style.top)||0;
       const correctLeft = +el.dataset.correctLeft, correctTop = +el.dataset.correctTop;
       const dist = Math.hypot(left-correctLeft, top-correctTop);
       const snapRange = +el.dataset.snapRange;
@@ -821,14 +766,10 @@ if(isDevBypass) {
       return left == +p.dataset.correctLeft && top == +p.dataset.correctTop;
     });
     if(allSnapped){
-      $('#jigsawMsg').innerText = 'You solved it! ❤️';
-      // small celebration
+      document.getElementById('jigsawMsg').innerText = 'You solved it! ❤️';
       pieces.forEach(p => p.style.boxShadow = '0 12px 28px rgba(255,107,154,0.28)');
     }
   }
-
-  // reset on page change
-  document.addEventListener('visibilitychange', ()=>{ /* optional */ });
 })();
 
 /* ---------- Heart Maze (simple path following with swipe) ---------- */
@@ -836,7 +777,7 @@ if(isDevBypass) {
   const mazeCanvas = document.getElementById('mazeCanvas');
   const mazeWrap = document.getElementById('mazeWrap');
   const player = document.getElementById('playerDot');
-  const msg = $('#mazeMsg');
+  const msg = document.getElementById('mazeMsg');
   let ctx, w, h;
   let pathPoints = [];
   let playerPos = {x:0,y:0};
@@ -850,7 +791,6 @@ if(isDevBypass) {
     resetPlayer();
   }
   function drawHeartPath(cx,cy,scale=1){
-    // A simple heart-like bezier path - we will create a curving path for the player to follow
     const p = [];
     const steps = 120;
     for(let i=0;i<steps;i++){
@@ -875,8 +815,6 @@ if(isDevBypass) {
       if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y);
     }
     ctx.stroke();
-
-    // draw thin inner guide
     ctx.lineWidth = 4;
     ctx.strokeStyle = 'rgba(255,107,154,0.16)';
     ctx.beginPath();
@@ -900,7 +838,6 @@ if(isDevBypass) {
     player.style.left = Math.max(4, Math.min(rect.width-32, left)) + 'px';
     player.style.top = Math.max(4, Math.min(rect.height-32, top)) + 'px';
   }
-  // swipe: track pointer move inside canvas and snap to nearest path point
   let pointerDown=false;
   mazeCanvas.addEventListener('pointerdown', e=>{ pointerDown=true; mazeCanvas.setPointerCapture(e.pointerId); moveToPoint(e); });
   mazeCanvas.addEventListener('pointermove', e=>{ if(pointerDown) moveToPoint(e); });
@@ -909,21 +846,16 @@ if(isDevBypass) {
   function moveToPoint(e){
     const rect = mazeCanvas.getBoundingClientRect();
     const x = e.clientX - rect.left, y = e.clientY - rect.top;
-    // find nearest path index
     let bestIdx = 0, bestDist = Infinity;
     for(let i=0;i<pathPoints.length;i++){
       const p = pathPoints[i];
       const d = Math.hypot(p.x - x, p.y - y);
       if(d < bestDist){ bestDist = d; bestIdx = i; }
     }
-    // move player to that path point (simulate swipe)
     playerPos = {...pathPoints[bestIdx]};
     updatePlayerDOM();
-    // check finish: if near last point
     if(bestIdx >= pathPoints.length - 6){
       msg.innerText = 'You found the way to my heart ❤️';
-      // small celebration and lock further moves
-      setTimeout(()=>{ /* optional */ }, 300);
     }
   }
 
@@ -935,13 +867,13 @@ if(isDevBypass) {
 
 /* ---------- Connect Hearts (dot-to-dot) ---------- */
 (function connectModule(){
-  const canvas = $('#connectCanvas');
+  const canvas = document.getElementById('connectCanvas');
   const ctx = canvas.getContext('2d');
   let W,H;
   let dots = [];
   let lines = [];
   let currentIndex = 0;
-  const msg = $('#connectMsg');
+  const msg = document.getElementById('connectMsg');
 
   function resize(){
     canvas.width = canvas.clientWidth;
@@ -953,10 +885,8 @@ if(isDevBypass) {
 
   function initDots(){
     dots = [];
-    // create sample heart-shape dot coordinates (scaled)
     const center = {x: W/2, y: H/2};
     const r = Math.min(W,H)/3;
-    // place numbered dots along a heart parametric curve for clarity
     for(let i=0;i<14;i++){
       const t = Math.PI*(i/13);
       const x = center.x + r * 0.9 * Math.sin(t) * Math.sin(t) * Math.cos(t);
@@ -969,7 +899,6 @@ if(isDevBypass) {
 
   function draw(){
     ctx.clearRect(0,0,W,H);
-    // draw lines
     ctx.lineWidth = 4; ctx.strokeStyle='rgba(255,107,154,0.9)';
     ctx.beginPath();
     for(let i=0;i<lines.length;i++){
@@ -978,7 +907,6 @@ if(isDevBypass) {
     }
     ctx.stroke();
 
-    // draw dots
     for(const d of dots){
       ctx.beginPath();
       ctx.fillStyle = (d.idx <= currentIndex ? '#ff9fbf' : '#fff');
@@ -1023,13 +951,11 @@ if(isDevBypass) {
       } else {
         msg.innerText = `Good — connect ${currentIndex} → ${currentIndex+1}`;
       }
-    } else {
-      // optional little feedback
     }
     startDot=null; draw();
   });
 
-  $('#resetConnect').addEventListener('click', ()=>{ initDots(); draw(); });
+  document.getElementById('resetConnect').addEventListener('click', ()=>{ initDots(); draw(); });
 
   window.addEventListener('resize', ()=>{ setTimeout(resize,130); });
   setTimeout(()=>{ resize(); }, 200);
@@ -1037,7 +963,7 @@ if(isDevBypass) {
 
 /* ---------- Gallery Polaroids ---------- */
 (function galleryModule(){
-  const input = $('#galleryFiles'), grid = $('#polaroidGrid'), clear = $('#clearGallery');
+  const input = document.getElementById('galleryFiles'), grid = document.getElementById('polaroidGrid'), clear = document.getElementById('clearGallery');
   input.addEventListener('change', e=>{
     const files = Array.from(e.target.files || []);
     for(const f of files){
@@ -1051,7 +977,6 @@ if(isDevBypass) {
     const img = document.createElement('img'); img.src = src;
     p.appendChild(img);
     p.addEventListener('click', ()=> {
-      // enlarge
       if(p.classList.contains('big')){ p.classList.remove('big'); p.style.transform = `rotate(${(Math.random()*12-6).toFixed(1)}deg)`;}
       else { p.classList.add('big'); p.style.transform = 'none'; }
     });
@@ -1062,11 +987,11 @@ if(isDevBypass) {
 
 /* ---------- Notepad download (no trimming) ---------- */
 (function notepadModule(){
-  const area = $('#noteArea'), btn = $('#downloadNote'), nameIn = $('#nameForFile');
+  const area = document.getElementById('noteArea'), btn = document.getElementById('downloadNote'), nameIn = document.getElementById('nameForFile');
   btn.addEventListener('click', ()=>{
     let filename = nameIn.value.trim() || 'note.txt';
     if(!filename.toLowerCase().endsWith('.txt')) filename += '.txt';
-    const text = area.value; // important: no trimming or length limit
+    const text = area.value; // no trimming or limit
     const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = filename;
@@ -1077,12 +1002,10 @@ if(isDevBypass) {
 
 /* ---------- Small helpers ---------- */
 (function init(){
-  // wire nav buttons so hidden pages won't be accessible until unlocked
   $('#nav').addEventListener('click', e=>{
     const b = e.target.closest('button[data-page]');
     if(!b) return;
     const id = b.dataset.page;
-    // If unlock overlay visible and not bypassed, block navigation to protected pages (except welcome)
     const protectedPages = ['games','timeline','gallery','notepad'];
     if(!isDevBypass && !unlockScreen.classList.contains('hide') && protectedPages.includes(id)){
       alert('Please unlock the site first by winning SOS 3 times in a row.');
@@ -1091,19 +1014,15 @@ if(isDevBypass) {
     showPage(id);
   });
 
-  // ensure welcome loads nicely
   showPage('welcome');
 
-  // mobile: quickly focus video
-  const vid = $('#welcomeVideo');
+  const vid = document.getElementById('welcomeVideo');
   vid && vid.addEventListener('loadedmetadata', ()=> { vid.play().catch(()=>{}); });
 
-  // show initial wins
   updateWinsUI();
 
-  // show/hide SOS if already unlocked
   if(!isDevBypass && unlockScreen.classList.contains('hide') === false){
-    // still locked
+    // locked
   } else {
     unlockScreen.classList.add('hide');
   }
