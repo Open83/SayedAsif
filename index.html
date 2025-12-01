@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Saraaa ❤️ — Single File</title>
+<title>Saraaa ❤️ — Fixed Build</title>
 <style>
   :root{--bg:#071026;--accent:#ff6b9a;--muted:#9aa6b2;--glass:rgba(255,255,255,0.03);--maxw:420px}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071026,#041023);color:#eaf2ff}
@@ -15,10 +15,10 @@
   .page{position:absolute;inset:0;padding:12px;box-sizing:border-box;display:none;flex-direction:column;gap:8px;overflow:auto}
   .page.active{display:flex}
   video.player{width:100%;height:auto;border-radius:12px;object-fit:cover;background:#000}
-  #unlock{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.88),rgba(0,0,0,0.8));z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:10px;border-radius:12px}
-  #unlock.hide{display:none}
-  #status{position:absolute;right:8px;top:8px;background:rgba(0,0,0,0.45);padding:6px 10px;border-radius:8px;font-size:12px;color:var(--muted);z-index:95}
-  #log{position:absolute;left:8px;top:8px;background:rgba(0,0,0,0.36);padding:6px 8px;border-radius:8px;font-size:12px;color:var(--muted);z-index:95;max-width:40%;max-height:24vh;overflow:auto}
+  #unlockOverlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.88),rgba(0,0,0,0.8));z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:10px;border-radius:12px}
+  #unlockOverlay.hide{display:none}
+  #statusBox{position:absolute;right:8px;top:8px;background:rgba(0,0,0,0.45);padding:6px 10px;border-radius:8px;font-size:12px;color:var(--muted);z-index:95}
+  #logBox{position:absolute;left:8px;top:8px;background:rgba(0,0,0,0.36);padding:6px 8px;border-radius:8px;font-size:12px;color:var(--muted);z-index:95;max-width:42%;max-height:24vh;overflow:auto}
   .dbg{font-size:11px;color:#cdd9e6;margin-top:2px}
   .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:10px;border-radius:12px}
   .jboard{position:relative;width:100%;height:56vmin;max-height:58%;background:#041426;border-radius:10px;overflow:hidden;touch-action:none}
@@ -41,292 +41,434 @@
   </header>
 
   <main class="frame" id="frame">
-    <div id="status">LOCKED • Wins: <span id="wins">0</span>/<span id="req">3</span></div>
-    <div id="log"><strong>LOG</strong><div id="logLines"></div></div>
+    <div id="statusBox">LOCKED • Wins: <span id="statusWins">0</span>/<span id="statusReq">3</span></div>
+    <div id="logBox"><strong>LOG</strong><div id="logLines"></div></div>
 
-    <div id="unlock">
+    <div id="unlockOverlay">
       <div style="font-size:18px">Unlock the site — Play SOS</div>
-      <div style="color:var(--muted)">Consecutive wins required: <strong id="reqText">3</strong></div>
-      <div style="color:var(--muted)">You need <span id="need">3</span> more consecutive wins</div>
-      <div style="display:flex;gap:8px;margin-top:8px"><button id="start" class="btn">Start SOS</button><button id="reset" class="btn">Reset</button></div>
-      <div style="font-size:12px;color:var(--muted);margin-top:8px">Developer bypass: add <!-- hide-game --> comment in file to skip lock (place the comment inside the HTML file).</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">AI mistake chance: <span id="mist">35%</span></div>
+      <div style="color:var(--muted)">Consecutive wins required: <strong id="winsNeeded">3</strong></div>
+      <div style="color:var(--muted)">You need <span id="winsRemaining">3</span> more consecutive wins</div>
+      <div style="display:flex;gap:8px;margin-top:8px"><button id="startSOS" class="btn">Start SOS Game</button><button id="resetSOS" class="btn">Reset</button></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">Developer shortcut: include the HTML comment <code>&lt;!-- hide-game --&gt;</code> anywhere in this file to bypass the lock.</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">AI mistake chance: <span id="mistakeVal">35%</span></div>
     </div>
 
-    <div id="sos" style="display:none;position:absolute;inset:6%;background:rgba(0,0,0,0.55);border-radius:10px;padding:8px;z-index:100;overflow:auto"></div>
+    <div id="sosUI" style="display:none;position:absolute;inset:6%;background:rgba(0,0,0,0.55);border-radius:10px;padding:8px;z-index:100;overflow:auto"></div>
 
-    <!-- Page 1 -->
+    <!-- Welcome -->
     <section id="welcome" class="page active">
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
-        <video id="vid" class="player" playsinline muted loop autoplay>
+        <video id="welcomeVideo" class="player" playsinline muted loop autoplay>
           <source src="video-9x16.mp4" type="video/mp4">
         </video>
         <div style="text-align:center"><strong>For Saraaa ❤️</strong><div style="font-size:13px;color:var(--muted)">Tap Games to start the surprise</div></div>
       </div>
     </section>
 
-    <!-- Page 2: Games -->
+    <!-- Games -->
     <section id="games" class="page">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Mini Jigsaw</div><div style="font-size:12px;color:var(--muted)">Upload 9:16 image</div></div>
-        <div style="display:flex;gap:8px;margin-top:8px"><input id="jf" type="file" accept="image/*"><select id="pc"><option>9</option><option>12</option><option selected>16</option></select><button id="startJ" class="btn">Start</button></div>
-        <div id="jboard" class="jboard" style="margin-top:8px;display:none"></div>
-        <div id="jmsg" style="font-size:13px;color:var(--muted);margin-top:6px"></div>
+        <div style="display:flex;gap:8px;margin-top:8px"><input id="jigsawFile" type="file" accept="image/*"><select id="piecesCount"><option>9</option><option>12</option><option selected>16</option></select><button id="startJigsaw" class="btn">Start</button></div>
+        <div id="jigsawBoard" class="jboard" style="margin-top:8px;display:none"></div>
+        <div id="jigsawMsg" style="font-size:13px;color:var(--muted);margin-top:6px"></div>
       </div>
 
       <div class="card" style="margin-top:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Heart Maze</div><div style="font-size:12px;color:var(--muted)">Swipe to reach the end</div></div>
-        <div id="mwrap" class="jboard" style="margin-top:8px"><canvas id="mcanvas"></canvas><div id="pdot" style="position:absolute;left:10%;top:76%;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;font-weight:700">❤</div></div>
-        <div style="display:flex;gap:8px;margin-top:8px"><button id="rmaze" class="btn">Reset</button><div id="mmsg" style="font-size:13px;color:var(--muted)"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Heart Maze</div><div style="font-size:12px;color:var(--muted)">Swipe/tap to guide the dot</div></div>
+        <div id="mazeWrap" class="jboard" style="margin-top:8px">
+          <canvas id="mazeCanvas"></canvas>
+          <div id="playerDot" style="position:absolute;left:12%;top:70%;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;font-weight:700;box-shadow:0 8px 26px rgba(255,107,154,0.18)">❤</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px"><button id="resetMaze" class="btn">Reset</button><div id="mazeMsg" style="font-size:13px;color:var(--muted)"></div></div>
       </div>
 
       <div class="card" style="margin-top:10px">
         <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Connect Hearts</div><div style="font-size:12px;color:var(--muted)">Dot-to-dot</div></div>
-        <canvas id="ccanvas" style="margin-top:8px;height:42vmin;background:#04122a;border-radius:10px"></canvas>
-        <div style="display:flex;gap:8px;margin-top:8px"><button id="rconnect" class="btn">Reset</button><div id="cmsg" style="font-size:13px;color:var(--muted)"></div></div>
+        <canvas id="connectCanvas" style="margin-top:8px;height:44vmin;background:#04122a;border-radius:10px"></canvas>
+        <div style="display:flex;gap:8px;margin-top:8px"><button id="resetConnect" class="btn">Reset</button><div id="connectMsg" style="font-size:13px;color:var(--muted)"></div></div>
       </div>
     </section>
 
-    <!-- Page 3: Timeline -->
+    <!-- Timeline -->
     <section id="timeline" class="page">
       <div style="font-weight:700">Love Timeline</div>
-      <div id="tlist" style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+      <div id="timelineList" style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:14px;height:14px;border-radius:50%;background:var(--accent);margin-top:8px"></div><div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:10px"><div style="font-weight:700">First Chat</div><div style="font-size:13px;color:var(--muted)">That day we started talking — unforgettable</div></div></div>
       </div>
     </section>
 
-    <!-- Page 4: Gallery -->
+    <!-- Gallery -->
     <section id="gallery" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Polaroid Gallery</div><div style="font-size:12px;color:var(--muted)">Tap to enlarge</div></div>
-      <div style="display:flex;gap:8px;margin-top:8px"><input id="gfiles" type="file" accept="image/*" multiple><button id="gclear" class="btn">Clear</button></div>
-      <div class="polgrid" id="polgrid" style="margin-top:8px"></div>
+      <div style="display:flex;gap:8px;margin-top:8px"><input id="galleryFiles" type="file" accept="image/*" multiple><button id="clearGallery" class="btn">Clear</button></div>
+      <div class="polgrid" id="polaroidGrid" style="margin-top:8px"></div>
     </section>
 
-    <!-- Page 5: Notepad -->
+    <!-- Notepad -->
     <section id="notepad" class="page">
       <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700">Notepad</div><div style="font-size:12px;color:var(--muted)">Download .txt (no trimming)</div></div>
-      <textarea id="note" placeholder="Write your message..."></textarea>
-      <div style="display:flex;gap:8px"><input id="fname" placeholder="note.txt" style="flex:1;padding:8px;border-radius:8px;background:#021426;border:1px solid rgba(255,255,255,0.02);color:#fff"><button id="dlnote" class="btn">Download .txt</button></div>
+      <textarea id="noteArea" placeholder="Write your message..."></textarea>
+      <div style="display:flex;gap:8px"><input id="fileName" placeholder="note.txt" style="flex:1;padding:8px;border-radius:8px;background:#021426;border:1px solid rgba(255,255,255,0.02);color:#fff"><button id="downloadNote" class="btn">Download .txt</button></div>
     </section>
+
   </main>
 
   <footer>Made with ♥ for Saraaa — Mobile friendly • 9:16</footer>
 </div>
 
 <script>
-/* ---------- Utilities & state ---------- */
-const CHANCE = 0.35;
-const WINS_REQ = 3;
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-function log(msg){ const box = document.getElementById('logLines'); const el = document.createElement('div'); el.className='dbg'; el.textContent = (new Date()).toLocaleTimeString() + ' • ' + msg; box.prepend(el); while(box.children.length>30) box.removeChild(box.lastChild); console.log('[SARA]',msg); }
-function showPage(id){ $$('.page').forEach(p=>p.classList.remove('active')); const p = document.getElementById(id); if(p) p.classList.add('active'); }
-document.getElementById('reqText').innerText = WINS_REQ;
-document.getElementById('req').innerText = WINS_REQ;
+/* ========= Utilities & Safe DOM helpers ========= */
+const CHANCE_TO_MISTAKE = 0.35;
+const WINS_REQUIRED = 3;
 
-/* detect hide-game comment */
-function hasHideComment(){
+const $ = sel => document.querySelector(sel);
+const getEl = id => {
+  const el = document.getElementById(id);
+  if(!el) console.warn('[SARA] missing element #' + id);
+  return el;
+};
+const safeSetText = (id, text) => {
+  const el = getEl(id);
+  if(el) el.innerText = text;
+  else console.warn('[SARA] safeSetText failed for #' + id);
+};
+function log(msg){
+  try{
+    const box = getEl('logLines');
+    if(box){
+      const d = document.createElement('div'); d.className='dbg'; d.textContent = (new Date()).toLocaleTimeString() + ' • ' + msg;
+      box.prepend(d);
+      while(box.children.length > 40) box.removeChild(box.lastChild);
+    }
+    console.log('[SARA]', msg);
+  }catch(e){ console.error(e); }
+}
+
+/* Keep IDs consistent */
+safeSetText('winsNeeded', WINS_REQUIRED);
+safeSetText('mistakeVal', Math.round(CHANCE_TO_MISTAKE*100) + '%');
+safeSetText('statusReq', WINS_REQUIRED);
+
+/* Developer bypass detection (scan comments) */
+function hasHideGameComment(){
   try{
     const walker = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT, null, false);
-    let n;
-    while(n = walker.nextNode()){ if(n.nodeValue && n.nodeValue.includes('hide-game')) return true; }
-  }catch(e){ return false; } return false;
-}
-const DEV = hasHideComment();
-if(DEV){ $('#unlock').classList.add('hide'); $('#status').textContent = 'BYPASS — UNLOCKED'; log('Developer bypass active'); } else log('No developer bypass — site locked');
-
-/* nav */
-$('#nav').addEventListener('click', e=>{ const b = e.target.closest('button[data-page]'); if(!b) return; const id=b.dataset.page; const prot=['games','timeline','gallery','notepad']; if(!DEV && !$('#unlock').classList.contains('hide') && prot.includes(id)){ alert('Please unlock the site first by winning SOS.'); log('Blocked navigation to '+id); return; } showPage(id); log('Navigated to '+id); });
-
-let wins=0; let need=WINS_REQ;
-function updateWins(){ document.getElementById('wins').innerText = wins; document.getElementById('need').innerText = Math.max(0,WINS_REQ - wins); }
-
-/* ---------- SOS (simple, reliable AI) ---------- */
-function buildSOS(){
-  const container = $('#sos');
-  container.innerHTML=''; container.style.display='block';
-  const title = document.createElement('div'); title.style.fontWeight='700'; title.textContent='SOS — Unlock Game';
-  const info = document.createElement('div'); info.style.color='#9aa6b2'; info.style.fontSize='12px'; info.textContent = 'Pick S or O then tap a cell.';
-  container.appendChild(title); container.appendChild(info);
-
-  const top = document.createElement('div'); top.style.display='flex'; top.style.gap='6px';
-  const sBtn = document.createElement('button'); sBtn.className='btn'; sBtn.textContent='S';
-  const oBtn = document.createElement('button'); oBtn.className='btn'; oBtn.textContent='O';
-  const st = document.createElement('div'); st.style.flex='1'; st.style.textAlign='center'; st.style.color='#ffd1e0';
-  top.appendChild(sBtn); top.appendChild(oBtn); top.appendChild(st);
-  container.appendChild(top);
-
-  const size=5; const grid=document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns=`repeat(${size},1fr)`; grid.style.gap='6px'; grid.style.marginTop='8px';
-  container.appendChild(grid);
-  const cells=[];
-  for(let r=0;r<size;r++){ for(let c=0;c<size;c++){ const btn=document.createElement('button'); btn.className='btn'; btn.style.fontSize='16px'; btn.dataset.r=r; btn.dataset.c=c; grid.appendChild(btn); cells.push(btn); } }
-  const ctrl = document.createElement('div'); ctrl.style.display='flex'; ctrl.style.justifyContent='space-between'; ctrl.style.marginTop='8px';
-  const restart = document.createElement('button'); restart.className='btn'; restart.textContent='Restart';
-  const close = document.createElement('button'); close.className='btn'; close.textContent='Close';
-  ctrl.appendChild(restart); ctrl.appendChild(close); container.appendChild(ctrl);
-
-  let board = Array.from({length:size},()=>Array(size).fill(''));
-  let player='S'; let turn='player'; let score={p:0,a:0};
-
-  function countSOS(bd){
-    let total=0; const dirs=[[0,1],[1,0],[1,1],[1,-1]];
-    for(let r=0;r<size;r++) for(let c=0;c<size;c++) for(const [dr,dc] of dirs){ const r2=r+dr,c2=c+dc,r3=r+2*dr,c3=c+2*dc; if(r3<0||c3<0||r3>=size||c3>=size) continue; if(bd[r][c]==='S'&&bd[r2][c2]==='O'&&bd[r3][c3]==='S') total++; }
-    return total;
-  }
-  function render(){
-    cells.forEach(b=>{ const r=+b.dataset.r,c=+b.dataset.c; b.innerText = board[r][c]||''; b.disabled = !!board[r][c]; });
-    st.innerText = `Turn: ${turn.toUpperCase()} • You:${score.p} AI:${score.a}`;
-  }
-  function avail(bd){ const list=[]; for(let r=0;r<size;r++) for(let c=0;c<size;c++) if(!bd[r][c]){ list.push({r,c,letter:'S'}); list.push({r,c,letter:'O'}); } return list; }
-
-  // simple AI: evaluate immediate SOS count, add randomization controlled by CHANCE
-  function aiPick(){
-    const moves = avail(board); if(!moves.length) return null;
-    let best=null,bestVal=-Infinity;
-    for(const m of moves){
-      const nb = board.map(r=>r.slice()); nb[m.r][m.c]=m.letter;
-      const val = countSOS(nb);
-      const error = Math.random()<CHANCE ? (Math.random()*2-1) : 0;
-      const scoreVal = val + error;
-      if(scoreVal > bestVal){ bestVal = scoreVal; best = m; }
+    let node;
+    while(node = walker.nextNode()){
+      if(node.nodeValue && node.nodeValue.includes('hide-game')) return true;
     }
-    return best;
-  }
-
-  sBtn.onclick = ()=>{ player='S'; sBtn.style.background='linear-gradient(90deg,#ff9fbf,#ff6b9a)'; oBtn.style.background=''; log('Player chose S'); };
-  oBtn.onclick = ()=>{ player='O'; oBtn.style.background='linear-gradient(90deg,#ff9fbf,#ff6b9a)'; sBtn.style.background=''; log('Player chose O'); };
-
-  grid.addEventListener('click', e=>{
-    const b = e.target.closest('button'); if(!b) return;
-    const r=+b.dataset.r,c=+b.dataset.c; if(board[r][c]||turn!=='player') return;
-    const before = countSOS(board);
-    board[r][c] = player;
-    const after = countSOS(board); score.p += Math.max(0, after-before);
-    turn='ai'; render();
-    if(board.flat().every(x=>x)) return finish();
-    setTimeout(aiMove, 300);
-  });
-
-  async function aiMove(){
-    const mv = aiPick(); if(!mv) return finish();
-    await new Promise(res=>setTimeout(res, 300 + Math.random()*300));
-    const before = countSOS(board);
-    board[mv.r][mv.c] = mv.letter;
-    const after = countSOS(board); score.a += Math.max(0, after-before);
-    turn='player'; render();
-    if(board.flat().every(x=>x)) return finish();
-  }
-
-  function finish(){
-    let res = 'draw'; if(score.p > score.a) res='player'; else if(score.a > score.p) res='ai';
-    log('SOS result: ' + res + ` (You:${score.p} AI:${score.a})`);
-    if(res==='player'){ wins++; updateWins(); if(wins>=WINS_REQ){ $('#unlock').classList.add('hide'); $('#status').textContent = 'UNLOCKED'; alert('Congrats — site unlocked!'); } else alert('You won! Consecutive wins: ' + wins); }
-    else { wins=0; updateWins(); alert(res==='draw'?'Draw':'AI won — try again'); }
-    container.style.display='none'; $('#sos').style.display='none'; $('#unlock').classList.remove('hide');
-  }
-
-  restart.onclick = ()=>{ board = Array.from({length:size},()=>Array(size).fill('')); score={p:0,a:0}; turn='player'; render(); log('SOS restarted'); };
-  close.onclick = ()=>{ container.style.display='none'; $('#sos').style.display='none'; $('#unlock').classList.remove('hide'); };
-
-  render();
-  log('SOS UI built');
+  }catch(e){ return false; }
+  return false;
+}
+const DEV_BYPASS = hasHideGameComment();
+if(DEV_BYPASS){
+  const overlay = getEl('unlockOverlay');
+  if(overlay) overlay.classList.add('hide');
+  const statusBox = getEl('statusBox');
+  if(statusBox) statusBox.innerText = 'BYPASS ACTIVE — UNLOCKED';
+  log('Developer bypass detected');
+} else {
+  log('No developer bypass detected');
 }
 
-/* wire SOS buttons */
-$('#start').addEventListener('click', ()=>{
-  if(DEV){ $('#unlock').classList.add('hide'); $('#status').textContent = 'BYPASS — UNLOCKED'; log('Start pressed: bypass active'); return; }
-  $('#unlock').classList.add('hide');
-  $('#sos').style.display='block';
-  try{ buildSOS(); }catch(e){ log('SOS build error: ' + e.message); console.error(e); }
-});
-$('#reset').addEventListener('click', ()=>{ wins=0; updateWins(); log('Progress reset'); alert('Progress reset'); });
-
-/* ---------- Jigsaw (drag + snap) ---------- */
-(function(){
-  const file = $('#jf'), startBtn = $('#startJ'), board = $('#jboard'), msg = $('#jmsg');
-  let pieces=[], img=new Image(), cols=4, rows=4;
-  file.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; img=new Image(); img.src=URL.createObjectURL(f); });
-  startBtn.addEventListener('click', ()=>{
-    const f = file.files[0]; if(!f){ msg.innerText='Choose an image first'; return; }
-    const val = +$('#pc').value; if(val<=9){ cols=3; rows=Math.ceil(val/3); } else if(val<=12){ cols=4; rows=3; } else { cols=4; rows=4; }
-    img = new Image(); img.onload = makePieces; img.src = URL.createObjectURL(f);
-  });
-  function makePieces(){
-    board.innerHTML=''; pieces=[]; board.style.display='block'; msg.innerText='';
-    const W = board.clientWidth, H = board.clientHeight; const pW=Math.floor(W/cols), pH=Math.floor(H/rows);
-    const scale = Math.max(W/img.width, H/img.height); const drawW=img.width*scale, drawH=img.height*scale; const offX=(W-drawW)/2, offY=(H-drawH)/2;
-    for(let r=0;r<rows;r++){ for(let c=0;c<cols;c++){
-      const el = document.createElement('div'); el.className='piece'; el.style.width=pW+'px'; el.style.height=pH+'px';
-      const posX = c*pW, posY = r*pH;
-      el.style.backgroundImage = `url(${img.src})`; el.style.backgroundSize = `${drawW}px ${drawH}px`; el.style.backgroundPosition = `${offX - posX}px ${offY - posY}px`;
-      el.style.left = (Math.random()*(W-pW)) + 'px'; el.style.top = (Math.random()*(H-pH)) + 'px';
-      el.dataset.cx = posX; el.dataset.cy = posY; el.dataset.snap = Math.max(12, Math.min(pW,pH)/3);
-      board.appendChild(el); makeDrag(el); pieces.push(el);
-    } }
-    msg.innerText='Drag pieces to assemble. They snap into place.';
-    log('Jigsaw pieces created: ' + pieces.length);
+/* ======== Navigation ======== */
+document.getElementById('nav').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-page]');
+  if(!btn) return;
+  const pageId = btn.dataset.page;
+  const protectedPages = ['games','timeline','gallery','notepad'];
+  if(!DEV_BYPASS && !getEl('unlockOverlay').classList.contains('hide') && protectedPages.includes(pageId)){
+    alert('Please unlock the site first by winning SOS 3 times in a row.');
+    log('Blocked navigation to ' + pageId);
+    return;
   }
-  function makeDrag(el){
-    let down=false, sx=0, sy=0, ox=0, oy=0;
-    function start(e){ down=true; sx=e.clientX; sy=e.clientY; ox=parseFloat(el.style.left)||0; oy=parseFloat(el.style.top)||0; try{el.setPointerCapture&&el.setPointerCapture(e.pointerId)}catch{} el.style.transition='none'; }
-    function move(e){ if(!down) return; const dx=e.clientX - sx, dy=e.clientY - sy; el.style.left = (ox+dx)+'px'; el.style.top = (oy+dy)+'px'; }
-    function end(e){ if(!down) return; down=false; try{el.releasePointerCapture&&el.releasePointerCapture(e.pointerId)}catch{} el.style.transition='transform .12s,left .12s,top .12s'; const left=parseFloat(el.style.left)||0, top=parseFloat(el.style.top)||0; const cl=+el.dataset.cx, ct=+el.dataset.cy; const d=Math.hypot(left-cl, top-ct); if(d <= +el.dataset.snap){ el.style.left = cl+'px'; el.style.top = ct+'px'; el.style.transform='scale(1.02)'; setTimeout(()=>el.style.transform='scale(1)',120); } checkComplete(); }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page = getEl(pageId);
+  if(page) page.classList.add('active');
+  log('Navigated to ' + pageId);
+});
+
+/* ======== Wins state & safe UI updates ======== */
+let consecutiveWins = 0;
+let winsRemaining = WINS_REQUIRED;
+function updateWinsUI(){
+  safeSetText('statusWins', consecutiveWins);
+  safeSetText('winsRemaining', Math.max(0, WINS_REQUIRED - consecutiveWins));
+}
+updateWinsUI();
+
+/* ======== SOS game (builds into #sosUI) ======== */
+function createSOS(){
+  try{
+    const container = getEl('sosUI');
+    if(!container) { log('createSOS: sosUI not found'); return; }
+    container.innerHTML = '';
+    container.style.display = 'block';
+
+    const title = document.createElement('div'); title.style.fontWeight='700'; title.textContent='SOS — Unlock Game';
+    const info = document.createElement('div'); info.style.color='#9aa6b2'; info.style.fontSize='12px'; info.textContent='Pick S or O then tap a cell.';
+    container.appendChild(title); container.appendChild(info);
+
+    const top = document.createElement('div'); top.style.display='flex'; top.style.gap='6px';
+    const sBtn = document.createElement('button'); sBtn.className='btn'; sBtn.textContent='S';
+    const oBtn = document.createElement('button'); oBtn.className='btn'; oBtn.textContent='O';
+    const status = document.createElement('div'); status.style.flex='1'; status.style.textAlign='center'; status.style.color='#ffd1e0';
+    top.appendChild(sBtn); top.appendChild(oBtn); top.appendChild(status);
+    container.appendChild(top);
+
+    const SIZE = 5;
+    const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns = `repeat(${SIZE},1fr)`; grid.style.gap='6px'; grid.style.marginTop='8px';
+    container.appendChild(grid);
+
+    const cells = [];
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE;c++){
+        const btn = document.createElement('button'); btn.className='btn'; btn.style.fontSize='16px';
+        btn.dataset.r = r; btn.dataset.c = c;
+        grid.appendChild(btn); cells.push(btn);
+      }
+    }
+
+    const ctrl = document.createElement('div'); ctrl.style.display='flex'; ctrl.style.justifyContent='space-between'; ctrl.style.marginTop='8px';
+    const restart = document.createElement('button'); restart.className='btn'; restart.textContent='Restart';
+    const close = document.createElement('button'); close.className='btn'; close.textContent='Close';
+    ctrl.appendChild(restart); ctrl.appendChild(close); container.appendChild(ctrl);
+
+    let board = Array.from({length:SIZE}, ()=>Array(SIZE).fill(''));
+    let playerLetter = 'S'; let turn = 'player'; let scores = {player:0,ai:0};
+
+    function totalSOS(bd){
+      let total=0; const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+      for(let r=0;r<SIZE;r++){
+        for(let c=0;c<SIZE;c++){
+          for(const [dr,dc] of dirs){
+            const r2=r+dr, c2=c+dc, r3=r+dr*2, c3=c+dc*2;
+            if(r3<0||c3<0||r3>=SIZE||c3>=SIZE) continue;
+            if(bd[r][c]==='S' && bd[r2][c2]==='O' && bd[r3][c3]==='S') total++;
+          }
+        }
+      }
+      return total;
+    }
+
+    function render(){
+      cells.forEach(btn=>{
+        const r = +btn.dataset.r, c = +btn.dataset.c;
+        btn.innerText = board[r][c] || '';
+        btn.disabled = !!board[r][c];
+      });
+      status.innerText = `Turn:${turn.toUpperCase()} You:${scores.player} AI:${scores.ai}`;
+    }
+
+    function availableMoves(bd){
+      const list = [];
+      for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) if(!bd[r][c]){ list.push({r,c,letter:'S'}); list.push({r,c,letter:'O'}); }
+      return list;
+    }
+
+    function aiChoose(){
+      const moves = availableMoves(board);
+      if(!moves.length) return null;
+      let best=null, bestVal=-Infinity;
+      for(const m of moves){
+        const nb = board.map(row => row.slice()); nb[m.r][m.c] = m.letter;
+        const v = totalSOS(nb);
+        const rnd = Math.random() < CHANCE_TO_MISTAKE ? (Math.random()*2 - 1) : 0;
+        const scoreVal = v + rnd;
+        if(scoreVal > bestVal){ bestVal = scoreVal; best = m; }
+      }
+      return best;
+    }
+
+    sBtn.onclick = ()=>{ playerLetter='S'; sBtn.style.background='linear-gradient(90deg,#ff9fbf,#ff6b9a)'; oBtn.style.background=''; log('Selected S'); };
+    oBtn.onclick = ()=>{ playerLetter='O'; oBtn.style.background='linear-gradient(90deg,#ff9fbf,#ff6b9a)'; sBtn.style.background=''; log('Selected O'); };
+
+    grid.addEventListener('click', e=>{
+      const b = e.target.closest('button'); if(!b) return;
+      const r = +b.dataset.r, c = +b.dataset.c;
+      if(board[r][c] || turn !== 'player') return;
+      const before = totalSOS(board);
+      board[r][c] = playerLetter;
+      const after = totalSOS(board);
+      scores.player += Math.max(0, after - before);
+      turn = 'ai'; render();
+      if(board.flat().every(x=>x)) return endMatch();
+      setTimeout(aiMove, 300);
+    });
+
+    async function aiMove(){
+      const mv = aiChoose();
+      if(!mv) return endMatch();
+      await new Promise(res => setTimeout(res, 300 + Math.random()*300));
+      const before = totalSOS(board);
+      board[mv.r][mv.c] = mv.letter;
+      const after = totalSOS(board);
+      scores.ai += Math.max(0, after - before);
+      turn = 'player'; render();
+      if(board.flat().every(x=>x)) return endMatch();
+    }
+
+    function endMatch(){
+      let res = 'draw';
+      if(scores.player > scores.ai) res='player';
+      else if(scores.ai > scores.player) res='ai';
+      log('Match ended: ' + res + ` (You:${scores.player} AI:${scores.ai})`);
+      if(res === 'player'){
+        consecutiveWins++;
+        winsRemaining = Math.max(0, WINS_REQUIRED - consecutiveWins);
+        updateWinsUI();
+        if(consecutiveWins >= WINS_REQUIRED){
+          getEl('unlockOverlay') && getEl('unlockOverlay').classList.add('hide');
+          const sb = getEl('statusBox'); if(sb) sb.innerText = 'UNLOCKED';
+          log('Unlocked!');
+          setTimeout(()=>alert('Congrats — site unlocked! ❤️'), 60);
+        } else {
+          setTimeout(()=>alert('You won! Consecutive wins: ' + consecutiveWins), 60);
+        }
+      } else {
+        consecutiveWins = 0;
+        winsRemaining = WINS_REQUIRED;
+        updateWinsUI();
+        setTimeout(()=>alert(res === 'draw' ? 'Draw' : 'AI won — try again'), 60);
+      }
+      container.style.display = 'none';
+      getEl('sosUI') && (getEl('sosUI').style.display = 'none');
+      getEl('unlockOverlay') && getEl('unlockOverlay').classList.remove('hide');
+    }
+
+    restart.onclick = ()=>{ board = Array.from({length:SIZE}, ()=>Array(SIZE).fill('')); scores = {player:0,ai:0}; turn='player'; render(); log('SOS restarted'); };
+    close.onclick = ()=>{ container.style.display='none'; getEl('sosUI') && (getEl('sosUI').style.display='none'); getEl('unlockOverlay') && getEl('unlockOverlay').classList.remove('hide'); };
+
+    render();
+    log('SOS UI created');
+  }catch(err){
+    log('createSOS error: ' + (err && err.message ? err.message : err));
+    console.error(err);
+  }
+}
+
+/* Start/reset SOS wiring */
+getEl('startSOS') && getEl('startSOS').addEventListener('click', ()=>{
+  if(DEV_BYPASS){ getEl('unlockOverlay') && getEl('unlockOverlay').classList.add('hide'); getEl('statusBox') && (getEl('statusBox').innerText='BYPASS ACTIVE — UNLOCKED'); log('StartSOS clicked — bypass'); return; }
+  getEl('unlockOverlay') && getEl('unlockOverlay').classList.add('hide');
+  getEl('sosUI') && (getEl('sosUI').style.display = 'block');
+  try{ createSOS(); }catch(e){ log('Error creating SOS: ' + (e.message||e)); }
+});
+getEl('resetSOS') && getEl('resetSOS').addEventListener('click', ()=>{ consecutiveWins = 0; winsRemaining = WINS_REQUIRED; updateWinsUI(); log('SOS progress reset'); alert('Progress reset'); });
+
+/* ========= Jigsaw (drag + snap) ========= */
+(function(){
+  const fileIn = getEl('jigsawFile'), piecesCount = getEl('piecesCount'), startBtn = getEl('startJigsaw'), board = getEl('jigsawBoard'), msg = getEl('jigsawMsg');
+  if(!fileIn || !startBtn || !board) { log('Jigsaw init missing elements'); return; }
+  let pieces = [], img = new Image(), cols=4, rows=4;
+  fileIn.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; img = new Image(); img.src = URL.createObjectURL(f); });
+  startBtn.addEventListener('click', ()=>{
+    const f = fileIn.files[0]; if(!f){ if(msg) msg.innerText='Please choose an image.'; return; }
+    const val = +piecesCount.value; if(val<=9){ cols=3; rows=Math.ceil(val/3); } else if(val<=12){ cols=4; rows=3; } else { cols=4; rows=4; }
+    img = new Image(); img.onload = createPieces; img.src = URL.createObjectURL(f);
+  });
+  function createPieces(){
+    board.innerHTML=''; pieces=[]; board.style.display='block'; if(msg) msg.innerText='';
+    const W = board.clientWidth, H = board.clientHeight; const pW=Math.floor(W/cols), pH=Math.floor(H/rows);
+    const scale = Math.max(W/img.width, H/img.height); const drawW = img.width * scale, drawH = img.height * scale;
+    const offX = (W - drawW)/2, offY = (H - drawH)/2;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const el = document.createElement('div'); el.className='piece'; el.style.width = pW + 'px'; el.style.height = pH + 'px';
+        const posX = c*pW, posY = r*pH;
+        el.style.backgroundImage = `url(${img.src})`;
+        el.style.backgroundSize = `${drawW}px ${drawH}px`;
+        el.style.backgroundPosition = `${offX - posX}px ${offY - posY}px`;
+        el.style.left = (Math.random()*(W-pW)) + 'px';
+        el.style.top = (Math.random()*(H-pH)) + 'px';
+        el.dataset.cx = posX; el.dataset.cy = posY; el.dataset.snap = Math.max(12, Math.min(pW,pH)/3);
+        board.appendChild(el); makeDraggable(el); pieces.push(el);
+      }
+    }
+    if(msg) msg.innerText = 'Drag pieces to assemble. They snap when close.';
+    log('Jigsaw created (' + pieces.length + ' pieces)');
+  }
+  function makeDraggable(el){
+    let dragging=false, sx=0, sy=0, ox=0, oy=0;
+    function start(e){ dragging=true; sx=e.clientX; sy=e.clientY; ox=parseFloat(el.style.left)||0; oy=parseFloat(el.style.top)||0; try{ el.setPointerCapture && el.setPointerCapture(e.pointerId); }catch{} el.style.transition='none'; }
+    function move(e){ if(!dragging) return; const dx=e.clientX-sx, dy=e.clientY-sy; el.style.left = (ox+dx) + 'px'; el.style.top = (oy+dy) + 'px'; }
+    function end(e){ if(!dragging) return; dragging=false; try{ el.releasePointerCapture && el.releasePointerCapture(e.pointerId); }catch{} el.style.transition='transform .12s,left .12s,top .12s'; const left=parseFloat(el.style.left)||0, top=parseFloat(el.style.top)||0; const cx=+el.dataset.cx, cy=+el.dataset.cy; const dist=Math.hypot(left-cx, top-cy); if(dist <= +el.dataset.snap){ el.style.left = cx + 'px'; el.style.top = cy + 'px'; el.style.transform='scale(1.02)'; setTimeout(()=>el.style.transform='scale(1)',120); } checkComplete(); }
     el.addEventListener('pointerdown', start); window.addEventListener('pointermove', move); window.addEventListener('pointerup', end);
-    // mouse fallback
     el.addEventListener('mousedown', start); window.addEventListener('mousemove', move); window.addEventListener('mouseup', end);
   }
-  function checkComplete(){ if(pieces.length===0) return; const ok = pieces.every(p=>{ return Math.round(parseFloat(p.style.left)||0) === +p.dataset.cx && Math.round(parseFloat(p.style.top)||0) === +p.dataset.cy; }); if(ok){ $('#jmsg').innerText='You solved it! ❤️'; pieces.forEach(p=>p.style.boxShadow='0 12px 28px rgba(255,107,154,0.28)'); log('Jigsaw completed'); } }
+  function checkComplete(){ if(pieces.length===0) return; const ok = pieces.every(p=> Math.round(parseFloat(p.style.left)||0) === +p.dataset.cx && Math.round(parseFloat(p.style.top)||0) === +p.dataset.cy ); if(ok){ if(getEl('jigsawMsg')) getEl('jigsawMsg').innerText = 'You solved it! ❤️'; pieces.forEach(p=>p.style.boxShadow='0 12px 28px rgba(255,107,154,0.28)'); log('Jigsaw solved'); } }
 })();
 
-/* ---------- Heart Maze ---------- */
+/* ========= Heart Maze ========= */
 (function(){
-  const canvas = $('#mcanvas'), wrap = $('#mwrap'), dot = $('#pdot'), msg = $('#mmsg');
-  let W,H,path=[];
-  function resize(){ canvas.width = wrap.clientWidth; canvas.height = wrap.clientHeight; W=canvas.width; H=canvas.height; buildPath(); drawPath(); resetDot(); }
+  const canvas = getEl('mazeCanvas'), wrap = getEl('mazeWrap'), dot = getEl('playerDot'), msg = getEl('mazeMsg');
+  if(!canvas || !wrap || !dot){ log('Maze elements missing'); return; }
+  let W=0,H=0,path=[];
+  function resize(){ canvas.width = wrap.clientWidth; canvas.height = wrap.clientHeight; W = canvas.width; H = canvas.height; buildPath(); draw(); resetDot(); }
   function buildPath(){ path=[]; const cx=W/2, cy=H/2; const steps=140; for(let i=0;i<steps;i++){ const t=i/steps*Math.PI*2; const x = cx + Math.sin(t)*(Math.cos(t)>=0?0.9:1.1)*(Math.min(W,H)/6); const y = cy - Math.cos(t)*(Math.min(W,H)/4); path.push({x,y}); } }
-  function drawPath(){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,W,H); ctx.lineWidth = Math.max(8,Math.min(W,H)/18); ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.beginPath(); path.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.stroke(); }
-  let idx=0;
-  function resetDot(){ idx=0; updateDot(); msg.innerText=''; }
-  function updateDot(){ const rect = wrap.getBoundingClientRect(); const p = path[idx]||path[0]; if(!p) return; const left = p.x - rect.left - 14, top = p.y - rect.top - 14; dot.style.left = Math.max(4,Math.min(rect.width-32,left))+'px'; dot.style.top = Math.max(4,Math.min(rect.height-32,top))+'px'; }
-  function gotoPoint(e){ const rect = canvas.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top; let best=0,bd=1e9; for(let i=0;i<path.length;i++){ const d = Math.hypot(path[i].x-x,path[i].y-y); if(d<bd){ bd=d; best=i; } } idx = best; updateDot(); if(idx >= path.length-6){ msg.innerText = 'You found the way to my heart ❤️'; log('Maze complete'); } }
-  canvas.addEventListener('pointerdown', e=>{ canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); gotoPoint(e); });
-  canvas.addEventListener('pointermove', e=>{ if(e.buttons) gotoPoint(e); });
-  $('#rmaze').addEventListener('click', ()=> resetDot());
+  function draw(){ const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,W,H); ctx.lineWidth = Math.max(8,Math.min(W,H)/18); ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.beginPath(); path.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.stroke(); }
+  let idx = 0;
+  function resetDot(){ idx = 0; updateDot(); if(msg) msg.innerText=''; }
+  function updateDot(){ const rect = wrap.getBoundingClientRect(); const p = path[idx] || path[0]; if(!p) return; const left = p.x - rect.left - 14, top = p.y - rect.top - 14; dot.style.left = Math.max(4, Math.min(rect.width-32, left)) + 'px'; dot.style.top = Math.max(4, Math.min(rect.height-32, top)) + 'px'; }
+  function goto(e){ const rect = canvas.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top; let best=0,bd=1e9; for(let i=0;i<path.length;i++){ const d = Math.hypot(path[i].x-x, path[i].y-y); if(d < bd){ bd=d; best=i; } } idx = best; updateDot(); if(idx >= path.length - 6){ if(msg) msg.innerText='You found the way to my heart ❤️'; log('Maze complete'); } }
+  canvas.addEventListener('pointerdown', e=>{ canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); goto(e); });
+  canvas.addEventListener('pointermove', e=>{ if(e.buttons) goto(e); });
+  getEl('resetMaze') && getEl('resetMaze').addEventListener('click', ()=> resetDot());
   window.addEventListener('resize', ()=> setTimeout(resize,120));
   setTimeout(resize,200);
 })();
 
-/* ---------- Connect Hearts ---------- */
+/* ========= Connect Hearts ========= */
 (function(){
-  const canvas = $('#ccanvas'), ctx = canvas.getContext('2d'), msg = $('#cmsg');
-  let W,H,dots=[],lines=[],current=0;
+  const canvas = getEl('connectCanvas'), msg = getEl('connectMsg');
+  if(!canvas){ log('Connect canvas missing'); return; }
+  const ctx = canvas.getContext('2d');
+  let W=0,H=0,dots=[],lines=[],current=0;
   function resize(){ canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; W=canvas.width; H=canvas.height; initDots(); draw(); }
-  function initDots(){ dots=[]; const center={x:W/2,y:H/2}; const r=Math.min(W,H)/3; for(let i=0;i<14;i++){ const t=Math.PI*(i/13); const x=center.x + r*0.9*Math.sin(t)*Math.sin(t)*Math.cos(t); const y=center.y - r*(0.8*Math.cos(t)-0.2*Math.cos(2*t)); dots.push({x,y,idx:i+1}); } current=1; lines=[]; msg.innerText='Connect dot 1 → 2 → 3 ...'; }
-  function draw(){ ctx.clearRect(0,0,W,H); ctx.lineWidth=4; ctx.strokeStyle='rgba(255,107,154,0.95)'; ctx.beginPath(); for(const l of lines){ ctx.moveTo(l[0].x,l[0].y); ctx.lineTo(l[1].x,l[1].y); } ctx.stroke(); dots.forEach(d=>{ ctx.beginPath(); ctx.fillStyle = (d.idx<=current? '#ff9fbf' : '#fff'); ctx.arc(d.x,d.y,10,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#000'; ctx.font='10px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(d.idx, d.x, d.y); }); }
-  function nearest(x,y){ let best=null,dist=1e9; for(const d of dots){ const dd=Math.hypot(d.x-x,d.y-y); if(dd<dist){ dist=dd; best=d; } } return dist<28?best:null; }
-  let start=null;
-  canvas.addEventListener('pointerdown', e=>{ const rect=canvas.getBoundingClientRect(); const nd=nearest(e.clientX-rect.left,e.clientY-rect.top); if(nd && nd.idx===current) start=nd; });
-  canvas.addEventListener('pointerup', e=>{ const rect=canvas.getBoundingClientRect(); const nd=nearest(e.clientX-rect.left,e.clientY-rect.top); if(start && nd && nd.idx===current+1){ lines.push([start,nd]); current++; if(current>=dots.length) msg.innerText='Lovely! The heart appears ❤️'; else msg.innerText=`Good — connect ${current} → ${current+1}`; } start=null; draw(); });
-  $('#rconnect').addEventListener('click', ()=>{ initDots(); draw(); });
-  window.addEventListener('resize', ()=> setTimeout(resize,120)); setTimeout(resize,200);
+  function initDots(){ dots=[]; const center={x:W/2,y:H/2}; const r=Math.min(W,H)/3; for(let i=0;i<14;i++){ const t=Math.PI*(i/13); const x = center.x + r*0.9*Math.sin(t)*Math.sin(t)*Math.cos(t); const y = center.y - r*(0.8*Math.cos(t)-0.2*Math.cos(2*t)); dots.push({x,y,idx:i+1}); } current=1; lines=[]; if(msg) msg.innerText='Connect dot 1 → 2 → 3 ...'; }
+  function draw(){ ctx.clearRect(0,0,W,H); ctx.lineWidth=4; ctx.strokeStyle='rgba(255,107,154,0.95)'; ctx.beginPath(); for(const l of lines){ ctx.moveTo(l[0].x,l[0].y); ctx.lineTo(l[1].x,l[1].y); } ctx.stroke(); for(const d of dots){ ctx.beginPath(); ctx.fillStyle = (d.idx <= current ? '#ff9fbf' : '#fff'); ctx.arc(d.x,d.y,10,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#000'; ctx.font='10px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(String(d.idx), d.x, d.y); } }
+  function nearest(x,y){ let best=null,dist=1e9; for(const d of dots){ const dd=Math.hypot(d.x-x,d.y-y); if(dd < dist){ dist = dd; best = d; } } return dist < 28 ? best : null; }
+  let startDot = null;
+  canvas.addEventListener('pointerdown', e=>{ const rect=canvas.getBoundingClientRect(); const nd = nearest(e.clientX-rect.left, e.clientY-rect.top); if(nd && nd.idx===current) startDot = nd; });
+  canvas.addEventListener('pointerup', e=>{ const rect=canvas.getBoundingClientRect(); const nd = nearest(e.clientX-rect.left, e.clientY-rect.top); if(startDot && nd && nd.idx === current + 1){ lines.push([startDot, nd]); current++; if(current >= dots.length){ if(msg) msg.innerText='Lovely! The heart appears ❤️' } else { if(msg) msg.innerText = `Good — connect ${current} → ${current+1}` } } startDot = null; draw(); });
+  getEl('resetConnect') && getEl('resetConnect').addEventListener('click', ()=>{ initDots(); draw(); });
+  window.addEventListener('resize', ()=> setTimeout(resize,120));
+  setTimeout(resize,200);
 })();
 
-/* ---------- Gallery ---------- */
+/* ========= Gallery ========= */
 (function(){
-  const input = $('#gfiles'), grid = $('#polgrid'), clear = $('#gclear');
-  input.addEventListener('change', e=>{ const files = Array.from(e.target.files||[]); for(const f of files){ const url = URL.createObjectURL(f); addPol(url); } });
-  function addPol(src){ const p=document.createElement('div'); p.className='pol'; const img=document.createElement('img'); img.src=src; p.appendChild(img); p.style.transform=`rotate(${(Math.random()*12-6).toFixed(2)}deg)`; p.addEventListener('click', ()=>{ if(p.classList.contains('big')){ p.classList.remove('big'); p.style.transform=`rotate(${(Math.random()*12-6).toFixed(2)}deg)`; } else { p.classList.add('big'); p.style.transform='none'; } }); grid.appendChild(p); }
-  clear.addEventListener('click', ()=>{ grid.innerHTML=''; input.value=''; });
+  const input = getEl('galleryFiles'), grid = getEl('polaroidGrid'), clear = getEl('clearGallery');
+  if(!input || !grid){ log('Gallery elements missing'); return; }
+  input.addEventListener('change', e=>{ const files = Array.from(e.target.files || []); for(const f of files){ const url = URL.createObjectURL(f); addPolaroid(url); } });
+  function addPolaroid(src){ const p = document.createElement('div'); p.className='pol'; const img = document.createElement('img'); img.src = src; p.appendChild(img); p.style.transform = `rotate(${(Math.random()*12 - 6).toFixed(2)}deg)`; p.addEventListener('click', ()=>{ if(p.classList.contains('big')){ p.classList.remove('big'); p.style.transform = `rotate(${(Math.random()*12 - 6).toFixed(2)}deg)`; } else { p.classList.add('big'); p.style.transform = 'none'; } }); grid.appendChild(p); }
+  clear && clear.addEventListener('click', ()=>{ grid.innerHTML=''; input.value=''; });
 })();
 
-/* ---------- Notepad download ---------- */
+/* ========= Notepad download ========= */
 (function(){
-  const btn = $('#dlnote'), area = $('#note'), nameIn = $('#fname');
-  btn.addEventListener('click', ()=>{ let name = (nameIn.value||'note').trim(); if(!name.toLowerCase().endsWith('.txt')) name += '.txt'; const text = area.value; const blob = new Blob([text], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2000); log('Note saved: ' + name + ' (' + text.length + ' chars)'); });
+  const btn = getEl('downloadNote'), area = getEl('noteArea'), nameIn = getEl('fileName');
+  if(!btn || !area){ log('Notepad elements missing'); return; }
+  btn.addEventListener('click', ()=>{
+    let filename = (nameIn.value || 'note').trim();
+    if(!filename.toLowerCase().endsWith('.txt')) filename += '.txt';
+    const text = area.value;
+    const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    log('Note downloaded: ' + filename + ' (' + text.length + ' chars)');
+  });
 })();
 
-/* ---------- Init ---------- */
-(function init(){ showPage('welcome'); log('App initialized'); if($('#vid')) $('#vid').play().catch(()=>log('Autoplay blocked')); updateWins(); })();
+/* ========= Init ========= */
+(function init(){
+  // safe defaults if elements missing
+  if(getEl('welcomeVideo')) getEl('welcomeVideo').play().catch(()=> log('Autoplay blocked'));
+  updateWinsUI();
+  log('App initialized');
+})();
 </script>
 </body>
 </html>
