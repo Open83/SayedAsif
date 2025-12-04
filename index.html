@@ -1,716 +1,771 @@
-import React, { useEffect, useState } from 'react';
-import { Heart, Lock, RotateCcw, Download, Menu, X } from 'lucide-react';
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Saraaa ❤️ — Mobile Site</title>
+<style>
+  /* Mobile-first styles, gradients, and simple utility classes */
+  :root{
+    --glass: rgba(255,255,255,0.12);
+    --glass-2: rgba(255,255,255,0.08);
+    --accent: #ff6b6b;
+    --text: #fff;
+    --maxw: 420px;
+  }
+  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  body{background:linear-gradient(180deg,#0f1724,#0b1220);color:var(--text);-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;min-height:100vh;position:relative;padding-bottom:84px;}
+  header{position:fixed;left:0;right:0;top:0;background:linear-gradient(180deg, rgba(0,0,0,0.48), rgba(0,0,0,0.24));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.04);z-index:50}
+  .header-inner{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px;}
+  .brand{display:flex;gap:10px;align-items:center}
+  .brand h1{margin:0;font-size:18px;letter-spacing:0.4px}
+  .menu-btn{background:var(--glass);border-radius:10px;padding:8px;border:0;color:var(--text)}
+  main{padding-top:74px}
+  .page{display:none;padding:16px 12px 40px}
+  .page.active{display:block}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));border-radius:18px;padding:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 6px 30px rgba(0,0,0,0.45)}
+  .aspect9x16{width:100%;aspect-ratio:9/16;border-radius:14px;overflow:hidden;position:relative}
+  .center{display:flex;align-items:center;justify-content:center}
+  .title{font-weight:800;font-size:28px;margin:6px 0}
+  .subtitle{color:rgba(255,255,255,0.9);font-weight:600}
+  .nav{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.5));backdrop-filter:blur(6px);border-top:1px solid rgba(255,255,255,0.03);padding:8px}
+  .nav-inner{max-width:var(--maxw);margin:0 auto;display:flex;gap:8px}
+  .nav button{flex:1;padding:10px;border-radius:12px;border:0;background:rgba(255,255,255,0.08);color:var(--text);font-weight:700}
+  .nav button.active{background:var(--text);color:var(--accent)}
+  .small{font-size:13px;color:rgba(255,255,255,0.85)}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .btn{padding:10px;border-radius:12px;border:0;background:var(--text);color:var(--accent);font-weight:800}
+  .muted{color:rgba(255,255,255,0.75)}
+  /* SOS board */
+  .sos-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .sos-cell{aspect-ratio:1/1;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900}
+  .control-row{display:flex;gap:8px;margin-bottom:10px}
+  .pill{padding:10px 12px;border-radius:999px;border:0;background:rgba(255,255,255,0.08);font-weight:800}
+  .progress{height:8px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,#ffd166,#ff6b6b);width:0}
+  /* jigsaw */
+  .jig-area{position:relative;border-radius:12px;overflow:hidden}
+  .jig-piece{position:absolute;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.4)}
+  .placed{background:linear-gradient(90deg,#52b788,#2d6a4f)}
+  .not-placed{background:linear-gradient(90deg,#f59e0b,#f97316)}
+  /* maze */
+  .maze-area{position:relative;border-radius:12px;overflow:hidden}
+  .heart{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
+  /* dots */
+  .dot{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+  /* polaroids */
+  .polaroid{background:#fff;border-radius:12px;padding:8px;color:#111}
+  .polaroid .meta{font-size:12px;color:#444}
+  .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);z-index:60}
+  .modal .box{background:#fff;border-radius:14px;padding:16px;max-width:360px;width:92%}
+  .txtarea{width:100%;min-height:160px;border-radius:12px;border:6px solid #fff;padding:12px;font-family:cursive;color:#222}
+  /* responsive tweaks */
+  @media(min-width:720px){
+    :root{--maxw:720px}
+    .wrap{padding-bottom:100px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
 
-/**
- * SaraaaWebsite — single-file component (mobile-first)
- *
- * Requirements implemented:
- * - SOS unlock system (true SOS game: place 'S' or 'O')
- * - AI with CHANCE_TO_MISTAKE (heuristic: score -> block -> random)
- * - 5 pages (Welcome, Games, Timeline, Polaroid Gallery, Love Notes)
- * - 3 mini-games (jigsaw, maze, connect dots) — touch friendly
- * - Download love notes as .txt
- * - Wins-in-a-row unlocking (3 wins required)
- *
- * Add to your app and ensure Tailwind + lucide-react are installed.
- */
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <button id="menuToggle" class="menu-btn">☰</button>
+        <div>
+          <h1>Saraaa ❤️</h1>
+          <div class="small">My Forever Love</div>
+        </div>
+      </div>
+      <div class="small" id="winDisplay">Wins: 0 / 3</div>
+    </div>
+  </header>
 
-const SaraaaWebsite = () => {
-  // Developer shortcut: set true to bypass SOS lock
-  const SKIP_SOS = false;
+  <!-- Pages container -->
+  <main>
+    <!-- PAGE 1: Welcome / Videos -->
+    <section id="page-0" class="page active">
+      <div class="card">
+        <div class="aspect9x16 center" id="videoSlot" style="background:linear-gradient(135deg,#ff6b6b,#ff9a9e);">
+          <div style="text-align:center">
+            <div id="videoEmoji" style="font-size:68px">💕</div>
+            <div id="videoTitle" style="font-weight:900;font-size:20px">Our Love Story</div>
+            <div class="muted">Tap to play</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;justify-content:center">
+          <button id="prevVideo" class="pill">← Prev</button>
+          <div id="videoCounter" class="pill">1 / 5</div>
+          <button id="nextVideo" class="pill">Next →</button>
+        </div>
 
-  // Page navigation
-  const [unlockedPages, setUnlockedPages] = useState(SKIP_SOS);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [showMenu, setShowMenu] = useState(false);
+        <div style="margin-top:12px">
+          <div class="card" style="margin-bottom:10px">
+            <p style="margin:0;font-weight:700">💕 From the moment I saw you</p>
+            <p class="muted">You brought color to my gray world. You are my light.</p>
+          </div>
+          <div class="card">
+            <p style="margin:0;font-weight:700">🌟 Every ordinary day is extraordinary</p>
+            <p class="muted">Your laugh is my favorite song — forever grateful.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  // SOS game (3x3)
-  // board cells: null | 'S' | 'O'
-  const [sosBoard, setSosBoard] = useState(Array(9).fill(null));
-  const [sosTurn, setSosTurn] = useState('human'); // 'human' | 'ai'
-  const [selectedLetter, setSelectedLetter] = useState('S'); // for human choice
-  const [sosScores, setSosScores] = useState({ human: 0, ai: 0 });
-  const [sosMessage, setSosMessage] = useState('Your turn — choose S or O and tap a cell');
-  const [sosGameOver, setSosGameOver] = useState(false);
-  const [winsInARow, setWinsInARow] = useState(0);
+    <!-- PAGE 2: Games -->
+    <section id="page-1" class="page">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-weight:900">Play With Me 🎮</div>
+              <div class="muted">Win 3x at SOS to unlock pages</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:900;font-size:18px" id="scoreDisplay">0 - 0</div>
+              <div class="muted">Score (you - AI)</div>
+            </div>
+          </div>
 
-  // AI mistake chance
-  const CHANCE_TO_MISTAKE = 0.35;
+          <!-- wins progress -->
+          <div style="margin-top:10px">
+            <div class="progress"><i id="progBar"></i></div>
+          </div>
+        </div>
 
-  // Games state
-  const [jigsawPieces, setJigsawPieces] = useState([]);
-  const [jigsawWon, setJigsawWon] = useState(false);
-  const [mazePos, setMazePos] = useState({ x: 0, y: 0 });
-  const [mazeWon, setMazeWon] = useState(false);
-  const [dotIndices, setDotIndices] = useState([]);
-  const [dotsConnected, setDotsConnected] = useState(false);
+        <!-- tabs -->
+        <div style="display:flex;gap:8px">
+          <button class="pill" data-tab="sos" onclick="switchGameTab('sos')">SOS</button>
+          <button class="pill" data-tab="jig" onclick="switchGameTab('jig')">Jigsaw</button>
+          <button class="pill" data-tab="maze" onclick="switchGameTab('maze')">Maze</button>
+          <button class="pill" data-tab="dots" onclick="switchGameTab('dots')">Hearts</button>
+        </div>
 
-  // Notes
-  const [notes, setNotes] = useState('');
+        <!-- SOS Tab -->
+        <div id="tab-sos" class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-weight:900">🔐 SOS Challenge</div>
+            <div class="small">Win streak: <strong id="streak">0</strong>/3</div>
+          </div>
 
-  // ----- Utility: count SOS sequences created by placing a letter at index -----
-  // Board is array of 'S'|'O'|null. We count new SOS patterns formed that include placedIndex.
-  const countNewSOS = (board, placedIndex) => {
-    if (placedIndex == null) return 0;
-    const lines = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8],
-      [0, 3, 6], [1, 4, 7], [2, 5, 8],
-      [0, 4, 8], [2, 4, 6]
-    ];
-    let count = 0;
-    for (let line of lines) {
-      if (line.includes(placedIndex)) {
-        const [a, b, c] = line;
-        // SOS pattern must be S O S
-        if (board[a] === 'S' && board[b] === 'O' && board[c] === 'S') count++;
+          <div class="control-row">
+            <button id="selectS" class="pill">S</button>
+            <button id="selectO" class="pill">O</button>
+            <button id="resetSos" class="pill" style="background:transparent;border:1px solid rgba(255,255,255,0.06)">Reset</button>
+          </div>
+
+          <div class="sos-board" id="sosBoard">
+            <!-- 9 cells created by JS -->
+          </div>
+
+          <div style="margin-top:10px" class="small" id="sosMessage">Choose S or O then tap a cell</div>
+        </div>
+
+        <!-- Jigsaw Tab -->
+        <div id="tab-jig" class="card" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:900">🧩 Mini Jigsaw</div>
+            <div id="jigFlag" class="small">Not complete</div>
+          </div>
+          <div class="aspect9x16 jig-area" id="jigArea" style="background:linear-gradient(135deg,#ffd166,#f97316);border-radius:12px"></div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="resetJig" class="pill">Reset</button>
+            <div style="flex:1"></div>
+          </div>
+        </div>
+
+        <!-- Maze Tab -->
+        <div id="tab-maze" class="card" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:900">❤️ Heart Maze</div>
+            <div id="mazeFlag" class="small">Goal: ⭐ bottom-right</div>
+          </div>
+          <div class="aspect9x16 maze-area" id="mazeArea" style="background:linear-gradient(135deg,#ff90a3,#ff7aa2);border-radius:12px">
+            <div id="heart" class="heart" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#ff4d6d">❤️</div>
+            <div style="position:absolute;right:14px;bottom:14px;width:48px;height:48px;border-radius:50%;background:#ffd166;display:flex;align-items:center;justify-content:center">⭐</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
+            <button class="pill" onclick="moveMaze('left')">⬅️</button>
+            <button class="pill" onclick="moveMaze('up')">⬆️</button>
+            <button class="pill" onclick="moveMaze('right')">➡️</button>
+            <div></div>
+            <button class="pill" onclick="moveMaze('down')">⬇️</button>
+            <div></div>
+          </div>
+        </div>
+
+        <!-- Dots Tab -->
+        <div id="tab-dots" class="card" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:900">💌 Connect Hearts</div>
+            <div id="dotsFlag" class="small">Tap all numbers</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <!-- 9 dots -->
+            <div id="dot0" class="dot card center" onclick="toggleDot(0)">1</div>
+            <div id="dot1" class="dot card center" onclick="toggleDot(1)">2</div>
+            <div id="dot2" class="dot card center" onclick="toggleDot(2)">3</div>
+            <div id="dot3" class="dot card center" onclick="toggleDot(3)">4</div>
+            <div id="dot4" class="dot card center" onclick="toggleDot(4)">5</div>
+            <div id="dot5" class="dot card center" onclick="toggleDot(5)">6</div>
+            <div id="dot6" class="dot card center" onclick="toggleDot(6)">7</div>
+            <div id="dot7" class="dot card center" onclick="toggleDot(7)">8</div>
+            <div id="dot8" class="dot card center" onclick="toggleDot(8)">9</div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="pill" onclick="resetDots()">Reset</button>
+            <div style="flex:1"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: Timeline -->
+    <section id="page-2" class="page">
+      <div class="card">
+        <div class="title">Our Timeline 💕</div>
+        <div class="muted">The milestones of our beautiful journey</div>
+
+        <div style="margin-top:14px">
+          <div style="position:relative;padding-left:18px">
+            <div style="position:absolute;left:6px;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#fff,#ff9a9e);border-radius:3px"></div>
+            <div id="timelineList" style="display:flex;flex-direction:column;gap:12px;padding-top:6px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: Polaroids -->
+    <section id="page-3" class="page">
+      <div class="card">
+        <div class="title">Our Moments 📸</div>
+        <div class="muted">Tap a memory to preview</div>
+
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px" id="polaroidGrid"></div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: Love Notes -->
+    <section id="page-4" class="page">
+      <div class="card">
+        <div class="title">Love Notes 💌</div>
+        <div class="muted">Write from the heart — download as .txt</div>
+
+        <textarea id="notes" class="txtarea" placeholder="My dearest Saraaa, I want you to know..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" id="downloadNotes">Download .txt</button>
+          <button class="pill" id="clearNotes">Clear</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer nav -->
+  <div class="nav" style="position:fixed;bottom:0;left:0;right:0">
+    <div class="nav-inner">
+      <button data-page="0" class="active" onclick="goTo(0)">Welcome</button>
+      <button data-page="1" onclick="goTo(1)">Games</button>
+      <button data-page="2" onclick="goTo(2)">Timeline</button>
+      <button data-page="3" onclick="goTo(3)">Moments</button>
+      <button data-page="4" onclick="goTo(4)">Notes</button>
+    </div>
+  </div>
+
+  <!-- Polaroid Modal -->
+  <div id="modal" class="modal" style="display:none" onclick="closeModal()">
+    <div class="box" onclick="event.stopPropagation()">
+      <div id="modalContent"></div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ------------------------------
+   Configuration & initial data
+   ------------------------------ */
+const SKIP_SOS = false; // set true to bypass lock
+const CHANCE_TO_MISTAKE = 0.35;
+let unlockedPages = SKIP_SOS;
+let currentPage = 0;
+let winsInARow = 0;
+let sosBoard = Array(9).fill(null);
+let sosTurn = 'human';
+let selectedLetter = 'S';
+let sosScores = { human: 0, ai: 0 };
+let sosGameOver = false;
+
+/* Content arrays */
+const videos = [
+  { title: "Our Love Story", emoji: "💕", color: "linear-gradient(135deg,#ff6b6b,#ff9a9e)" },
+  { title: "First Date Magic", emoji: "🌹", color: "linear-gradient(135deg,#ff8a72,#ff6b6b)" },
+  { title: "Midnight Talks", emoji: "🌙", color: "linear-gradient(135deg,#6d28d9,#a78bfa)" },
+  { title: "Adventures Together", emoji: "✈️", color: "linear-gradient(135deg,#06b6d4,#3b82f6)" },
+  { title: "Our Best Moments", emoji: "✨", color: "linear-gradient(135deg,#ffd166,#f97316)" },
+];
+let videoIndex = 0;
+
+const messages = [
+  "From the moment I saw you, my heart knew you were the one.",
+  "Your smile is my favorite sight in the world.",
+  "Every second with you feels like a beautiful dream.",
+  "You are my greatest blessing, my safe haven.",
+  "In your eyes, I found my home and peace."
+];
+
+const milestones = [
+  { emoji:'👀', title:'Our Eyes Met', desc:'When I first saw you, everything changed', date:'Day 1' },
+  { emoji:'😊', title:'First Smile', desc:'Your smile made my heart skip', date:'Week 1' },
+  { emoji:'💬', title:'Late Talks', desc:'Hours of conversations and laughter', date:'Month 1' },
+  { emoji:'🌙', title:'Stargazing', desc:'Under stars, I knew you were the one', date:'Month 2' },
+  { emoji:'💘', title:'I Fell Hard', desc:'Madly, deeply, completely in love', date:'Month 3' },
+  { emoji:'💍', title:'You Said Yes', desc:'The happiest moment of my life', date:'Month 6' },
+  { emoji:'🏠', title:'Our Home', desc:'Building our life together, day by day', date:'Today' },
+  { emoji:'♾️', title:'Forever', desc:'You are my forever and always', date:'Infinity' }
+];
+
+const polaroids = Array.from({length:12}, (_,i) => ({
+  id:i, title: ['First Date','Pizza Night','Beach Day','Movie Time','Coffee Vibes','Sunset','Adventure','Our Smile','Late Night','Rainy Day','Celebration','Forever'][i],
+  color: `hsl(${i*30},70%,60%)`
+}));
+
+/* ------------------------------
+   Helpers: DOM references
+   ------------------------------ */
+const pages = Array.from(document.querySelectorAll('.page'));
+const navButtons = Array.from(document.querySelectorAll('.nav button'));
+const winDisplay = document.getElementById('winDisplay');
+const streakEl = document.getElementById('streak');
+const progBar = document.getElementById('progBar');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const sosMessageEl = document.getElementById('sosMessage');
+const sosBoardEl = document.getElementById('sosBoard');
+const selectSEl = document.getElementById('selectS');
+const selectOEl = document.getElementById('selectO');
+const resetSosBtn = document.getElementById('resetSos');
+const videoSlot = document.getElementById('videoSlot');
+const videoEmoji = document.getElementById('videoEmoji');
+const videoTitle = document.getElementById('videoTitle');
+const videoCounter = document.getElementById('videoCounter');
+const prevVideo = document.getElementById('prevVideo');
+const nextVideo = document.getElementById('nextVideo');
+const timelineList = document.getElementById('timelineList');
+const polaroidGrid = document.getElementById('polaroidGrid');
+const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modalContent');
+const winStreakDisplay = document.getElementById('winDisplay');
+const progBarInner = progBar;
+
+/* ------------------------------
+   Navigation management
+   ------------------------------ */
+function goTo(idx){
+  // if locked and trying to go to >1, redirect to games
+  if (!unlockedPages && idx > 1) {
+    idx = 1;
+    alert("Pages locked — win the SOS challenge 3 times to unlock all pages.");
+  }
+  pages.forEach((p,i) => p.classList.toggle('active', i === idx));
+  navButtons.forEach((b,i) => b.classList.toggle('active', i === idx));
+  currentPage = idx;
+}
+
+/* Menu */
+document.getElementById('menuToggle').addEventListener('click', ()=> {
+  // toggle menu by showing the games page quickly (small behavior)
+  const to = (currentPage === 1) ? 0 : 1;
+  goTo(to);
+});
+
+/* ------------------------------
+   Welcome / video controls
+   ------------------------------ */
+function renderVideo(){
+  const v = videos[videoIndex];
+  videoSlot.style.background = v.color;
+  videoEmoji.textContent = v.emoji;
+  videoTitle.textContent = v.title;
+  videoCounter.textContent = (videoIndex+1) + " / " + videos.length;
+}
+prevVideo.addEventListener('click', ()=> { videoIndex = Math.max(0, videoIndex-1); renderVideo(); });
+nextVideo.addEventListener('click', ()=> { videoIndex = Math.min(videos.length-1, videoIndex+1); renderVideo(); });
+videoSlot.addEventListener('click', ()=> { alert("Video playback placeholder — replace with <video> tag or actual media."); });
+
+/* ------------------------------
+   Timeline & Polaroids render
+   ------------------------------ */
+function renderTimeline(){
+  timelineList.innerHTML = '';
+  milestones.forEach(m => {
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.gap = '10px';
+    div.innerHTML = `
+      <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;color:#111;font-size:18px">${m.emoji}</div>
+      <div style="flex:1">
+        <div style="font-weight:800">${m.title}</div>
+        <div class="muted" style="font-size:13px">${m.desc}</div>
+        <div class="muted" style="font-size:12px;margin-top:6px">${m.date}</div>
+      </div>
+    `;
+    timelineList.appendChild(div);
+  });
+}
+
+function renderPolaroids(){
+  polaroidGrid.innerHTML = '';
+  polaroids.forEach((p,i) => {
+    const box = document.createElement('div');
+    box.className = 'polaroid card';
+    box.style.transform = `rotate(${i%2===0?-3:3}deg)`;
+    box.style.cursor = 'pointer';
+    box.innerHTML = `
+      <div style="width:100%;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:${p.color}cc;display:flex;align-items:center;justify-content:center">
+        <div style="font-size:36px">📷</div>
+      </div>
+      <div style="margin-top:8px;text-align:center">
+        <div style="font-weight:900;color:#111">${p.title}</div>
+        <div class="meta">Memory #${i+1}</div>
+      </div>
+    `;
+    box.addEventListener('click', ()=> openModal(p));
+    polaroidGrid.appendChild(box);
+  });
+}
+
+function openModal(p){
+  modalContent.innerHTML = `
+    <div style="width:100%;aspect-ratio:3/4;border-radius:8px;background:${p.color};display:flex;align-items:center;justify-content:center;font-size:42px">📷</div>
+    <h3 style="margin:10px 0 6px;color:#111">${p.title}</h3>
+    <p style="color:#444;font-size:13px">This moment captures our love — cherish it forever ❤️</p>
+  `;
+  modal.style.display = 'flex';
+}
+function closeModal(){ modal.style.display = 'none'; }
+
+/* ------------------------------
+   SOS Game logic
+   ------------------------------ */
+function initSosBoard(){
+  sosBoard = Array(9).fill(null);
+  sosTurn = 'human';
+  sosScores = {human:0, ai:0};
+  sosGameOver = false;
+  selectedLetter = 'S';
+  document.getElementById('streak').textContent = winsInARow;
+  renderSos();
+  setMessage('Choose S or O then tap a cell');
+  updateScoreDisplay();
+  updateProg();
+}
+
+/* create cells */
+function renderSos(){
+  sosBoardEl.innerHTML = '';
+  for (let i=0;i<9;i++){
+    const btn = document.createElement('button');
+    btn.className = 'sos-cell';
+    btn.dataset.idx = i;
+    btn.textContent = sosBoard[i] || '';
+    btn.addEventListener('click', ()=> handleSosClick(i));
+    sosBoardEl.appendChild(btn);
+  }
+  // update selection UI
+  selectSEl.classList.toggle('pill-selected', selectedLetter==='S');
+  selectOEl.classList.toggle('pill-selected', selectedLetter==='O');
+}
+function setMessage(m){ sosMessageEl.textContent = m; }
+
+/* count new SOS sequences that include index */
+function countNewSOS(board, idx){
+  if (idx==null) return 0;
+  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  let count=0;
+  for (const line of lines){
+    if (line.includes(idx)){
+      const [a,b,c]=line;
+      if (board[a]==='S' && board[b]==='O' && board[c]==='S') count++;
+    }
+  }
+  return count;
+}
+
+/* human click */
+function handleSosClick(idx){
+  if (sosGameOver || sosTurn!=='human' || sosBoard[idx]) return;
+  sosBoard[idx] = selectedLetter;
+  const gained = countNewSOS(sosBoard, idx);
+  if (gained>0){
+    sosScores.human += gained;
+    setMessage(`🎯 You formed ${gained} SOS!`);
+    // player gets extra turn on scoring (common SOS rule)
+    if (sosBoard.every(Boolean)) finishSos();
+    else { renderSos(); updateScoreDisplay(); }
+  } else {
+    renderSos(); updateScoreDisplay();
+    if (sosBoard.every(Boolean)) finishSos();
+    else {
+      sosTurn = 'ai';
+      setMessage('🤖 AI thinking...');
+      setTimeout(()=> aiMove(sosBoard.slice()), 700);
+    }
+  }
+}
+
+/* AI move heuristic */
+function aiMove(boardSnapshot){
+  // mistake
+  const empties = boardSnapshot.map((v,i)=> v===null? i: null).filter(v=>v!==null);
+  if (!empties.length){
+    if (boardSnapshot.every(Boolean)) finishSos();
+    return;
+  }
+  if (Math.random() < CHANCE_TO_MISTAKE){
+    const pick = empties[Math.floor(Math.random()*empties.length)];
+    return aiPlace(pick, Math.random()<0.5?'S':'O', boardSnapshot);
+  }
+  // helper
+  const testGain = (pos, letter, board) => {
+    const b = board.slice(); b[pos] = letter; return countNewSOS(b, pos);
+  };
+  // 1) immediate scoring
+  for (const pos of empties){
+    for (const letter of ['S','O']){
+      if (testGain(pos, letter, boardSnapshot) > 0){
+        return aiPlace(pos, letter, boardSnapshot);
       }
     }
-    return count;
-  };
-
-  // ----- Human places letter -----
-  const placeLetter = (index) => {
-    if (sosBoard[index] || sosGameOver || sosTurn !== 'human') return;
-    const newBoard = [...sosBoard];
-    newBoard[index] = selectedLetter;
-    setSosBoard(newBoard);
-
-    const gained = countNewSOS(newBoard, index);
-    if (gained > 0) {
-      setSosScores(prev => ({ ...prev, human: prev.human + gained }));
-      setSosMessage(`You formed ${gained} SOS!`);
-      // human gets another move on SOS usually — we'll keep turn to human if they scored
-      // but for simplicity we'll let human continue only if not game over
-      // check if board full:
-      if (newBoard.every(Boolean)) {
-        finishSosGame(newBoard);
-      } else {
-        // If scored, let human move again, else give turn to AI
-        setSosTurn('human');
-      }
-    } else {
-      // no score; AI turn next
-      if (newBoard.every(Boolean)) {
-        finishSosGame(newBoard);
-      } else {
-        setSosTurn('ai');
-        setSosMessage('AI thinking...');
-        setTimeout(() => aiMove(newBoard), 600);
+  }
+  // 2) block human immediate scoring
+  for (const pos of empties){
+    for (const h of ['S','O']){
+      if (testGain(pos, h, boardSnapshot) > 0){
+        const prefer = h==='S'? 'O':'S';
+        const letter = testGain(pos, prefer, boardSnapshot)>0 ? (prefer==='S'? 'O':'S') : prefer;
+        return aiPlace(pos, letter, boardSnapshot);
       }
     }
-  };
-
-  // ----- Determine final winner and update winsInARow -----
-  const finishSosGame = (board) => {
-    const final = { ...sosScores };
-    // Ensure counts consistent by scanning entire board too (in case)
-    // But keep already stored scores.
-    setSosGameOver(true);
-
-    // Evaluate winner
-    if (final.human > final.ai) {
-      setSosMessage(`🎉 You win! Score ${final.human} — ${final.ai}`);
-      setWinsInARow(prev => {
-        const next = prev + 1;
-        return next;
-      });
-    } else if (final.ai > final.human) {
-      setSosMessage(`AI wins ${final.ai} — ${final.human}. Try again!`);
-      setWinsInARow(0);
-    } else {
-      setSosMessage(`🤝 Draw ${final.human} — ${final.ai}`);
-      setWinsInARow(0);
+  }
+  // 3) priority pick center -> corners -> edges
+  const priority = [4,0,2,6,8,1,3,5,7];
+  for (const p of priority){
+    if (boardSnapshot[p] === null){
+      const letter = testGain(p,'S',boardSnapshot) >= testGain(p,'O',boardSnapshot) ? 'S' : 'O';
+      return aiPlace(p, letter, boardSnapshot);
     }
-  };
+  }
+  // fallback random
+  const pick = empties[0];
+  aiPlace(pick, 'S', boardSnapshot);
+}
 
-  // ----- SOS AI logic (heuristic) -----
-  // 1) If CHANCE_TO_MISTAKE triggers, pick random empty.
-  // 2) Otherwise try moves that immediately score for AI (choose best letter and cell).
-  // 3) Otherwise try to block human immediate scoring moves.
-  // 4) Otherwise pick center/corner/any.
-  const aiMove = (boardSnapshot) => {
-    if (Math.random() < CHANCE_TO_MISTAKE) {
-      // pick random empty
-      const empties = boardSnapshot.map((v, i) => v === null ? i : null).filter(v => v !== null);
-      const pick = empties[Math.floor(Math.random() * empties.length)];
-      aiPlace(pick, randomLetter());
-      return;
+/* aiPlace: commit AI move */
+function aiPlace(pos, letter, boardSnapshot){
+  sosBoard[pos]=letter;
+  const gained = countNewSOS(sosBoard,pos);
+  if (gained>0){
+    sosScores.ai += gained;
+    setMessage(`🤖 AI formed ${gained} SOS`);
+    renderSos(); updateScoreDisplay();
+    if (sosBoard.every(Boolean)) return finishSos();
+    // AI gets another move after scoring
+    setTimeout(()=> aiMove(sosBoard.slice()), 450);
+  } else {
+    renderSos(); updateScoreDisplay();
+    if (sosBoard.every(Boolean)) finishSos();
+    else {
+      sosTurn='human';
+      setMessage('Your turn — choose S or O');
     }
+  }
+}
 
-    const empties = boardSnapshot.map((v, i) => v === null ? i : null).filter(v => v !== null);
+/* finish and evaluate winner */
+function finishSos(){
+  sosGameOver = true;
+  if (sosScores.human > sosScores.ai){
+    setMessage(`🎉 You win! ${sosScores.human} — ${sosScores.ai}`);
+    winsInARow++;
+  } else if (sosScores.ai > sosScores.human){
+    setMessage(`😢 AI wins ${sosScores.ai} — ${sosScores.human}`);
+    winsInARow = 0;
+  } else {
+    setMessage(`🤝 Draw ${sosScores.human} — ${sosScores.ai}`);
+    winsInARow = 0;
+  }
+  document.getElementById('streak').textContent = winsInARow;
+  updateProg();
+  if (winsInARow >= 3 && !unlockedPages){
+    unlockedPages = true;
+    alert('🎉 All pages unlocked!');
+  }
+  updateWinDisplay();
+}
 
-    // Helper to test placing a letter at pos and count new SOS
-    const testGain = (pos, letter, board) => {
-      const b = [...board];
-      b[pos] = letter;
-      return countNewSOS(b, pos);
+/* UI controls for SOS */
+selectSEl.addEventListener('click', ()=> { selectedLetter='S'; selectSEl.style.background='white'; selectSEl.style.color='#ff6b6b'; selectOEl.style.background=''; selectOEl.style.color=''; });
+selectOEl.addEventListener('click', ()=> { selectedLetter='O'; selectOEl.style.background='white'; selectOEl.style.color='#ff6b6b'; selectSEl.style.background=''; selectSEl.style.color=''; });
+resetSosBtn.addEventListener('click', ()=> { winsInARow = 0; initSosBoard(); updateWinDisplay(); });
+
+function updateScoreDisplay(){
+  scoreDisplay.textContent = sosScores.human + ' - ' + sosScores.ai;
+}
+function updateProg(){
+  const pct = Math.min(100, (winsInARow/3)*100);
+  progBarInner.style.width = pct + '%';
+}
+function updateWinDisplay(){
+  winDisplay.textContent = `Wins: ${winsInARow} / 3`;
+}
+
+/* ------------------------------
+   Jigsaw behavior
+   ------------------------------ */
+let jigPieces = [];
+function setupJigsaw(){
+  const area = document.getElementById('jigArea');
+  area.innerHTML = '';
+  jigPieces = Array.from({length:12}, (_,i)=>({
+    id:i, x:Math.random()*70+8, y:Math.random()*70+8, placed:false
+  }));
+  for (const p of jigPieces){
+    const el = document.createElement('div');
+    el.className = 'jig-piece not-placed center';
+    el.style.left = p.x + '%';
+    el.style.top = p.y + '%';
+    el.style.transform = 'translate(-50%,-50%)';
+    el.textContent = p.id+1;
+    el.onclick = ()=> {
+      p.placed = !p.placed;
+      el.classList.toggle('placed', p.placed);
+      el.classList.toggle('not-placed', !p.placed);
+      checkJig();
     };
+    area.appendChild(el);
+  }
+}
+function checkJig(){
+  const all = jigPieces.every(p=>p.placed);
+  document.getElementById('jigFlag').textContent = all ? '✅ Completed' : 'Not complete';
+}
+document.getElementById('resetJig').addEventListener('click', ()=> {
+  setupJigsaw();
+});
 
-    // 1) immediate scoring move for AI
-    for (let pos of empties) {
-      for (let letter of ['S', 'O']) {
-        const gain = testGain(pos, letter, boardSnapshot);
-        if (gain > 0) {
-          aiPlace(pos, letter);
-          return;
-        }
-      }
-    }
+/* ------------------------------
+   Maze behavior
+   ------------------------------ */
+let mazePos = { x:50, y:50 };
+function renderMaze(){
+  const heart = document.getElementById('heart');
+  heart.style.left = mazePos.x + '%';
+  heart.style.top = mazePos.y + '%';
+  if (mazePos.x >= 85 && mazePos.y >= 85){
+    document.getElementById('mazeFlag').textContent = '✅ You Won!';
+  }
+}
+function moveMaze(dir){
+  if (dir === 'up' && mazePos.y > 5) mazePos.y -= 10;
+  if (dir === 'down' && mazePos.y < 95) mazePos.y += 10;
+  if (dir === 'left' && mazePos.x > 5) mazePos.x -= 10;
+  if (dir === 'right' && mazePos.x < 95) mazePos.x += 10;
+  renderMaze();
+}
+function resetMaze(){ mazePos = {x:50,y:50}; renderMaze(); document.getElementById('mazeFlag').textContent='Goal: ⭐ bottom-right'; }
 
-    // 2) block human immediate scoring (if human can score next move)
-    for (let pos of empties) {
-      // if human placing S or O at pos yields gain, try to place something to prevent it:
-      for (let humanLetter of ['S', 'O']) {
-        const humanGain = testGain(pos, humanLetter, boardSnapshot);
-        if (humanGain > 0) {
-          // Try to block by placing at pos now (place any letter) — best is to place the letter that prevents pattern
-          // We'll choose a letter that doesn't create immediate AI score unless necessary
-          const prefer = (humanLetter === 'S') ? 'O' : 'S';
-          // If placing 'prefer' creates AI score, choose other letter
-          if (testGain(pos, prefer, boardSnapshot) > 0) {
-            const alt = prefer === 'S' ? 'O' : 'S';
-            aiPlace(pos, alt);
-          } else {
-            aiPlace(pos, prefer);
-          }
-          return;
-        }
-      }
-    }
+/* ------------------------------
+   Dots (connect hearts)
+   ------------------------------ */
+let dotSeq = Array.from({length:9}, (_,i)=>i);
+function toggleDot(i){
+  dotSeq = dotSeq.filter(x=>x!==i);
+  document.getElementById('dot'+i).textContent = '✓';
+  document.getElementById('dot'+i).style.background = 'linear-gradient(90deg,#fff,#ffd166)';
+  if (dotSeq.length===0){
+    document.getElementById('dotsFlag').textContent = '✅ Perfect Match!';
+  }
+}
+function resetDots(){
+  dotSeq = Array.from({length:9}, (_,i)=>i);
+  for (let i=0;i<9;i++){
+    const el = document.getElementById('dot'+i);
+    el.textContent = i+1;
+    el.style.background = '';
+  }
+  document.getElementById('dotsFlag').textContent = 'Tap all numbers';
+}
 
-    // 3) Center first, then corners, then edges
-    const priority = [4, 0, 2, 6, 8, 1, 3, 5, 7];
-    for (let p of priority) {
-      if (boardSnapshot[p] === null) {
-        // use a heuristic letter: if placing 'S' yields more potential (lookahead 1), pick it, else O
-        const sGain = testGain(p, 'S', boardSnapshot);
-        const oGain = testGain(p, 'O', boardSnapshot);
-        const pickLetter = sGain >= oGain ? 'S' : 'O';
-        aiPlace(p, pickLetter);
-        return;
-      }
-    }
+/* ------------------------------
+   Small utilities & initialization
+   ------------------------------ */
+function switchGameTab(name){
+  document.getElementById('tab-sos').style.display = 'none';
+  document.getElementById('tab-jig').style.display = 'none';
+  document.getElementById('tab-maze').style.display = 'none';
+  document.getElementById('tab-dots').style.display = 'none';
+  if (name==='sos') document.getElementById('tab-sos').style.display = 'block';
+  if (name==='jig') document.getElementById('tab-jig').style.display = 'block';
+  if (name==='maze') document.getElementById('tab-maze').style.display = 'block';
+  if (name==='dots') document.getElementById('tab-dots').style.display = 'block';
+}
 
-    // fallback
-    if (empties.length) aiPlace(empties[0], randomLetter());
-  };
+/* download notes */
+document.getElementById('downloadNotes').addEventListener('click', ()=>{
+  const txt = document.getElementById('notes').value;
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);
+  a.download = `love-notes-${new Date().toLocaleDateString()}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
+document.getElementById('clearNotes').addEventListener('click', ()=> document.getElementById('notes').value = '');
 
-  const randomLetter = () => (Math.random() < 0.5 ? 'S' : 'O');
+/* modal close */
+modal.addEventListener('click', ()=> modal.style.display='none');
 
-  // Perform AI place (update board and scores)
-  const aiPlace = (pos, letter) => {
-    if (pos == null || sosBoard[pos] !== null) {
-      // fallback: find empty
-      const emptyIndex = sosBoard.findIndex(c => c === null);
-      if (emptyIndex === -1) {
-        finishSosGame(sosBoard);
-        return;
-      }
-      pos = emptyIndex;
-    }
-    const newBoard = [...sosBoard];
-    newBoard[pos] = letter;
-    setSosBoard(newBoard);
-    const gained = countNewSOS(newBoard, pos);
-    if (gained > 0) {
-      setSosScores(prev => ({ ...prev, ai: prev.ai + gained }));
-      setSosMessage(`AI formed ${gained} SOS`);
-      // AI gets another move if scored — implement similar rule: continue AI if not finished
-      if (newBoard.every(Boolean)) {
-        finishSosGame(newBoard);
-      } else {
-        // try another AI move a moment later (to reflect extra-turn)
-        setTimeout(() => aiMove(newBoard), 450);
-      }
-    } else {
-      // pass turn to human
-      if (newBoard.every(Boolean)) {
-        finishSosGame(newBoard);
-      } else {
-        setSosTurn('human');
-        setSosMessage('Your turn — choose S or O');
-      }
-    }
-  };
+/* initialize everything */
+function init(){
+  // render static blocks
+  renderVideo();
+  renderTimeline();
+  renderPolaroids();
+  setupJigsaw();
+  initSosBoard();
+  renderMaze();
+  resetDots();
+  // nav default
+  goTo(0);
 
-  // Reset SOS
-  const resetSos = () => {
-    setSosBoard(Array(9).fill(null));
-    setSosTurn('human');
-    setSelectedLetter('S');
-    setSosScores({ human: 0, ai: 0 });
-    setSosMessage('Your turn — choose S or O and tap a cell');
-    setSosGameOver(false);
-  };
+  // initial tab
+  switchGameTab('sos');
+}
+init();
 
-  // Watch winsInARow to unlock pages
-  useEffect(() => {
-    if (winsInARow >= 3 && !unlockedPages) {
-      setUnlockedPages(true);
-    }
-  }, [winsInARow, unlockedPages]);
+/* Expose small functions to global for inline onclicks */
+window.goTo = goTo;
+window.switchGameTab = switchGameTab;
+window.moveMaze = moveMaze;
+window.toggleDot = toggleDot;
+window.resetDots = resetDots;
+window.openModal = openModal;
+window.closeModal = closeModal;
 
-  // ----- Jigsaw initialization -----
-  useEffect(() => {
-    if (jigsawPieces.length === 0 && !jigsawWon) {
-      const pieces = Array.from({ length: 12 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 70 + 5, // keep inside
-        y: Math.random() * 70 + 5,
-        placed: false
-      }));
-      setJigsawPieces(pieces);
-    }
-  }, [jigsawPieces.length, jigsawWon]);
+/* ensure global update functions exist for sos */
+window.handleSosClick = handleSosClick;
+window.aiMove = aiMove;
+window.aiPlace = aiPlace;
 
-  const handleJigsawPieceClick = (id) => {
-    const newPieces = jigsawPieces.map(p => p.id === id ? { ...p, placed: !p.placed } : p);
-    setJigsawPieces(newPieces);
-    if (newPieces.every(p => p.placed)) setJigsawWon(true);
-  };
-
-  // ----- Maze controls -----
-  const handleMazeMove = (direction) => {
-    if (mazeWon) return;
-    let newPos = { ...mazePos };
-    if (direction === 'up' && mazePos.y > 0) newPos.y -= 20;
-    if (direction === 'down' && mazePos.y < 80) newPos.y += 20;
-    if (direction === 'left' && mazePos.x > 0) newPos.x -= 20;
-    if (direction === 'right' && mazePos.x < 80) newPos.x += 20;
-    setMazePos(newPos);
-    if (newPos.x === 80 && newPos.y === 80) setMazeWon(true);
-  };
-
-  // ----- Dot connect -----
-  useEffect(() => {
-    if (dotIndices.length === 0) setDotIndices([0,1,2,3,4,5,6,7,8]);
-  }, [dotIndices.length]);
-
-  const handleDotClick = (index) => {
-    if (!dotIndices.includes(index)) return;
-    const newIndices = dotIndices.filter(i => i !== index);
-    setDotIndices(newIndices);
-    if (newIndices.length === 0) setDotsConnected(true);
-  };
-
-  // ----- UI Pages -----
-  const Page1 = () => (
-    <div className="w-full min-h-screen bg-gradient-to-b from-purple-700 via-pink-600 to-red-500 p-4 pb-20 overflow-y-auto">
-      <div className="max-w-[380px] mx-auto space-y-6 pt-4">
-        <div className="rounded-3xl overflow-hidden shadow-2xl">
-          <div className="w-full aspect-[9/16] bg-black/30 flex items-center justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-black/30 to-transparent"></div>
-            <div className="text-center z-10 px-6">
-              <Heart className="w-20 h-20 text-white mx-auto mb-4 animate-bounce" fill="white" />
-              <p className="text-2xl font-bold text-white mb-2">Welcome Video</p>
-              <p className="text-white/80">A collection of moments — tap to play</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Extra video sections — small playlist style */}
-        {['Our First Date', 'Late Night Talks', 'Sunset Walk'].map((label, i) => (
-          <div key={i} className="rounded-3xl overflow-hidden shadow-2xl">
-            <div className="w-full aspect-[9/16] bg-gradient-to-br from-pink-500 to-red-400 flex items-end justify-start p-4 relative">
-              <div className="absolute inset-0 bg-black/10"></div>
-              <div className="z-10">
-                <p className="text-white font-bold text-lg">{label}</p>
-                <p className="text-white/80 text-sm">Tap to open full memory</p>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30">
-          <p className="text-white text-lg font-medium leading-relaxed">
-            💕 From the moment I saw you, my world changed — you painted my days with new colors.
-          </p>
-        </div>
-
-        <div className="text-center py-6">
-          <h1 className="text-5xl font-black text-white mb-1 drop-shadow-lg">Saraaa❤️</h1>
-          <p className="text-xl text-white/90 font-semibold drop-shadow-md">My Forever Love</p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const Page2 = () => (
-    <div className="w-full min-h-screen bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 p-4 pb-20 overflow-y-auto">
-      <div className="max-w-[380px] mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-3xl font-black text-white">Play With Me 🎮</h1>
-          <div className="text-white/90 text-sm">
-            Wins in a row: <span className="font-bold">{winsInARow}</span>
-          </div>
-        </div>
-
-        <p className="text-white/90 mb-6">Complete the mini-games. Win the SOS 3 times in a row to unlock hidden pages.</p>
-
-        {/* SOS Game card */}
-        <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 shadow-xl mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <p className="text-white text-xl font-black">🔐 SOS Challenge</p>
-              <p className="text-white/80 text-sm">Place S or O and make "SOS" sequences</p>
-            </div>
-            <div className="text-white/90 text-sm">
-              <div>Score: {sosScores.human} — {sosScores.ai}</div>
-            </div>
-          </div>
-
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={() => setSelectedLetter('S')}
-              className={`flex-1 py-2 rounded-lg font-bold ${selectedLetter === 'S' ? 'bg-white text-pink-600' : 'bg-white/20 text-white'}`}
-            >
-              S
-            </button>
-            <button
-              onClick={() => setSelectedLetter('O')}
-              className={`flex-1 py-2 rounded-lg font-bold ${selectedLetter === 'O' ? 'bg-white text-pink-600' : 'bg-white/20 text-white'}`}
-            >
-              O
-            </button>
-            <button
-              onClick={resetSos}
-              className="py-2 px-3 rounded-lg bg-white/10 text-white flex items-center gap-2"
-            >
-              <RotateCcw className="w-4 h-4" /> Reset
-            </button>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            {sosBoard.map((cell, i) => (
-              <button
-                key={i}
-                onClick={() => placeLetter(i)}
-                className={`w-full aspect-square rounded-lg text-2xl font-extrabold ${cell ? 'bg-white text-pink-600' : 'bg-white/10 text-white'}`}
-              >
-                {cell || ''}
-              </button>
-            ))}
-          </div>
-
-          <div className="text-white/90 text-sm mb-2">{sosMessage}</div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                // quick reset all (including wins)
-                resetSos();
-                setWinsInARow(0);
-              }}
-              className="flex-1 py-3 rounded-lg bg-white text-pink-600 font-bold"
-            >
-              Reset All
-            </button>
-            <button
-              onClick={() => {
-                // cheat / developer: skip unlock
-                setUnlockedPages(true);
-                setSosMessage('All pages unlocked (developer shortcut)');
-              }}
-              className="py-3 px-3 rounded-lg bg-white/20 text-white"
-            >
-              <Lock className="w-4 h-4 inline-block mr-2" /> Unlock
-            </button>
-          </div>
-        </div>
-
-        {/* Mini Games */}
-        <div className="space-y-4">
-          {/* Jigsaw */}
-          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 shadow-xl">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-white font-black">🧩 Mini Jigsaw</p>
-                <p className="text-white/80 text-sm">Tap pieces to place them</p>
-              </div>
-              {jigsawWon && <div className="text-white">✅</div>}
-            </div>
-
-            <div className="bg-gradient-to-br from-yellow-300 to-orange-300 rounded-xl aspect-square p-3 relative overflow-hidden mb-3">
-              {jigsawPieces.map(piece => (
-                <button
-                  key={piece.id}
-                  onClick={() => handleJigsawPieceClick(piece.id)}
-                  className={`absolute w-12 h-12 rounded-lg text-white font-bold flex items-center justify-center shadow-lg transition-transform ${piece.placed ? 'bg-green-500 scale-100' : 'bg-yellow-500 hover:scale-110'}`}
-                  style={{ left: `${piece.x}%`, top: `${piece.y}%` }}
-                >
-                  {piece.id + 1}
-                </button>
-              ))}
-              {jigsawWon && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-xl">
-                  <div className="text-5xl animate-bounce">💝</div>
-                </div>
-              )}
-            </div>
-            {!jigsawWon ? null : <div className="text-white text-center font-bold">Perfect!</div>}
-          </div>
-
-          {/* Maze */}
-          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 shadow-xl">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-white font-black">❤️ Heart Maze</p>
-                <p className="text-white/80 text-sm">Guide the heart to the star</p>
-              </div>
-              {mazeWon && <div className="text-white">✅</div>}
-            </div>
-
-            <div className="bg-gradient-to-br from-red-300 to-pink-300 rounded-xl aspect-square mb-3 relative overflow-hidden border-4 border-white/40">
-              {/* player */}
-              <div
-                className="absolute w-9 h-9 bg-red-500 rounded-full z-10 flex items-center justify-center text-white font-bold shadow-lg transition-all duration-200"
-                style={{ left: `${mazePos.x}%`, top: `${mazePos.y}%`, transform: 'translate(-50%, -50%)' }}
-              >
-                ❤️
-              </div>
-
-              {/* goal */}
-              <div className="absolute right-3 bottom-3 w-9 h-9 bg-yellow-300 rounded-full flex items-center justify-center text-lg shadow-lg border-2 border-yellow-400">
-                ⭐
-              </div>
-
-              {/* simple walls for decoration */}
-              <div className="absolute top-1/4 left-1/4 w-1/2 h-1 bg-white/40"></div>
-              <div className="absolute top-1/2 left-0 w-1/3 h-1 bg-white/40"></div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <button onClick={() => handleMazeMove('left')} className="py-2 rounded-lg bg-white/20 text-white">⬅️</button>
-              <button onClick={() => handleMazeMove('up')} className="py-2 rounded-lg bg-white/20 text-white">⬆️</button>
-              <button onClick={() => handleMazeMove('right')} className="py-2 rounded-lg bg-white/20 text-white">➡️</button>
-              <div></div>
-              <button onClick={() => handleMazeMove('down')} className="py-2 rounded-lg bg-white/20 text-white">⬇️</button>
-              <div></div>
-            </div>
-
-            {mazeWon && <div className="text-white text-center font-bold mt-3">You Won!</div>}
-          </div>
-
-          {/* Connect Dots */}
-          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 shadow-xl">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-white font-black">💌 Connect Hearts</p>
-                <p className="text-white/80 text-sm">Tap all hearts to reveal</p>
-              </div>
-              {dotsConnected && <div className="text-white">✅</div>}
-            </div>
-
-            <div className="bg-gradient-to-br from-blue-300 to-purple-300 rounded-xl aspect-square p-4 flex items-center justify-center">
-              <div className="grid grid-cols-3 gap-4 w-full h-full place-items-center">
-                {[0,1,2,3,4,5,6,7,8].map(i => (
-                  <button key={i} onClick={() => handleDotClick(i)}
-                    className={`w-12 h-12 rounded-full font-bold shadow-lg transition-transform ${dotIndices.includes(i) ? 'bg-blue-500 text-white scale-110' : 'bg-white/70 text-gray-700'}`}>
-                    {dotIndices.includes(i) ? '✓' : i+1}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {dotsConnected && <div className="text-white text-center font-bold mt-3">Perfect Match!</div>}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const Page3 = () => (
-    <div className="w-full min-h-screen bg-gradient-to-b from-cyan-500 via-blue-500 to-purple-600 p-4 pb-20 overflow-y-auto">
-      <div className="max-w-[380px] mx-auto">
-        <h1 className="text-3xl text-white font-black mb-2">Our Timeline 💕</h1>
-        <p className="text-white/90 mb-6">Our beautiful journey together</p>
-
-        <div className="relative pl-12">
-          <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-white to-pink-300 rounded"></div>
-
-          <div className="space-y-6">
-            {[
-              { title: 'The Beginning', desc: 'When our eyes first met, something special started', emoji: '👀', date: 'Day 1' },
-              { title: 'First Smile', desc: 'Your smile made my day brighter', emoji: '😊', date: 'Week 1' },
-              { title: 'Late Nights', desc: 'Hours of talks, laughter, and dreams', emoji: '🌙', date: 'Month 1' },
-              { title: 'I Fell Hard', desc: 'I realized I want you forever', emoji: '💘', date: 'Month 3' },
-              { title: 'You Said Yes', desc: 'The happiest moment when you agreed to be mine', emoji: '💍', date: 'Month 6' },
-              { title: 'Forever & Always', desc: 'You are my home', emoji: '💕', date: 'Forever' }
-            ].map((it, idx) => (
-              <div key={idx} className="flex gap-4 items-start">
-                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg -translate-y-1">
-                  <div className="text-lg">{it.emoji}</div>
-                </div>
-
-                <div className="bg-white/20 backdrop-blur-md rounded-2xl p-3 border border-white/30 flex-1">
-                  <div className="text-white/70 text-xs font-bold mb-1">{it.date}</div>
-                  <div className="text-white font-black">{it.title}</div>
-                  <div className="text-white/90 text-sm">{it.desc}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const Page4 = () => (
-    <div className="w-full min-h-screen bg-gradient-to-b from-amber-400 via-orange-400 to-red-500 p-4 pb-20 overflow-y-auto">
-      <div className="max-w-[380px] mx-auto">
-        <h1 className="text-3xl text-white font-black mb-2">Our Moments 📸</h1>
-        <p className="text-white/90 mb-6">Captured memories of us</p>
-
-        <div className="grid grid-cols-2 gap-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="transform hover:scale-105 transition-all">
-              <div className="bg-white rounded-lg shadow-2xl p-2">
-                <div className="w-full aspect-[9/16] rounded-md overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${['#FF6B6B','#FF8E72','#FFA07A','#FFB347','#FFD700','#FF69B4','#FF1493','#DA70D6'][i]} 0%, ${['#FF8E72','#FFA07A','#FFB347','#FFD700','#FFA500','#FF6347','#FF4500','#FF69B4'][i]} 100%)`}}>
-                  <div className="absolute inset-0 flex items-center justify-center text-white text-4xl">📷</div>
-                </div>
-                <div className="px-2 py-3 text-center">
-                  <div className="text-gray-800 font-bold text-sm">Memory #{i+1}</div>
-                  <div className="text-gray-600 text-xs mt-1">{['First date', 'Pizza night', 'Beach day', 'Movie time', 'Coffee vibes', 'Sunset walk', 'My favorite', 'Forever'][i]}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const Page5 = () => (
-    <div className="w-full min-h-screen bg-gradient-to-b from-pink-400 via-rose-400 to-red-500 p-4 pb-20 flex flex-col">
-      <div className="max-w-[380px] mx-auto w-full">
-        <h1 className="text-3xl text-white font-black mb-2 text-center">Love Notes 💌</h1>
-        <p className="text-white/90 text-center mb-6">Write your feelings here</p>
-
-        <textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="My dearest Saraaa,\n\nI want you to know..."
-          className="w-full h-64 bg-gradient-to-br from-yellow-100 to-amber-50 border-4 border-white rounded-2xl p-5 text-amber-900 placeholder-amber-400 focus:outline-none resize-none shadow-xl"
-          style={{ fontFamily: 'cursive', fontSize: 16, lineHeight: 1.8 }}
-        />
-
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <button
-            onClick={() => {
-              const element = document.createElement('a');
-              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(notes));
-              const filename = `love-notes-${new Date().toLocaleDateString()}.txt`;
-              element.setAttribute('download', filename);
-              document.body.appendChild(element);
-              element.click();
-              document.body.removeChild(element);
-            }}
-            className="py-3 rounded-2xl bg-white text-pink-600 font-bold flex items-center justify-center gap-2"
-          >
-            <Download className="w-4 h-4" /> Download .txt
-          </button>
-
-          <button
-            onClick={() => {
-              setNotes('');
-            }}
-            className="py-3 rounded-2xl bg-white/10 text-white flex items-center justify-center"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const pages = [
-    { title: 'Welcome', component: <Page1 /> },
-    { title: 'Games', component: <Page2 /> },
-    { title: 'Timeline', component: <Page3 /> },
-    { title: 'Moments', component: <Page4 /> },
-    { title: 'Love Notes', component: <Page5 /> },
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-      {/* Top Nav */}
-      <header className="fixed top-4 left-0 right-0 z-40 flex justify-between items-center px-4">
-        <div className="max-w-[380px] mx-auto w-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setShowMenu(s => !s)} className="bg-white/10 p-2 rounded-full">
-              {showMenu ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
-            </button>
-            <div>
-              <div className="text-lg font-black">Saraaa❤️</div>
-              <div className="text-xs text-white/70">My Forever Love</div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="text-sm text-white/80 hidden sm:block">Wins: {winsInARow}</div>
-            <button onClick={() => { resetSos(); setWinsInARow(0); setUnlockedPages(SKIP_SOS); }} className="bg-white/10 p-2 rounded-lg text-sm">Reset</button>
-          </div>
-        </div>
-      </header>
-
-      {/* Menu */}
-      {showMenu && (
-        <nav className="fixed top-20 left-0 right-0 z-30">
-          <div className="max-w-[380px] mx-auto bg-white/5 rounded-2xl p-3 backdrop-blur-md border border-white/10 shadow-lg">
-            <div className="grid grid-cols-5 gap-2">
-              {pages.map((p, idx) => (
-                <button
-                  key={idx}
-                  disabled={!unlockedPages && idx > 1} // Allow Welcome & Games and lock rest until unlocked
-                  onClick={() => { setCurrentPage(idx); setShowMenu(false); }}
-                  className={`py-2 px-2 rounded-lg text-sm ${(!unlockedPages && idx > 1) ? 'opacity-40 cursor-not-allowed' : 'bg-white/10'}`}
-                >
-                  {p.title}
-                </button>
-              ))}
-            </div>
-            {!unlockedPages && <div className="mt-3 text-xs text-white/70">Pages locked — win SOS 3 times in a row to unlock.</div>}
-          </div>
-        </nav>
-      )}
-
-      {/* Page container */}
-      <main className="pt-24 pb-12">
-        {/* If locked and trying to access locked page, show lock screen */}
-        {(!unlockedPages && currentPage > 1) ? (
-          <div className="max-w-[380px] mx-auto p-6 text-center">
-            <div className="bg-white/10 rounded-2xl p-8">
-              <Lock className="w-12 h-12 mx-auto mb-4" />
-              <h2 className="text-xl font-black mb-2">Locked Pages</h2>
-              <p className="text-white/80 mb-4">Win the SOS challenge 3 times in a row (on the Games page) to unlock the full site.</p>
-              <button onClick={() => { setCurrentPage(1); }} className="py-3 px-4 rounded-lg bg-white text-pink-600 font-bold">Go to Games</button>
-            </div>
-          </div>
-        ) : (
-          <div>
-            {/* render selected page component */}
-            {pages[currentPage].component}
-          </div>
-        )}
-      </main>
-
-      {/* bottom nav */}
-      <footer className="fixed bottom-4 left-0 right-0 z-40">
-        <div className="max-w-[380px] mx-auto px-4 flex items-center justify-between">
-          {pages.map((p, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentPage(idx)}
-              className={`flex-1 py-3 mx-1 rounded-2xl text-sm ${currentPage === idx ? 'bg-white text-pink-600 font-bold' : 'bg-white/10 text-white'}`}
-              disabled={!unlockedPages && idx > 1}
-            >
-              {p.title}
-            </button>
-          ))}
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default SaraaaWebsite;
+/* debug: expose some state to console if needed */
+window._debugState = ()=>({sosBoard,sosTurn,sosScores,winsInARow,unlockedPages});
+</script>
+</body>
+</html>
