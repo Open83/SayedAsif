@@ -20,7 +20,7 @@
         body {
             font-family: 'Georgia', serif;
             overflow-x: hidden;
-            background: linear-gradient(135deg, var(--primary), var(--teal), var(--olive));
+            background: linear-gradient(135deg, var(--primary), var(--teal), var(--deep), var(--warm));
             min-height: 100vh;
         }
         /* Navigation */
@@ -171,6 +171,54 @@
             margin: 0 auto;
             background: white;
             touch-action: none;
+        }
+        /* Win Modal */
+        .win-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .win-modal.active {
+            display: flex;
+        }
+        .win-message {
+            background: linear-gradient(135deg, var(--primary), var(--teal));
+            color: var(--deep);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 20px;
+            max-width: 80%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: bounceIn 0.5s;
+        }
+        .win-btn {
+            margin-top: 20px;
+            background: var(--warm);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .win-btn:active {
+            transform: scale(0.95);
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
         }
         /* Page 3 - Polaroid Gallery */
         .gallery-grid {
@@ -391,6 +439,12 @@
             margin-bottom: 30px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
+        /* Mobile Responsiveness */
+        @media (max-width: 480px) {
+            h1 { font-size: 24px; }
+            .game-title { font-size: 20px; }
+            .win-message { font-size: 16px; padding: 30px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -442,7 +496,7 @@
             <button onclick="resetMaze()">Reset</button>
         </div>
         <canvas id="maze-canvas"></canvas>
-        <p style="color: white; text-align: center; margin-top: 10px;">Drag/swipe to move! Reach the heart! ❤️</p>
+        <p style="color: white; text-align: center; margin-top: 10px;">Swipe or use arrows to move! Reach the heart! ❤️</p>
     </div>
     <!-- Dot Heart Connect -->
     <div class="game-container">
@@ -452,8 +506,13 @@
             <button onclick="resetDots()">Reset</button>
         </div>
         <canvas id="dot-canvas"></canvas>
-        <p style="color: white; text-align: center; margin-top: 10px;">Click/tap the dots to draw a heart! 💕</p>
+        <p style="color: white; text-align: center; margin-top: 10px;">Click/tap the dots in order to draw a heart! 💕</p>
     </div>
+</div>
+<!-- Win Modal -->
+<div class="win-modal" id="win-modal">
+    <div class="win-message" id="win-text"></div>
+    <button class="win-btn" onclick="closeWin()">Play Again! 🎮</button>
 </div>
 <!-- Page 3: Polaroid Gallery -->
 <div class="page" id="page3">
@@ -495,6 +554,16 @@
         document.getElementById('page' + n).classList.add('active');
         document.querySelectorAll('nav button')[n-1].classList.add('active');
     }
+    // Win Modal Functions
+    function showWin(message, resetFunc) {
+        document.getElementById('win-text').innerHTML = message;
+        document.getElementById('win-modal').classList.add('active');
+        window.currentReset = resetFunc;
+    }
+    function closeWin() {
+        document.getElementById('win-modal').classList.remove('active');
+        if (window.currentReset) window.currentReset();
+    }
     // JIGSAW PUZZLE
     let jigsawPieces = [];
     let jigsawSize = 3;
@@ -516,9 +585,7 @@
             for (let j = 0; j < jigsawSize; j++) {
                 jigsawPieces.push({
                     correct: {x: j * pieceSize, y: i * pieceSize},
-                    current: {x: Math.random() * (size - pieceSize), y: Math.random() * (size - pieceSize)},
-                    srcX: j * pieceSize,
-                    srcY: i * pieceSize,
+                    current: {x: Math.random() * (size - pieceSize) + pieceSize/2, y: Math.random() * (size - pieceSize) + pieceSize/2},
                     size: pieceSize,
                     placed: false
                 });
@@ -532,18 +599,24 @@
         jigsawCtx.fillStyle = '#f0f0f0';
         jigsawCtx.fillRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
        
+        let allPlaced = true;
         jigsawPieces.forEach(piece => {
             jigsawCtx.strokeStyle = '#195454';
             jigsawCtx.lineWidth = 2;
-            jigsawCtx.strokeRect(piece.current.x, piece.current.y, piece.size, piece.size);
+            jigsawCtx.strokeRect(piece.current.x - piece.size/2, piece.current.y - piece.size/2, piece.size, piece.size);
             jigsawCtx.fillStyle = piece.placed ? '#996537' : '#9ecce3';
-            jigsawCtx.fillRect(piece.current.x, piece.current.y, piece.size, piece.size);
+            jigsawCtx.fillRect(piece.current.x - piece.size/2, piece.current.y - piece.size/2, piece.size, piece.size);
             jigsawCtx.fillStyle = 'white';
             jigsawCtx.font = '20px Arial';
             jigsawCtx.textAlign = 'center';
-            jigsawCtx.fillText('❤️', piece.current.x + piece.size/2, piece.current.y + piece.size/2 + 7);
+            jigsawCtx.fillText('❤️', piece.current.x, piece.current.y + 7);
+            if (!piece.placed) allPlaced = false;
         });
+        if (allPlaced) {
+            showWin('Wah Saraaa! Puzzle complete ho gaya! Tumhari love ki tarah perfect fit! ❤️😍', () => initJigsaw(9));
+        }
     }
+    // Mouse events for jigsaw
     function handleJigsawMouseDown(e) {
         const rect = jigsawCanvas.getBoundingClientRect();
         const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
@@ -551,8 +624,8 @@
        
         for (let i = jigsawPieces.length - 1; i >= 0; i--) {
             const p = jigsawPieces[i];
-            if (x >= p.current.x && x <= p.current.x + p.size &&
-                y >= p.current.y && y <= p.current.y + p.size) {
+            if (x >= p.current.x - p.size/2 && x <= p.current.x + p.size/2 &&
+                y >= p.current.y - p.size/2 && y <= p.current.y + p.size/2) {
                 selectedPiece = p;
                 break;
             }
@@ -563,8 +636,8 @@
             const rect = jigsawCanvas.getBoundingClientRect();
             const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
             const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
-            selectedPiece.current.x = x - selectedPiece.size / 2;
-            selectedPiece.current.y = y - selectedPiece.size / 2;
+            selectedPiece.current.x = x;
+            selectedPiece.current.y = y;
             drawJigsaw();
         }
     }
@@ -580,20 +653,18 @@
             drawJigsaw();
         }
     }
-    jigsawCanvas = document.getElementById('jigsaw-canvas');
-    jigsawCanvas.addEventListener('mousedown', handleJigsawMouseDown);
-    jigsawCanvas.addEventListener('mousemove', handleJigsawMouseMove);
-    jigsawCanvas.addEventListener('mouseup', handleJigsawMouseUp);
+    // Touch events for jigsaw
     jigsawCanvas.addEventListener('touchstart', e => {
         e.preventDefault();
         const rect = jigsawCanvas.getBoundingClientRect();
-        const x = (e.touches[0].clientX - rect.left) * (jigsawCanvas.width / rect.width);
-        const y = (e.touches[0].clientY - rect.top) * (jigsawCanvas.height / rect.height);
+        const touch = e.touches[0];
+        const x = (touch.clientX - rect.left) * (jigsawCanvas.width / rect.width);
+        const y = (touch.clientY - rect.top) * (jigsawCanvas.height / rect.height);
        
         for (let i = jigsawPieces.length - 1; i >= 0; i--) {
             const p = jigsawPieces[i];
-            if (x >= p.current.x && x <= p.current.x + p.size &&
-                y >= p.current.y && y <= p.current.y + p.size) {
+            if (x >= p.current.x - p.size/2 && x <= p.current.x + p.size/2 &&
+                y >= p.current.y - p.size/2 && y <= p.current.y + p.size/2) {
                 selectedPiece = p;
                 break;
             }
@@ -603,10 +674,11 @@
         e.preventDefault();
         if (selectedPiece) {
             const rect = jigsawCanvas.getBoundingClientRect();
-            const x = (e.touches[0].clientX - rect.left) * (jigsawCanvas.width / rect.width);
-            const y = (e.touches[0].clientY - rect.top) * (jigsawCanvas.height / rect.height);
-            selectedPiece.current.x = x - selectedPiece.size / 2;
-            selectedPiece.current.y = y - selectedPiece.size / 2;
+            const touch = e.touches[0];
+            const x = (touch.clientX - rect.left) * (jigsawCanvas.width / rect.width);
+            const y = (touch.clientY - rect.top) * (jigsawCanvas.height / rect.height);
+            selectedPiece.current.x = x;
+            selectedPiece.current.y = y;
             drawJigsaw();
         }
     });
@@ -623,142 +695,148 @@
             drawJigsaw();
         }
     });
+    // Mouse for jigsaw
+    jigsawCanvas.addEventListener('mousedown', handleJigsawMouseDown);
+    document.addEventListener('mousemove', handleJigsawMouseMove);
+    document.addEventListener('mouseup', handleJigsawMouseUp);
     initJigsaw(9);
-    // HEART MAZE
+    // HEART MAZE - Proper Grid-based
+    const heartMaze = [
+  [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
+  [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+  [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+  [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+  [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+  [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+  [1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+  [1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
+  [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
     const mazeCanvas = document.getElementById('maze-canvas');
     const mazeCtx = mazeCanvas.getContext('2d');
-    const mazeSize = 400;
-    mazeCanvas.width = mazeSize;
-    mazeCanvas.height = mazeSize;
-   
-    let playerPos = {x: 50, y: 350};
-    let goalPos = {x: 350, y: 50};
-    let touchStart = null;
-    let mouseStart = null;
+    const rows = heartMaze.length;
+    const cols = heartMaze[0].length;
+    let player = { row: 0, col: Math.floor(cols / 2) }; // Start position
+    const goal = { row: rows - 1, col: Math.floor(cols / 2) };
+    let touchStart = { x: 0, y: 0 };
    
     function drawMaze() {
+        const rect = mazeCanvas.getBoundingClientRect();
+        const size = Math.min(rect.width, rect.height);
+        const cellSize = size / Math.max(rows, cols);
+        mazeCanvas.width = size;
+        mazeCanvas.height = size;
+       
         mazeCtx.fillStyle = '#f0f0f0';
-        mazeCtx.fillRect(0, 0, mazeSize, mazeSize);
+        mazeCtx.fillRect(0, 0, size, size);
        
-        // Simple heart-shaped path
-        mazeCtx.strokeStyle = '#996537';
-        mazeCtx.lineWidth = 40;
-        mazeCtx.beginPath();
-        mazeCtx.moveTo(50, 350);
-        mazeCtx.lineTo(50, 200);
-        mazeCtx.bezierCurveTo(50, 100, 150, 50, 200, 100);
-        mazeCtx.bezierCurveTo(250, 50, 350, 100, 350, 200);
-        mazeCtx.lineTo(350, 50);
-        mazeCtx.stroke();
+        // Draw walls
+        mazeCtx.fillStyle = '#996537';
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if (heartMaze[r][c] === 1) {
+                    mazeCtx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+                }
+            }
+        }
        
-        // Player
+        // Draw player
         mazeCtx.fillStyle = '#9ecce3';
         mazeCtx.beginPath();
-        mazeCtx.arc(playerPos.x, playerPos.y, 15, 0, Math.PI * 2);
+        mazeCtx.arc((player.col + 0.5) * cellSize, (player.row + 0.5) * cellSize, cellSize / 3, 0, Math.PI * 2);
         mazeCtx.fill();
        
-        // Goal
+        // Draw goal
         mazeCtx.fillStyle = '#ff6b9d';
-        mazeCtx.font = '30px Arial';
+        mazeCtx.font = `${cellSize / 2}px Arial`;
         mazeCtx.textAlign = 'center';
-        mazeCtx.fillText('❤️', goalPos.x, goalPos.y + 10);
+        mazeCtx.textBaseline = 'middle';
+        mazeCtx.fillText('❤️', (goal.col + 0.5) * cellSize, (goal.row + 0.5) * cellSize);
        
         // Check win
-        const dist = Math.hypot(playerPos.x - goalPos.x, playerPos.y - goalPos.y);
-        if (dist < 30) {
-            mazeCtx.fillStyle = 'rgba(158, 204, 227, 0.8)';
-            mazeCtx.fillRect(0, 0, mazeSize, mazeSize);
-            mazeCtx.fillStyle = 'white';
-            mazeCtx.font = '40px Arial';
-            mazeCtx.textAlign = 'center';
-            mazeCtx.fillText('You Win! 💕', mazeSize/2, mazeSize/2);
+        if (player.row === goal.row && player.col === goal.col) {
+            showWin('Yay Saraaa! Heart maze solve kar liya! Jaise tune mera dil jeet liya forever! 💖😘', resetMaze);
         }
     }
    
-    function handleMazeTouchStart(e) {
-        e.preventDefault();
-        const rect = mazeCanvas.getBoundingClientRect();
-        touchStart = {
-            x: e.touches[0].clientX - rect.left,
-            y: e.touches[0].clientY - rect.top
-        };
-    }
-   
-    function handleMazeTouchEnd(e) {
-        e.preventDefault();
-        if (!touchStart) return;
-       
-        const rect = mazeCanvas.getBoundingClientRect();
-        const touchEnd = {
-            x: e.changedTouches[0].clientX - rect.left,
-            y: e.changedTouches[0].clientY - rect.top
-        };
-       
-        const scaleX = mazeSize / rect.width;
-        const scaleY = mazeSize / rect.height;
-        const dx = (touchEnd.x - touchStart.x) * scaleX;
-        const dy = (touchEnd.y - touchStart.y) * scaleY;
-        const step = 30;
-       
-        if (Math.abs(dx) > Math.abs(dy)) {
-            playerPos.x += dx > 0 ? step : -step;
-        } else {
-            playerPos.y += dy > 0 ? step : -step;
+    function movePlayer(dr, dc) {
+        const newRow = player.row + dr;
+        const newCol = player.col + dc;
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && heartMaze[newRow][newCol] === 0) {
+            player.row = newRow;
+            player.col = newCol;
         }
-       
-        playerPos.x = Math.max(20, Math.min(mazeSize - 20, playerPos.x));
-        playerPos.y = Math.max(20, Math.min(mazeSize - 20, playerPos.y));
-       
-        touchStart = null;
-        drawMaze();
-    }
-
-    function handleMazeMouseDown(e) {
-        const rect = mazeCanvas.getBoundingClientRect();
-        mouseStart = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-    }
-   
-    function handleMazeMouseUp(e) {
-        if (!mouseStart) return;
-       
-        const rect = mazeCanvas.getBoundingClientRect();
-        const mouseEnd = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-       
-        const scaleX = mazeSize / rect.width;
-        const scaleY = mazeSize / rect.height;
-        const dx = (mouseEnd.x - mouseStart.x) * scaleX;
-        const dy = (mouseEnd.y - mouseStart.y) * scaleY;
-        const step = 30;
-       
-        if (Math.abs(dx) > Math.abs(dy)) {
-            playerPos.x += dx > 0 ? step : -step;
-        } else {
-            playerPos.y += dy > 0 ? step : -step;
-        }
-       
-        playerPos.x = Math.max(20, Math.min(mazeSize - 20, playerPos.x));
-        playerPos.y = Math.max(20, Math.min(mazeSize - 20, playerPos.y));
-       
-        mouseStart = null;
         drawMaze();
     }
    
-    mazeCanvas.addEventListener('touchstart', handleMazeTouchStart);
-    mazeCanvas.addEventListener('touchend', handleMazeTouchEnd);
-    mazeCanvas.addEventListener('mousedown', handleMazeMouseDown);
-    mazeCanvas.addEventListener('mouseup', handleMazeMouseUp);
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (document.getElementById('page2').classList.contains('active')) {
+            switch(e.key) {
+                case 'ArrowUp': movePlayer(-1, 0); break;
+                case 'ArrowDown': movePlayer(1, 0); break;
+                case 'ArrowLeft': movePlayer(0, -1); break;
+                case 'ArrowRight': movePlayer(0, 1); break;
+            }
+        }
+    });
+   
+    // Touch swipe for maze
+    mazeCanvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        touchStart.x = e.touches[0].clientX;
+        touchStart.y = e.touches[0].clientY;
+    });
+    mazeCanvas.addEventListener('touchend', e => {
+        e.preventDefault();
+        const touchEnd = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+        const dx = touchEnd.x - touchStart.x;
+        const dy = touchEnd.y - touchStart.y;
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 50) movePlayer(0, 1); // Right
+            else if (dx < -50) movePlayer(0, -1); // Left
+        } else {
+            if (dy > 50) movePlayer(1, 0); // Down
+            else if (dy < -50) movePlayer(-1, 0); // Up
+        }
+    });
+   
+    // Mouse click for maze (click on direction)
+    mazeCanvas.addEventListener('click', e => {
+        const rect = mazeCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const size = Math.min(rect.width, rect.height);
+        const cellSize = size / Math.max(rows, cols);
+        const clickCol = Math.floor(x / cellSize);
+        const clickRow = Math.floor(y / cellSize);
+        const dcol = clickCol - player.col;
+        const drow = clickRow - player.row;
+        if (Math.abs(dcol) + Math.abs(drow) === 1) { // Adjacent
+            movePlayer(drow, dcol);
+        }
+    });
    
     function resetMaze() {
-        playerPos = {x: 50, y: 350};
+        player = { row: 0, col: Math.floor(cols / 2) };
         drawMaze();
     }
-   
     drawMaze();
     // DOT CONNECT
     const dotCanvas = document.getElementById('dot-canvas');
@@ -808,53 +886,45 @@
        
         // Check completion
         if (connectedDots.length === heartDots.length) {
-            dotCtx.strokeStyle = '#ff6b9d';
-            dotCtx.lineWidth = 5;
-            dotCtx.shadowBlur = 20;
-            dotCtx.shadowColor = '#ff6b9d';
-            dotCtx.beginPath();
-            dotCtx.moveTo(connectedDots[0].x, connectedDots[0].y);
-            connectedDots.forEach(dot => dotCtx.lineTo(dot.x, dot.y));
-            dotCtx.closePath();
-            dotCtx.stroke();
-            dotCtx.shadowBlur = 0;
+            showWin('Beautiful job Saraaa! Heart perfectly banaya! Ab mera dil bhi tumhare haath mein hai! 💕🌹', resetDots);
         }
     }
-
-    function handleDotMouseDown(e) {
+   
+    function handleDotClick(e) {
         const rect = dotCanvas.getBoundingClientRect();
         const x = (e.clientX - rect.left) * (dotSize / rect.width);
         const y = (e.clientY - rect.top) * (dotSize / rect.height);
        
-        const clicked = heartDots.find(dot =>
+        const clickedIndex = heartDots.findIndex(dot =>
             Math.hypot(dot.x - x, dot.y - y) < 20
         );
        
-        if (clicked && !connectedDots.includes(clicked)) {
-            connectedDots.push(clicked);
+        if (clickedIndex !== -1 && connectedDots.length === clickedIndex) {
+            connectedDots.push(heartDots[clickedIndex]);
             drawDots();
         }
     }
    
-    dotCanvas.addEventListener('mousedown', handleDotMouseDown);
+    dotCanvas.addEventListener('click', handleDotClick);
     dotCanvas.addEventListener('touchstart', e => {
         e.preventDefault();
         const rect = dotCanvas.getBoundingClientRect();
-        const x = (e.touches[0].clientX - rect.left) * (dotSize / rect.width);
-        const y = (e.touches[0].clientY - rect.top) * (dotSize / rect.height);
+        const touch = e.touches[0];
+        const x = (touch.clientX - rect.left) * (dotSize / rect.width);
+        const y = (touch.clientY - rect.top) * (dotSize / rect.height);
        
-        const clicked = heartDots.find(dot =>
+        const clickedIndex = heartDots.findIndex(dot =>
             Math.hypot(dot.x - x, dot.y - y) < 20
         );
        
-        if (clicked && !connectedDots.includes(clicked)) {
-            connectedDots.push(clicked);
+        if (clickedIndex !== -1 && connectedDots.length === clickedIndex) {
+            connectedDots.push(heartDots[clickedIndex]);
             drawDots();
         }
     });
    
     function undoDot() {
-        connectedDots.pop();
+        if (connectedDots.length > 0) connectedDots.pop();
         drawDots();
     }
    
