@@ -83,7 +83,7 @@
   /* Modal */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 200; }
   .modal.active { display: flex; }
-  .modal-box { background: white; border-radius: 20px; padding: 20px; max-width: 90%; max-height: 80%; overflow: auto; transform: scale(0.8); transition: var(--transition); }
+  .modal-box { background: white; border-radius: 20px; padding: 20px; max-width: 90%; max-height: 80%; overflow: auto; transform: scale(0.8); transition: var(--transition); color: #333; }
   .modal.active .modal-box { transform: scale(1); }
   /* Notepad */
   .txtarea { width: 100%; min-height: 200px; border: none; border-radius: 12px; padding: 16px; font-family: 'Dancing Script', cursive; font-size: 18px; background: rgba(255,255,255,0.95); color: #333; resize: vertical; transition: var(--transition); }
@@ -117,6 +117,7 @@
       <div class="card">
         <div class="title">🔐 Unlock Our Story</div>
         <div class="subtitle">Win 3 SOS games in a row to reveal the magic</div>
+        <button id="howToPlayBtn" class="pill" style="display: block; margin: 0 auto 12px;">Kaise Khelen? (How to Play)</button>
         <div class="sos-board" id="sosBoard"></div>
         <div class="control-row" style="display: flex; gap: 8px; justify-content: center; margin: 12px 0;">
           <button id="selectS" class="pill active">S</button>
@@ -124,7 +125,7 @@
           <button id="resetSos" class="pill">Reset Game</button>
         </div>
         <div class="progress"><div id="progBar"></div></div>
-        <div id="sosMessage" class="muted" style="text-align: center; margin-top: 12px;">Choose S or O, then tap a cell to begin</div>
+        <div id="sosMessage" class="muted" style="text-align: center; margin-top: 12px;">Choose S or O, then tap an empty cell to place your letter.</div>
         <div id="scoreDisplay" style="text-align: center; font-weight: 700; font-size: 18px; margin-top: 8px;">0 - 0</div>
         <div id="streakDisplay" class="small" style="text-align: center;">Streak: 0/3</div>
       </div>
@@ -137,13 +138,10 @@
     <section id="page-0" class="page">
       <div class="card">
         <div class="aspect9x16 center" id="videoSlot" style="background: var(--bg-primary); position: relative; overflow: hidden;">
-          <video id="videoPlayer" loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=">
-            <!-- Replace with actual video sources -->
-            <source src="video1.mp4" type="video/mp4">
-          </video>
-          <div id="messageOverlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.5s;">
-            <div id="videoEmoji" style="font-size: 64px; margin-bottom: 12px;"></div>
-            <div id="videoTitle" style="font-weight: 900; font-size: 18px; text-align: center; padding: 0 16px;"></div>
+          <div id="videoPlaceholder" style="width: 100%; height: 100%; background: linear-gradient(135deg, #ff6b6b, #ff9a9e); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div id="videoEmoji" style="font-size: 64px; margin-bottom: 12px;">💕</div>
+            <div id="videoTitle" style="font-weight: 900; font-size: 18px; text-align: center; padding: 0 16px;">Our Eternal Flame</div>
+            <div class="muted">Tap to imagine our moments ❤️</div>
           </div>
         </div>
         <div style="display: flex; gap: 12px; justify-content: center; margin: 12px 0;">
@@ -245,7 +243,7 @@
     </div>
   </div>
 
-  <!-- Modal for Polaroid Zoom -->
+  <!-- Modal for Polaroid Zoom & How to Play -->
   <div id="modal" class="modal">
     <div class="modal-box">
       <div id="modalContent"></div>
@@ -267,6 +265,25 @@ let selectedLetter = 'S';
 let sosScores = { human: 0, ai: 0 };
 let sosGameOver = false;
 let videoIndex = 0;
+
+/* Jigsaw Globals - Moved up to avoid init issues */
+const jigSlots = [
+  {x:20, y:20}, {x:50, y:20}, {x:80, y:20},
+  {x:20, y:50}, {x:50, y:50}, {x:80, y:50},
+  {x:20, y:80}, {x:50, y:80}, {x:80, y:80}
+];
+let jigPieces = [];
+
+/* Dots Globals */
+let connectedDots = [];
+const dotPositions = [
+  [15,15], [50,15], [85,15],
+  [15,50], [50,50], [85,50],
+  [15,85], [50,85], [85,85]
+];
+
+/* Maze Globals */
+let mazePos = { x: 10, y: 10 };
 
 /* Data */
 const videos = [
@@ -304,9 +321,9 @@ const sosBoardEl = document.getElementById('sosBoard');
 const selectS = document.getElementById('selectS');
 const selectO = document.getElementById('selectO');
 const resetSos = document.getElementById('resetSos');
+const howToPlayBtn = document.getElementById('howToPlayBtn');
 const videoSlot = document.getElementById('videoSlot');
-const videoPlayer = document.getElementById('videoPlayer');
-const messageOverlay = document.getElementById('messageOverlay');
+const videoPlaceholder = document.getElementById('videoPlaceholder');
 const videoEmoji = document.getElementById('videoEmoji');
 const videoTitle = document.getElementById('videoTitle');
 const videoCounter = document.getElementById('videoCounter');
@@ -323,13 +340,15 @@ const notes = document.getElementById('notes');
 function init() {
   renderTimeline();
   renderPolaroids();
-  setupGames();
   if (SKIP_SOS) {
     unlockAll();
   } else {
     initSOS();
   }
+  setupGames();
   goTo(0);
+  renderVideo();
+  renderMessages();
 }
 init();
 
@@ -356,14 +375,10 @@ function goTo(idx) {
 /* Page 1: Videos & Messages */
 function renderVideo() {
   const v = videos[videoIndex];
-  videoSlot.style.background = v.bg;
+  videoPlaceholder.style.background = v.bg;
   videoEmoji.textContent = v.emoji;
   videoTitle.textContent = v.title;
   videoCounter.textContent = `${videoIndex + 1} / ${videos.length}`;
-  messageOverlay.style.opacity = 0;
-  videoPlayer.load(); // Reload for different poster if needed
-  videoPlayer.play().catch(() => {});
-  setTimeout(() => messageOverlay.style.opacity = 1, 1000);
 }
 function renderMessages() {
   messagesSection.innerHTML = videos.map((v, i) => `
@@ -374,8 +389,6 @@ function renderMessages() {
 }
 prevVideo.onclick = () => { videoIndex = (videoIndex - 1 + videos.length) % videos.length; renderVideo(); renderMessages(); };
 nextVideo.onclick = () => { videoIndex = (videoIndex + 1) % videos.length; renderVideo(); renderMessages(); };
-renderVideo();
-renderMessages();
 
 /* SOS Game */
 function initSOS() {
@@ -470,8 +483,8 @@ function countNewSOS(idx) {
   let count = 0;
   for (let line of lines) {
     if (line.includes(idx)) {
-      const sPos = line[0] === idx ? 0 : line[2] === idx ? 2 : 1;
-      if (sosBoard[line[0]] === 'S' && sosBoard[line[1]] === 'O' && sosBoard[line[2]] === 'S') count++;
+      const [a, b, c] = line;
+      if (sosBoard[a] === 'S' && sosBoard[b] === 'O' && sosBoard[c] === 'S') count++;
     }
   }
   return count;
@@ -479,7 +492,8 @@ function countNewSOS(idx) {
 function countNewSOSForPos(pos, letter) {
   const tempBoard = [...sosBoard];
   tempBoard[pos] = letter;
-  return countNewSOS.call({sosBoard: tempBoard}, pos);
+  const tempCount = { sosBoard: tempBoard };
+  return countNewSOS.call(tempCount, pos);
 }
 function getEmptyIndices() {
   return sosBoard.map((cell, idx) => cell === null ? idx : null).filter(idx => idx !== null);
@@ -528,6 +542,17 @@ function updateWinDisplay() {
 selectS.onclick = () => { selectedLetter = 'S'; selectS.classList.add('active'); selectO.classList.remove('active'); };
 selectO.onclick = () => { selectedLetter = 'O'; selectO.classList.add('active'); selectS.classList.remove('active'); };
 resetSos.onclick = initSOS;
+howToPlayBtn.onclick = () => {
+  modalContent.innerHTML = `
+    <h3 style="margin:0 0 12px; color:#ff6b6b;">SOS Game Kaise Khelen? ❤️</h3>
+    <p style="margin-bottom:8px;"><strong>Step 1:</strong> Upar S ya O button dabao to choose your letter.</p>
+    <p style="margin-bottom:8px;"><strong>Step 2:</strong> Grid mein koi empty cell tap karo to place the letter.</p>
+    <p style="margin-bottom:8px;"><strong>Rule:</strong> Agar horizontal, vertical ya diagonal mein S-O-S ban jaye (including your move), to aapko 1 point milta hai! Aur extra turn bhi.</p>
+    <p style="margin-bottom:8px;"><strong>Win:</strong> Zyada points banao AI se. 3 games continuously jeeto to all pages unlock ho jayenge! 💕</p>
+    <p style="font-style:italic; color:#666;">Easy peasy, bas love ki tarah simple hai! Good luck, jaan! 😘</p>
+  `;
+  modal.classList.add('active');
+};
 
 /* Games Setup */
 function setupGames() {
@@ -547,12 +572,6 @@ function setupGames() {
 }
 
 /* Jigsaw */
-const jigSlots = [
-  {x:20, y:20}, {x:50, y:20}, {x:80, y:20},
-  {x:20, y:50}, {x:50, y:50}, {x:80, y:50},
-  {x:20, y:80}, {x:50, y:80}, {x:80, y:80}
-];
-let jigPieces = [];
 function setupJigsaw() {
   const area = document.getElementById('jigArea');
   area.innerHTML = jigSlots.map(slot => `<div class="jig-slot" style="left:${slot.x}%; top:${slot.y}%;"></div>`).join('');
@@ -584,11 +603,11 @@ function dropPiece(e) {
   // Find nearest slot
   let nearestSlot = null;
   let minDist = Infinity;
+  const rect = e.currentTarget.getBoundingClientRect();
   jigSlots.forEach((slot, sIdx) => {
-    const rect = e.target.getBoundingClientRect();
-    const slotX = (slot.x / 100) * rect.width;
-    const slotY = (slot.y / 100) * rect.height;
-    const dist = Math.sqrt((e.clientX - rect.left - slotX)**2 + (e.clientY - rect.top - slotY)**2);
+    const slotX = (slot.x / 100) * rect.width + rect.left;
+    const slotY = (slot.y / 100) * rect.height + rect.top;
+    const dist = Math.sqrt((e.clientX - slotX)**2 + (e.clientY - slotY)**2);
     if (dist < minDist) {
       minDist = dist;
       nearestSlot = {slot, sIdx};
@@ -608,7 +627,6 @@ function dropPiece(e) {
 document.getElementById('resetJig').onclick = setupJigsaw;
 
 /* Maze */
-let mazePos = { x: 10, y: 10 };
 function setupMaze() {
   const area = document.getElementById('mazeArea');
   area.innerHTML = '<div class="goal">⭐</div>'; // Clear walls for simple maze
@@ -671,15 +689,8 @@ document.getElementById('mazeArea').addEventListener('touchend', (e) => {
   touchStartX = null;
   touchStartY = null;
 }, {passive: true});
-setupMaze();
 
 /* Dots Connect */
-let connectedDots = [];
-const dotPositions = [
-  [15,15], [50,15], [85,15],
-  [15,50], [50,50], [85,50],
-  [15,85], [50,85], [85,85]
-];
 function setupDots() {
   connectedDots = [];
   const svg = document.getElementById('connectSvg');
@@ -687,13 +698,11 @@ function setupDots() {
   document.querySelectorAll('.dot').forEach((dot, idx) => {
     dot.classList.remove('active');
     dot.onclick = () => connectDot(idx);
-    dot.style.left = dotPositions[idx][0] + '%';
-    dot.style.top = dotPositions[idx][1] + '%';
     dot.innerHTML = idx + 1;
   });
 }
 function connectDot(idx) {
-  if (connectedDots.includes(idx) || connectedDots.length > 0 && connectedDots[connectedDots.length - 1] !== idx - 1) return; // Sequential only
+  if (connectedDots.includes(idx)) return; // Allow any order, just tap all
   connectedDots.push(idx);
   const dot = document.getElementById(`dot${idx}`);
   dot.classList.add('active');
@@ -720,7 +729,6 @@ function drawLine(x1, y1, x2, y2) {
   svg.appendChild(line);
 }
 document.getElementById('resetDots').onclick = setupDots;
-setupDots();
 
 /* Timeline */
 function renderTimeline() {
@@ -790,6 +798,9 @@ window.closeModal = closeModal;
 window.dragStart = dragStart;
 window.dropPiece = dropPiece;
 window.connectDot = connectDot;
+window.setupJigsaw = setupJigsaw;
+window.setupMaze = setupMaze;
+window.setupDots = setupDots;
 </script>
 </body>
 </html>
