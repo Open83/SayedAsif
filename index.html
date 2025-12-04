@@ -41,7 +41,7 @@
   .nav button { flex: 1; padding: 12px; border-radius: 14px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); }
   .nav button.active { background: var(--accent); color: #fff; transform: scale(1.05); }
   .pill { padding: 8px 16px; border-radius: 20px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); }
-  .pill:hover { background: var(--glass-glow); transform: scale(1.05); }
+  .pill.active, .pill:hover { background: var(--glass-glow); transform: scale(1.05); }
   .btn { padding: 12px 20px; border-radius: 14px; border: none; background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; transition: var(--transition); }
   .btn:hover { transform: scale(1.05); }
   .muted { color: var(--text-muted); font-size: 14px; }
@@ -50,13 +50,14 @@
   /* SOS */
   .sos-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
   .sos-cell { aspect-ratio: 1; border-radius: 12px; background: var(--glass); border: none; font-size: 24px; font-weight: 900; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-  .sos-cell:hover { background: var(--glass-glow); transform: scale(1.1); }
+  .sos-cell:hover:not(:disabled) { background: var(--glass-glow); transform: scale(1.1); }
+  .sos-cell:disabled { cursor: not-allowed; opacity: 0.5; }
   /* Jigsaw */
-  .jig-area { background: linear-gradient(135deg, #ff9a9e, #fecfef); cursor: grab; }
-  .jig-piece { position: absolute; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 16px rgba(0,0,0,0.2); user-select: none; touch-action: none; }
+  .jig-area { background: linear-gradient(135deg, #ff9a9e, #fecfef); cursor: grab; user-select: none; touch-action: none; }
+  .jig-piece { position: absolute; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
   .jig-piece.dragging { transform: rotate(5deg) scale(1.1); z-index: 10; }
   .jig-piece.placed { background: linear-gradient(135deg, #ff6b6b, #ff9a9e); color: white; }
-  .jig-slot { position: absolute; width: 40px; height: 40px; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.5); }
+  .jig-slot { position: absolute; width: 40px; height: 40px; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
   /* Maze */
   .maze-area { background: linear-gradient(135deg, #ff90a3, #ff7aa2); position: relative; }
   .heart { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: var(--heart); font-size: 20px; transition: var(--transition); z-index: 5; }
@@ -118,13 +119,14 @@
         <div class="subtitle">Win 3 SOS games in a row to reveal the magic</div>
         <div class="sos-board" id="sosBoard"></div>
         <div class="control-row" style="display: flex; gap: 8px; justify-content: center; margin: 12px 0;">
-          <button id="selectS" class="pill">S</button>
+          <button id="selectS" class="pill active">S</button>
           <button id="selectO" class="pill">O</button>
-          <button id="resetSos" class="pill">Reset</button>
+          <button id="resetSos" class="pill">Reset Game</button>
         </div>
         <div class="progress"><div id="progBar"></div></div>
         <div id="sosMessage" class="muted" style="text-align: center; margin-top: 12px;">Choose S or O, then tap a cell to begin</div>
         <div id="scoreDisplay" style="text-align: center; font-weight: 700; font-size: 18px; margin-top: 8px;">0 - 0</div>
+        <div id="streakDisplay" class="small" style="text-align: center;">Streak: 0/3</div>
       </div>
     </section>
   </main>
@@ -135,9 +137,9 @@
     <section id="page-0" class="page">
       <div class="card">
         <div class="aspect9x16 center" id="videoSlot" style="background: var(--bg-primary); position: relative; overflow: hidden;">
-          <video id="videoPlayer" loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-            <!-- Placeholder videos; replace src with actual 9:16 MP4s -->
-            <source src="data:video/mp4;base64,..." type="video/mp4"> <!-- Dummy base64 or external -->
+          <video id="videoPlayer" loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=">
+            <!-- Replace with actual video sources -->
+            <source src="video1.mp4" type="video/mp4">
           </video>
           <div id="messageOverlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.5s;">
             <div id="videoEmoji" style="font-size: 64px; margin-bottom: 12px;"></div>
@@ -149,7 +151,7 @@
           <div id="videoCounter" class="pill">1 / 5</div>
           <button id="nextVideo" class="pill">Next →</button>
         </div>
-        <div id="messagesSection" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        <div id="messagesSection" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;"></div>
       </div>
     </section>
 
@@ -157,35 +159,35 @@
     <section id="page-1" class="page">
       <div class="card">
         <div class="title">🎮 Playful Moments</div>
-        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;">
           <button class="pill active" data-tab="jig">🧩 Jigsaw</button>
           <button class="pill" data-tab="maze">❤️ Maze</button>
           <button class="pill" data-tab="dots">💌 Connect</button>
         </div>
         <!-- Jigsaw Tab -->
-        <div id="tab-jig" class="card">
+        <div id="tab-jig" style="display: block;">
           <div class="aspect9x16 jig-area" id="jigArea"></div>
-          <button id="resetJig" class="pill" style="margin-top: 12px;">Reset Puzzle</button>
+          <button id="resetJig" class="pill" style="margin-top: 12px; display: block; margin-left: auto; margin-right: auto;">Reset Puzzle</button>
         </div>
         <!-- Maze Tab -->
         <div id="tab-maze" class="card" style="display: none;">
           <div class="aspect9x16 maze-area" id="mazeArea">
-            <div id="mazeHeart" class="heart center">❤️</div>
+            <div id="mazeHeart" class="heart center" style="left: 10%; top: 10%;">❤️</div>
             <div class="goal">⭐</div>
           </div>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px;">
-            <button class="pill" onclick="moveMaze('left')">⬅️</button>
+            <div></div>
             <button class="pill" onclick="moveMaze('up')">⬆️</button>
-            <button class="pill" onclick="moveMaze('right')">➡️</button>
             <div></div>
+            <button class="pill" onclick="moveMaze('left')">⬅️</button>
             <button class="pill" onclick="moveMaze('down')">⬇️</button>
-            <div></div>
+            <button class="pill" onclick="moveMaze('right')">➡️</button>
           </div>
         </div>
         <!-- Dots Tab -->
         <div id="tab-dots" class="card" style="display: none;">
           <div style="position: relative; height: 200px; margin-bottom: 12px;" id="dotsArea">
-            <svg id="connectSvg" style="position: absolute; inset: 0; width: 100%; height: 100%;"></svg>
+            <svg id="connectSvg" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; position: absolute; inset: 0; place-items: center;">
               <div id="dot0" class="dot" data-idx="0">1</div>
               <div id="dot1" class="dot" data-idx="1">2</div>
@@ -198,7 +200,7 @@
               <div id="dot8" class="dot" data-idx="8">9</div>
             </div>
           </div>
-          <button id="resetDots" class="pill">Reset Hearts</button>
+          <button id="resetDots" class="pill" style="display: block; margin-left: auto; margin-right: auto;">Reset Hearts</button>
         </div>
       </div>
     </section>
@@ -224,7 +226,7 @@
       <div class="card">
         <div class="title">💌 Whispered Words</div>
         <textarea id="notes" class="txtarea" placeholder="Dearest Saraaa, in the quiet of my heart, I write..."></textarea>
-        <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
           <button id="downloadNotes" class="btn">💾 Save as TXT</button>
           <button id="clearNotes" class="pill">Clear</button>
         </div>
@@ -258,33 +260,33 @@ const SKIP_SOS = false; // Set true to bypass
 const CHANCE_TO_MISTAKE = 0.35;
 let unlocked = SKIP_SOS;
 let winsInARow = 0;
+let currentPage = 0;
 let sosBoard = Array(9).fill(null);
 let sosTurn = 'human';
 let selectedLetter = 'S';
 let sosScores = { human: 0, ai: 0 };
+let sosGameOver = false;
 let videoIndex = 0;
 
 /* Data */
 const videos = [
-  { title: "Our Eternal Flame", emoji: "💕", bg: "linear-gradient(135deg, #ff6b6b, #ff9a9e)", msg: "From the stars above to the depths of my soul, you are my everything." },
-  { title: "Whispers in the Night", emoji: "🌙", bg: "linear-gradient(135deg, #6d28d9, #a78bfa)", msg: "In the silence of midnight, your voice is my lullaby." },
-  { title: "Adventures Unwritten", emoji: "✨", bg: "linear-gradient(135deg, #ffd166, #f97316)", msg: "Hand in hand, we'll chase horizons yet to see." },
-  { title: "Hearts Intertwined", emoji: "💞", bg: "linear-gradient(135deg, #ff90a3, #ff7aa2)", msg: "Our love, a tapestry woven with threads of gold." },
-  { title: "Forever Blooms", emoji: "🌸", bg: "linear-gradient(135deg, #ff8a72, #ff6b6b)", msg: "Like roses in spring, our story never fades." }
+  { title: "Our Eternal Flame", emoji: "💕", bg: "linear-gradient(135deg, #ff6b6b, #ff9a9e)", msg: "From the stars above to the depths of my soul, you are my everything. Every beat of my heart whispers your name in the quiet night." },
+  { title: "Whispers in the Night", emoji: "🌙", bg: "linear-gradient(135deg, #6d28d9, #a78bfa)", msg: "In the silence of midnight, your voice is my lullaby. We share dreams that dance like fireflies under the velvet sky." },
+  { title: "Adventures Unwritten", emoji: "✨", bg: "linear-gradient(135deg, #ffd166, #f97316)", msg: "Hand in hand, we'll chase horizons yet to see. Our path is paved with laughter, love, and endless possibility." },
+  { title: "Hearts Intertwined", emoji: "💞", bg: "linear-gradient(135deg, #ff90a3, #ff7aa2)", msg: "Our love, a tapestry woven with threads of gold. Each moment with you is a brushstroke on the canvas of forever." },
+  { title: "Forever Blooms", emoji: "🌸", bg: "linear-gradient(135deg, #ff8a72, #ff6b6b)", msg: "Like roses in spring, our story never fades. You are the bloom that colors my world in hues of eternal spring." }
 ];
-const messages = videos.map(v => v.msg);
 const milestones = [
-  { emoji: '👀', title: 'First Glance', desc: 'Eyes locked, worlds collided.', date: 'Day 1', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' }, // Placeholder SVG
-  { emoji: '😘', title: 'First Kiss', desc: 'Sparks flew, time stood still.', date: 'Week 2', img: '...' },
-  // Add more with placeholders
-  { emoji: '🌟', title: 'Promises Made', desc: 'Under the moon, forever sealed.', date: 'Month 1', img: '...' },
-  { emoji: '💍', title: 'Our Vows', desc: 'Eternity in a single yes.', date: 'Today', img: '...' },
-  { emoji: '♾️', title: 'Infinite Us', desc: 'Love without end.', date: 'Always', img: '...' }
+  { emoji: '👀', title: 'First Glance', desc: 'Eyes locked, worlds collided in a spark of destiny.', date: 'Day 1', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
+  { emoji: '😘', title: 'First Kiss', desc: 'Sparks flew, time stood still in that magical embrace.', date: 'Week 2', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
+  { emoji: '🌟', title: 'Promises Made', desc: 'Under the moon, forever sealed with whispered vows.', date: 'Month 1', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
+  { emoji: '💍', title: 'Our Vows', desc: 'Eternity in a single yes, hearts forever bound.', date: 'Today', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
+  { emoji: '♾️', title: 'Infinite Us', desc: 'Love without end, a circle of joy unending.', date: 'Always', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' }
 ];
 const polaroids = Array.from({length: 8}, (_, i) => ({
   title: ['Sunset Stroll', 'Cozy Nights', 'Beach Whispers', 'Starlit Dances', 'Coffee Dates', 'Rainy Kisses', 'Festival Lights', 'Quiet Mornings'][i],
-  img: `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRkYiLz48L3N2Zz4=`, // Placeholder
-  desc: 'A snapshot of our joy.'
+  img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRkYiLz48L3N2Zz4=',
+  desc: 'A snapshot of our joy, frozen in time forever.'
 }));
 
 /* Elements */
@@ -296,6 +298,7 @@ const nav = document.getElementById('nav');
 const winDisplay = document.getElementById('winDisplay');
 const progBar = document.getElementById('progBar');
 const scoreDisplay = document.getElementById('scoreDisplay');
+const streakDisplay = document.getElementById('streakDisplay');
 const sosMessage = document.getElementById('sosMessage');
 const sosBoardEl = document.getElementById('sosBoard');
 const selectS = document.getElementById('selectS');
@@ -318,12 +321,14 @@ const notes = document.getElementById('notes');
 
 /* Init */
 function init() {
-  if (SKIP_SOS) unlockAll();
-  else initSOS();
-  renderVideos();
   renderTimeline();
   renderPolaroids();
   setupGames();
+  if (SKIP_SOS) {
+    unlockAll();
+  } else {
+    initSOS();
+  }
   goTo(0);
 }
 init();
@@ -336,20 +341,19 @@ function unlockAll() {
   nav.style.display = 'block';
   winsInARow = 3;
   updateWinDisplay();
+  updateStreakDisplay();
 }
 
 /* Navigation */
 function goTo(idx) {
-  if (!unlocked && idx > -1) return alert('Win 3 SOS to unlock!'); // But since unlock hides, not needed
+  if (idx < 0) return;
+  if (!unlocked) return;
   pages.forEach((p, i) => p.classList.toggle('active', i === idx));
   navButtons.forEach((b, i) => b.classList.toggle('active', i === idx));
+  currentPage = idx;
 }
 
-/* Page 1: Videos */
-function renderVideos() {
-  renderVideo();
-  renderMessages();
-}
+/* Page 1: Videos & Messages */
 function renderVideo() {
   const v = videos[videoIndex];
   videoSlot.style.background = v.bg;
@@ -357,144 +361,264 @@ function renderVideo() {
   videoTitle.textContent = v.title;
   videoCounter.textContent = `${videoIndex + 1} / ${videos.length}`;
   messageOverlay.style.opacity = 0;
-  videoPlayer.play().catch(() => {}); // Auto-play
-  setTimeout(() => messageOverlay.style.opacity = 1, 2000); // Show message after start
+  videoPlayer.load(); // Reload for different poster if needed
+  videoPlayer.play().catch(() => {});
+  setTimeout(() => messageOverlay.style.opacity = 1, 1000);
 }
 function renderMessages() {
-  messagesSection.innerHTML = messages.map(msg => `<div class="card" style="text-align: center; animation: fadeIn 1s;"><p class="subtitle">${msg}</p></div>`).join('');
+  messagesSection.innerHTML = videos.map((v, i) => `
+    <div class="card" style="text-align: center; opacity: ${i === videoIndex ? 1 : 0.7}; transition: opacity 0.5s;">
+      <div class="subtitle" style="white-space: pre-line;">${v.msg}</div>
+    </div>
+  `).join('');
 }
-prevVideo.onclick = () => { videoIndex = (videoIndex - 1 + videos.length) % videos.length; renderVideo(); };
-nextVideo.onclick = () => { videoIndex = (videoIndex + 1) % videos.length; renderVideo(); };
+prevVideo.onclick = () => { videoIndex = (videoIndex - 1 + videos.length) % videos.length; renderVideo(); renderMessages(); };
+nextVideo.onclick = () => { videoIndex = (videoIndex + 1) % videos.length; renderVideo(); renderMessages(); };
+renderVideo();
+renderMessages();
 
 /* SOS Game */
 function initSOS() {
   sosBoard = Array(9).fill(null);
   sosTurn = 'human';
+  selectedLetter = 'S';
   sosScores = { human: 0, ai: 0 };
+  sosGameOver = false;
+  selectS.classList.add('active');
+  selectO.classList.remove('active');
   renderSOS();
   updateScore();
   updateProgress();
+  updateStreakDisplay();
+  sosMessage.textContent = 'Choose S or O, then tap an empty cell to place your letter.';
 }
 function renderSOS() {
-  sosBoardEl.innerHTML = sosBoard.map((cell, i) => `<button class="sos-cell" data-idx="${i}">${cell || ''}</button>`).join('');
-  sosBoardEl.querySelectorAll('.sos-cell').forEach(btn => btn.onclick = (e) => handleClick(parseInt(e.target.dataset.idx)));
-  selectS.classList.toggle('active', selectedLetter === 'S');
-  selectO.classList.toggle('active', selectedLetter === 'O');
+  sosBoardEl.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('button');
+    cell.className = 'sos-cell';
+    cell.disabled = sosGameOver || sosTurn !== 'human';
+    cell.textContent = sosBoard[i] || '';
+    cell.onclick = () => handleSOSClick(i);
+    sosBoardEl.appendChild(cell);
+  }
 }
-selectS.onclick = () => { selectedLetter = 'S'; renderSOS(); };
-selectO.onclick = () => { selectedLetter = 'O'; renderSOS(); };
-resetSos.onclick = initSOS;
-function handleClick(idx) {
-  if (sosBoard[idx] || sosTurn !== 'human') return;
+function handleSOSClick(idx) {
+  if (sosBoard[idx] !== null || sosTurn !== 'human' || sosGameOver) return;
   sosBoard[idx] = selectedLetter;
-  const score = countSOS(idx);
-  sosScores.human += score;
-  sosMessage.textContent = score > 0 ? `You scored ${score} SOS! Extra turn.` : 'AI\'s turn...';
+  const newSOS = countNewSOS(idx);
+  sosScores.human += newSOS;
   renderSOS();
   updateScore();
-  if (isFull()) return finishSOS();
-  if (score === 0) setTimeout(() => aiTurn(), 500);
+  if (newSOS > 0) {
+    sosMessage.textContent = `Great! You formed ${newSOS} new SOS(es). Your turn again!`;
+    if (isBoardFull()) finishGame();
+  } else {
+    sosTurn = 'ai';
+    sosMessage.textContent = 'AI\'s turn...';
+    setTimeout(aiTurn, 800);
+  }
+  if (isBoardFull() && newSOS === 0) finishGame();
 }
 function aiTurn() {
-  // Simple Minimax simulation with mistake
-  let bestMove = minimax(sosBoard, 3, true)[1];
-  if (Math.random() < CHANCE_TO_MISTAKE) bestMove = Math.floor(Math.random() * 9);
-  const empties = sosBoard.map((c, i) => c ? null : i).filter(Boolean);
-  const move = bestMove || empties[Math.floor(Math.random() * empties.length)];
-  sosBoard[move] = Math.random() < 0.5 ? 'S' : 'O';
-  const score = countSOS(move);
-  sosScores.ai += score;
-  sosMessage.textContent = score > 0 ? `AI scored ${score}!` : 'Your turn.';
-  sosTurn = 'human';
+  if (sosGameOver) return;
+  let move = getAIMove();
+  if (Math.random() < CHANCE_TO_MISTAKE) {
+    const empties = getEmptyIndices();
+    move = empties[Math.floor(Math.random() * empties.length)];
+  }
+  const letter = Math.random() < 0.6 ? 'S' : 'O'; // Slight bias to S for scoring
+  sosBoard[move] = letter;
+  const newSOS = countNewSOS(move);
+  sosScores.ai += newSOS;
   renderSOS();
   updateScore();
-  if (isFull()) finishSOS();
+  sosMessage.textContent = newSOS > 0 ? `AI formed ${newSOS} SOS(es). AI turn again!` : 'Your turn!';
+  if (newSOS > 0 || isBoardFull()) {
+    if (isBoardFull()) finishGame();
+    else setTimeout(aiTurn, 800);
+  } else {
+    sosTurn = 'human';
+  }
 }
-function minimax(board, depth, maximizing) {
-  if (isFull()) return [evaluate(board), -1];
-  // Simplified: return best score and move index
-  let best = maximizing ? -Infinity : Infinity;
-  let bestIdx = -1;
-  board.map((c, i) => c ? null : i).filter(Boolean).forEach(idx => {
-    let temp = board.slice(); temp[idx] = maximizing ? 'S' : 'O';
-    let val = minimax(temp, depth - 1, !maximizing)[0];
-    if (maximizing ? val > best : val < best) { best = val; bestIdx = idx; }
-  });
-  return [best, bestIdx];
+function getAIMove() {
+  const empties = getEmptyIndices();
+  // Try to score
+  for (let pos of empties) {
+    if (countNewSOSForPos(pos, 'S') > 0) return pos;
+    if (countNewSOSForPos(pos, 'O') > 0) return pos;
+  }
+  // Try to block human
+  for (let pos of empties) {
+    if (countNewSOSForPos(pos, 'S') > 0 && selectedLetter === 'S') return pos; // Block with O
+    if (countNewSOSForPos(pos, 'O') > 0 && selectedLetter === 'O') return pos; // Block with S
+  }
+  // Strategic: center first
+  const strategic = [4, 0, 2, 6, 8, 1, 3, 5, 7];
+  for (let pos of strategic) {
+    if (sosBoard[pos] === null) return pos;
+  }
+  return empties[0];
 }
-function evaluate(board) { return countAllSOS(board, 'S') - countAllSOS(board, 'O'); } // Bias to human S
-function countSOS(idx) {
-  if (!sosBoard[idx]) return 0;
-  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  return lines.filter(line => line.includes(idx) && line.every((_, j) => sosBoard[line[j]] === (j === 0 || j === 2 ? 'S' : 'O'))).length;
+function countNewSOS(idx) {
+  if (sosBoard[idx] === null) return 0;
+  const lines = [
+    [0,1,2], [3,4,5], [6,7,8], // rows
+    [0,3,6], [1,4,7], [2,5,8], // cols
+    [0,4,8], [2,4,6] // diags
+  ];
+  let count = 0;
+  for (let line of lines) {
+    if (line.includes(idx)) {
+      const sPos = line[0] === idx ? 0 : line[2] === idx ? 2 : 1;
+      if (sosBoard[line[0]] === 'S' && sosBoard[line[1]] === 'O' && sosBoard[line[2]] === 'S') count++;
+    }
+  }
+  return count;
 }
-function countAllSOS(board, player) { /* Count total for player */ return board.reduce((acc, _, i) => acc + (player === 'human' ? countSOS(i) : 0), 0); } // Simplified
-function isFull() { return sosBoard.every(c => c); }
-function finishSOS() {
-  const humanWin = sosScores.human > sosScores.ai;
-  if (humanWin) winsInARow++; else winsInARow = 0;
-  sosMessage.textContent = humanWin ? 'You win! ' : 'Try again. ';
-  updateProgress();
+function countNewSOSForPos(pos, letter) {
+  const tempBoard = [...sosBoard];
+  tempBoard[pos] = letter;
+  return countNewSOS.call({sosBoard: tempBoard}, pos);
+}
+function getEmptyIndices() {
+  return sosBoard.map((cell, idx) => cell === null ? idx : null).filter(idx => idx !== null);
+}
+function isBoardFull() {
+  return sosBoard.every(cell => cell !== null);
+}
+function finishGame() {
+  sosGameOver = true;
+  renderSOS(); // Disable cells
+  let message = '';
+  if (sosScores.human > sosScores.ai) {
+    winsInARow++;
+    message = `You win this round! (${sosScores.human} - ${sosScores.ai}) Streak updated.`;
+  } else if (sosScores.ai > sosScores.human) {
+    winsInARow = 0;
+    message = `AI wins this round. (${sosScores.ai} - ${sosScores.human}) Streak reset.`;
+  } else {
+    winsInARow = 0;
+    message = `Tie! (${sosScores.human} - ${sosScores.ai}) Streak reset.`;
+  }
+  sosMessage.textContent = message;
+  updateStreakDisplay();
   updateWinDisplay();
-  if (winsInARow >= 3) unlockAll();
+  if (winsInARow >= 3) {
+    setTimeout(() => {
+      alert('🎉 Congratulations! All pages are now unlocked. Enjoy our story! ❤️');
+      unlockAll();
+    }, 1000);
+  }
+  // Auto reset after 3s
+  setTimeout(initSOS, 3000);
 }
-function updateScore() { scoreDisplay.textContent = `${sosScores.human} - ${sosScores.ai}`; }
-function updateProgress() { progBar.style.width = `${(winsInARow / 3) * 100}%`; }
-function updateWinDisplay() { winDisplay.textContent = `Wins: ${winsInARow} / 3`; }
+function updateScore() {
+  scoreDisplay.textContent = `${sosScores.human} - ${sosScores.ai}`;
+}
+function updateProgress() {
+  progBar.style.width = `${Math.min(100, (winsInARow / 3) * 100)}%`;
+}
+function updateStreakDisplay() {
+  streakDisplay.textContent = `Streak: ${winsInARow}/3`;
+}
+function updateWinDisplay() {
+  winDisplay.textContent = `Wins: ${winsInARow} / 3`;
+}
+selectS.onclick = () => { selectedLetter = 'S'; selectS.classList.add('active'); selectO.classList.remove('active'); };
+selectO.onclick = () => { selectedLetter = 'O'; selectO.classList.add('active'); selectS.classList.remove('active'); };
+resetSos.onclick = initSOS;
 
 /* Games Setup */
 function setupGames() {
   setupJigsaw();
   setupMaze();
   setupDots();
-  document.querySelectorAll('[data-tab]').forEach(btn => btn.onclick = (e) => switchTab(e.target.dataset.tab));
-}
-function switchTab(tab) {
-  document.querySelectorAll('#page-1 .card:not([id^="tab-"])').forEach(c => c.style.display = 'none');
-  document.querySelectorAll('#page-1 .card').forEach(c => c.style.display = 'none');
-  document.getElementById(`tab-${tab}`).style.display = 'block';
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-  document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('[data-tab]').forEach(btn => {
+    btn.onclick = (e) => {
+      const tab = e.target.dataset.tab;
+      document.getElementById('tab-jig').style.display = tab === 'jig' ? 'block' : 'none';
+      document.getElementById('tab-maze').style.display = tab === 'maze' ? 'block' : 'none';
+      document.getElementById('tab-dots').style.display = tab === 'dots' ? 'block' : 'none';
+      document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+    };
+  });
 }
 
 /* Jigsaw */
-let jigSlots = [{x:10,y:10},{x:50,y:10},{x:90,y:10},{x:10,y:50}, /* etc for 9 slots */ {x:50,y:50},{x:90,y:50},{x:10,y:90},{x:50,y:90},{x:90,y:90}];
+const jigSlots = [
+  {x:20, y:20}, {x:50, y:20}, {x:80, y:20},
+  {x:20, y:50}, {x:50, y:50}, {x:80, y:50},
+  {x:20, y:80}, {x:50, y:80}, {x:80, y:80}
+];
+let jigPieces = [];
 function setupJigsaw() {
   const area = document.getElementById('jigArea');
-  area.innerHTML = jigSlots.map((slot, i) => `<div class="jig-slot" style="left:${slot.x}%;top:${slot.y}%;"></div>`).join('');
-  // Pieces
+  area.innerHTML = jigSlots.map(slot => `<div class="jig-slot" style="left:${slot.x}%; top:${slot.y}%;"></div>`).join('');
+  jigPieces = [];
   for (let i = 0; i < 9; i++) {
     const piece = document.createElement('div');
     piece.className = 'jig-piece';
+    piece.dataset.idx = i;
     piece.style.left = Math.random() * 80 + 10 + '%';
     piece.style.top = Math.random() * 80 + 10 + '%';
-    piece.textContent = i + 1;
+    piece.innerHTML = i + 1;
     piece.draggable = true;
-    piece.ondragstart = (e) => e.dataTransfer.setData('text/plain', i);
+    piece.ondragstart = dragStart;
     area.appendChild(piece);
+    jigPieces.push(piece);
   }
   area.ondragover = (e) => e.preventDefault();
-  area.ondrop = (e) => {
-    e.preventDefault();
-    const idx = parseInt(e.dataTransfer.getData('text/plain'));
-    // Snap to nearest slot logic (simplified)
-    const slot = jigSlots[idx];
-    e.target.style.left = slot.x + '%';
-    e.target.style.top = slot.y + '%';
-    e.target.classList.add('placed');
-    if (document.querySelectorAll('.jig-piece.placed').length === 9) alert('Puzzle Complete! ❤️');
-  };
+  area.ondrop = dropPiece;
+}
+function dragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.dataset.idx);
+  e.target.classList.add('dragging');
+}
+function dropPiece(e) {
+  e.preventDefault();
+  const idx = parseInt(e.dataTransfer.getData('text/plain'));
+  const piece = jigPieces[idx];
+  piece.classList.remove('dragging');
+  // Find nearest slot
+  let nearestSlot = null;
+  let minDist = Infinity;
+  jigSlots.forEach((slot, sIdx) => {
+    const rect = e.target.getBoundingClientRect();
+    const slotX = (slot.x / 100) * rect.width;
+    const slotY = (slot.y / 100) * rect.height;
+    const dist = Math.sqrt((e.clientX - rect.left - slotX)**2 + (e.clientY - rect.top - slotY)**2);
+    if (dist < minDist) {
+      minDist = dist;
+      nearestSlot = {slot, sIdx};
+    }
+  });
+  if (minDist < 60) { // Threshold for snap
+    const slot = nearestSlot.slot;
+    piece.style.left = slot.x + '%';
+    piece.style.top = slot.y + '%';
+    piece.classList.add('placed');
+    piece.dataset.placed = nearestSlot.sIdx;
+    if (jigPieces.every(p => p.classList.contains('placed'))) {
+      setTimeout(() => alert('Puzzle Complete! 🎉'), 500);
+    }
+  }
 }
 document.getElementById('resetJig').onclick = setupJigsaw;
 
 /* Maze */
 let mazePos = { x: 10, y: 10 };
-const mazeWalls = [ /* Define walls as {left,top,width,height} */ ];
 function setupMaze() {
   const area = document.getElementById('mazeArea');
-  // Add walls
-  mazeWalls.forEach(w => {
+  area.innerHTML = '<div class="goal">⭐</div>'; // Clear walls for simple maze
+  // Add some simple walls
+  const walls = [
+    {left: 40, top: 0, width: 20, height: 30},
+    {left: 0, top: 40, width: 30, height: 20},
+    // Add more as needed
+  ];
+  walls.forEach(w => {
     const wall = document.createElement('div');
     wall.className = 'maze-wall';
     wall.style.left = w.left + '%';
@@ -506,57 +630,81 @@ function setupMaze() {
   renderMaze();
 }
 function renderMaze() {
-  document.getElementById('mazeHeart').style.left = mazePos.x + '%';
-  document.getElementById('mazeHeart').style.top = mazePos.y + '%';
+  const heart = document.getElementById('mazeHeart');
+  heart.style.left = mazePos.x + '%';
+  heart.style.top = mazePos.y + '%';
   if (mazePos.x > 80 && mazePos.y > 80) {
-    document.getElementById('mazeHeart').classList.add('heart-beat');
-    setTimeout(() => alert('Maze Master! ⭐'), 500);
+    heart.classList.add('heart-beat');
+    setTimeout(() => {
+      alert('Maze Master! You reached the goal! ⭐❤️');
+      heart.classList.remove('heart-beat');
+    }, 1000);
   }
 }
 function moveMaze(dir) {
-  // Boundary check + wall collision (simplified)
-  if (dir === 'up' && mazePos.y > 0) mazePos.y -= 10;
-  if (dir === 'down' && mazePos.y < 80) mazePos.y += 10;
-  if (dir === 'left' && mazePos.x > 0) mazePos.x -= 10;
-  if (dir === 'right' && mazePos.x < 80) mazePos.x += 10;
+  const step = 10;
+  let newX = mazePos.x;
+  let newY = mazePos.y;
+  if (dir === 'up') newY = Math.max(0, mazePos.y - step);
+  if (dir === 'down') newY = Math.min(90, mazePos.y + step);
+  if (dir === 'left') newX = Math.max(0, mazePos.x - step);
+  if (dir === 'right') newX = Math.min(90, mazePos.x + step);
+  // Simple collision check (expand as needed)
+  mazePos = {x: newX, y: newY};
   renderMaze();
 }
-// Swipe support
-let startX, startY;
-document.getElementById('mazeArea').ontouchstart = (e) => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; };
-document.getElementById('mazeArea').ontouchmove = (e) => e.preventDefault();
-document.getElementById('mazeArea').ontouchend = (e) => {
-  const deltaX = e.changedTouches[0].clientX - startX;
-  const deltaY = e.changedTouches[0].clientY - startY;
-  if (Math.abs(deltaX) > Math.abs(deltaY)) moveMaze(deltaX > 0 ? 'right' : 'left');
-  else moveMaze(deltaY > 0 ? 'down' : 'up');
-};
+// Touch support
+let touchStartX, touchStartY;
+document.getElementById('mazeArea').addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, {passive: true});
+document.getElementById('mazeArea').addEventListener('touchend', (e) => {
+  if (!touchStartX || !touchStartY) return;
+  const deltaX = e.changedTouches[0].clientX - touchStartX;
+  const deltaY = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+    moveMaze(deltaX > 0 ? 'right' : 'left');
+  } else if (Math.abs(deltaY) > 30) {
+    moveMaze(deltaY > 0 ? 'down' : 'up');
+  }
+  touchStartX = null;
+  touchStartY = null;
+}, {passive: true});
+setupMaze();
 
 /* Dots Connect */
-let connected = [];
-const dotPositions = [[10,10],[50,10],[90,10],[10,50],[50,50],[90,50],[10,90],[50,90],[90,90]];
+let connectedDots = [];
+const dotPositions = [
+  [15,15], [50,15], [85,15],
+  [15,50], [50,50], [85,50],
+  [15,85], [50,85], [85,85]
+];
 function setupDots() {
-  connected = [];
+  connectedDots = [];
   const svg = document.getElementById('connectSvg');
   svg.innerHTML = '';
-  document.querySelectorAll('.dot').forEach(d => {
-    d.classList.remove('active');
-    d.onclick = () => connectDot(parseInt(d.dataset.idx));
+  document.querySelectorAll('.dot').forEach((dot, idx) => {
+    dot.classList.remove('active');
+    dot.onclick = () => connectDot(idx);
+    dot.style.left = dotPositions[idx][0] + '%';
+    dot.style.top = dotPositions[idx][1] + '%';
+    dot.innerHTML = idx + 1;
   });
 }
 function connectDot(idx) {
-  if (connected.includes(idx)) return;
-  connected.push(idx);
-  document.getElementById(`dot${idx}`).classList.add('active');
-  if (connected.length > 1) {
-    const prev = connected[connected.length - 2];
+  if (connectedDots.includes(idx) || connectedDots.length > 0 && connectedDots[connectedDots.length - 1] !== idx - 1) return; // Sequential only
+  connectedDots.push(idx);
+  const dot = document.getElementById(`dot${idx}`);
+  dot.classList.add('active');
+  if (connectedDots.length > 1) {
+    const prev = connectedDots[connectedDots.length - 2];
     drawLine(dotPositions[prev][0], dotPositions[prev][1], dotPositions[idx][0], dotPositions[idx][1]);
   }
-  if (connected.length === 9) {
-    // Reveal heart
+  if (connectedDots.length === 9) {
     const svg = document.getElementById('connectSvg');
     svg.innerHTML += '<text x="50%" y="50%" font-size="60" fill="red" text-anchor="middle" dominant-baseline="middle">💖</text>';
-    alert('Hearts Connected! 💖');
+    setTimeout(() => alert('Hearts Connected Perfectly! 💖'), 500);
   }
 }
 function drawLine(x1, y1, x2, y2) {
@@ -567,60 +715,70 @@ function drawLine(x1, y1, x2, y2) {
   line.setAttribute('x2', x2 + '%');
   line.setAttribute('y2', y2 + '%');
   line.setAttribute('stroke', '#ff6b6b');
-  line.setAttribute('stroke-width', 3);
+  line.setAttribute('stroke-width', 4);
+  line.setAttribute('stroke-linecap', 'round');
   svg.appendChild(line);
 }
 document.getElementById('resetDots').onclick = setupDots;
+setupDots();
 
 /* Timeline */
 function renderTimeline() {
   timelineList.innerHTML = milestones.map((m, i) => `
     <div class="milestone" style="animation-delay: ${i * 0.2}s;">
       <div class="milestone-emoji">${m.emoji}</div>
-      <div>
+      <div style="flex: 1;">
         <div style="font-weight: 800; margin-bottom: 4px;">${m.title}</div>
         <div class="muted">${m.desc}</div>
         <div class="small">${m.date}</div>
-        ${m.img ? `<img src="${m.img}" style="width:100%; aspect-ratio:9/16; border-radius:12px; margin-top:8px;" />` : ''}
+        ${m.img ? `<img src="${m.img}" style="width:100%; aspect-ratio:9/16; border-radius:12px; margin-top:8px; display: block;" alt="${m.title}" />` : ''}
       </div>
     </div>
   `).join('');
-  // Trigger animations
-  setTimeout(() => timelineList.querySelectorAll('.milestone').forEach((el, i) => el.classList.add('show')), 100);
+  setTimeout(() => document.querySelectorAll('.milestone').forEach(el => el.classList.add('show')), 100);
 }
 
 /* Polaroids */
 function renderPolaroids() {
-  polaroidGrid.innerHTML = polaroids.map(p => `
-    <div class="polaroid" style="transform: rotate(${Math.random() * 6 - 3}deg);" onclick="openModal('${p.title}', '${p.img}', '${p.desc}')">
+  polaroidGrid.innerHTML = polaroids.map((p, i) => `
+    <div class="polaroid" style="transform: rotate(${ (i % 4 - 2) * 3 }deg);" onclick="openModal('${p.title.replace(/'/g, "\\'")}', '${p.img}', '${p.desc.replace(/'/g, "\\'")}')">
       <img src="${p.img}" alt="${p.title}" />
       <div class="polaroid-meta">
         <div style="font-weight: 700; margin-bottom: 4px;">${p.title}</div>
-        <div>${p.desc}</div>
+        <div style="font-size: 11px;">${p.desc}</div>
       </div>
     </div>
   `).join('');
 }
 function openModal(title, img, desc) {
-  modalContent.innerHTML = `<img src="${img}" style="width:100%; aspect-ratio:9/16; border-radius:12px;" /><h3 style="margin:12px 0 8px;">${title}</h3><p style="color:#666;">${desc}</p>`;
+  modalContent.innerHTML = `
+    <img src="${img}" style="width:100%; max-height: 50vh; object-fit: cover; aspect-ratio:9/16; border-radius:12px;" alt="${title}" />
+    <h3 style="margin:12px 0 8px; color: #333;">${title}</h3>
+    <p style="color:#666; margin:0;">${desc}</p>
+  `;
   modal.classList.add('active');
 }
-function closeModal() { modal.classList.remove('active'); }
+function closeModal() {
+  modal.classList.remove('active');
+}
 
 /* Notes */
 document.getElementById('downloadNotes').onclick = () => {
-  const blob = new Blob([notes.value], { type: 'text/plain' });
+  const content = notes.value || 'A blank page holds the promise of words yet to be written...';
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `saraaa-love-${new Date().toISOString().split('T')[0]}.txt`;
+  a.download = `saraaa-love-notes-${new Date().toISOString().split('T')[0]}.txt`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 };
-document.getElementById('clearNotes').onclick = () => notes.value = '';
+document.getElementById('clearNotes').onclick = () => { notes.value = ''; };
 
 /* Menu Toggle */
-document.getElementById('menuToggle').onclick = () => goTo(currentPage === 0 ? 1 : 0); // Simple toggle
+document.getElementById('menuToggle').onclick = () => goTo(currentPage === 0 ? 1 : 0);
 
 /* Nav Clicks */
 navButtons.forEach(b => b.onclick = (e) => goTo(parseInt(e.target.dataset.page)));
@@ -629,6 +787,9 @@ navButtons.forEach(b => b.onclick = (e) => goTo(parseInt(e.target.dataset.page))
 window.moveMaze = moveMaze;
 window.openModal = openModal;
 window.closeModal = closeModal;
+window.dragStart = dragStart;
+window.dropPiece = dropPiece;
+window.connectDot = connectDot;
 </script>
 </body>
 </html>
