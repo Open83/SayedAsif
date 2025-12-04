@@ -8,91 +8,90 @@
   /* Romantic gradient theme: pinks, purples, soft glows */
   :root {
     --bg-primary: linear-gradient(180deg, #1e0f2a 0%, #0f0f23 50%, #0a0a1a 100%);
-    --glass: rgba(255, 255, 255, 0.1);
-    --glass-glow: rgba(255, 107, 107, 0.2);
+    --glass: rgba(255, 255, 255, 0.06);
+    --glass-glow: rgba(255, 107, 107, 0.12);
     --accent: linear-gradient(135deg, #ff6b6b, #ff9a9e);
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.8);
-    --text-muted: rgba(255, 255, 255, 0.6);
+    --text-secondary: rgba(255, 255, 255, 0.9);
+    --text-muted: rgba(255, 255, 255, 0.7);
     --heart: #ff4d6d;
     --maxw: 100%;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
   * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; font-family: 'Inter', -apple-system, sans-serif; overflow-x: hidden; }
-  body { background: var(--bg-primary); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: var(--maxw); margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 80px; }
-  header { position: fixed; left: 0; right: 0; top: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass); z-index: 100; }
-  .header-inner { max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; }
+  html, body { height: 100%; margin: 0; font-family: 'Inter', -apple-system, sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  body { background: var(--bg-primary); color: var(--text-primary); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 96px; }
+  header { position: fixed; left: 0; right: 0; top: 0; background: rgba(0,0,0,0.35); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,0.03); z-index: 120; }
+  .header-inner { max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; gap:12px; }
   .brand { display: flex; gap: 12px; align-items: center; }
-  .brand h1 { margin: 0; font-size: 20px; font-weight: 900; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .brand h1 { margin: 0; font-size: 18px; font-weight: 900; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .small { font-size: 12px; color: var(--text-muted); }
-  .menu-btn { background: var(--glass); border-radius: 12px; padding: 8px; border: none; color: var(--text-primary); cursor: pointer; transition: var(--transition); }
-  main { padding-top: 70px; }
-  .page { display: none; padding: 16px; opacity: 0; transform: translateY(20px); transition: var(--transition); }
+  .menu-btn { background: var(--glass); border-radius: 12px; padding: 8px; border: none; color: var(--text-primary); cursor: pointer; transition: var(--transition); min-width:44px; }
+  main { padding-top: 72px; }
+  .page { display: none; padding: 16px; opacity: 0; transform: translateY(10px); transition: var(--transition); }
   .page.active { display: block; opacity: 1; transform: translateY(0); }
-  .card { background: var(--glass); border-radius: 20px; padding: 20px; border: 1px solid var(--glass-glow); box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(10px); margin-bottom: 16px; }
+  .card { background: var(--glass); border-radius: 18px; padding: 18px; border: 1px solid var(--glass-glow); box-shadow: 0 8px 30px rgba(0,0,0,0.25); backdrop-filter: blur(8px); margin-bottom: 18px; }
   .aspect9x16 { width: 100%; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; position: relative; }
   .center { display: flex; align-items: center; justify-content: center; }
-  .title { font-weight: 900; font-size: 28px; margin: 0 0 8px; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .subtitle { color: var(--text-secondary); font-weight: 600; font-size: 16px; }
-  .nav { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-top: 1px solid var(--glass); padding: 8px; z-index: 50; }
+  .title { font-weight: 900; font-size: 22px; margin: 0 0 8px; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .subtitle { color: var(--text-secondary); font-weight: 600; font-size: 14px; }
+  .nav { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.38); backdrop-filter: blur(18px); border-top: 1px solid rgba(255,255,255,0.02); padding: 10px; z-index: 80; }
   .nav-inner { max-width: var(--maxw); margin: 0 auto; display: flex; gap: 8px; }
-  .nav button { flex: 1; padding: 12px; border-radius: 14px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); }
-  .nav button.active { background: var(--accent); color: #fff; transform: scale(1.05); }
-  .pill { padding: 8px 16px; border-radius: 20px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); }
-  .pill.active, .pill:hover { background: var(--glass-glow); transform: scale(1.05); }
-  .btn { padding: 12px 20px; border-radius: 14px; border: none; background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; transition: var(--transition); }
-  .btn:hover { transform: scale(1.05); }
-  .muted { color: var(--text-muted); font-size: 14px; }
-  .progress { height: 6px; background: var(--glass); border-radius: 3px; overflow: hidden; margin: 8px 0; }
-  .progress > div { height: 100%; background: var(--accent); transition: width 0.5s ease; border-radius: 3px; }
+  .nav button { flex: 1; padding: 10px; border-radius: 14px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); font-size:13px; }
+  .nav button.active { background: linear-gradient(90deg,#ff7b93,#ff9ab3); color: #fff; transform: scale(1.02); }
+  .pill { padding: 8px 14px; border-radius: 20px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); font-size:13px; }
+  .pill.active, .pill:hover { background: var(--glass-glow); transform: scale(1.03); }
+  .btn { padding: 10px 16px; border-radius: 14px; border: none; background: linear-gradient(90deg,#ff6b6b,#ff9a9e); color: #fff; font-weight: 800; cursor: pointer; transition: var(--transition); }
+  .muted { color: var(--text-muted); font-size: 13px; }
+  .progress { height: 8px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; margin: 10px 0; }
+  .progress > div { height: 100%; background: linear-gradient(90deg,#ff6b6b,#ff9a9e); transition: width 0.45s ease; border-radius: 6px; width:0; }
   /* SOS */
   .sos-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
-  .sos-cell { aspect-ratio: 1; border-radius: 12px; background: var(--glass); border: none; font-size: 24px; font-weight: 900; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-  .sos-cell:hover:not(:disabled) { background: var(--glass-glow); transform: scale(1.1); }
-  .sos-cell:disabled { cursor: not-allowed; opacity: 0.5; }
+  .sos-cell { aspect-ratio: 1; border-radius: 12px; background: rgba(255,255,255,0.03); border: none; font-size: 28px; font-weight: 900; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; color: var(--text-primary); }
+  .sos-cell:hover:not(:disabled) { background: rgba(255,107,107,0.08); transform: scale(1.05); }
+  .sos-cell:disabled { cursor: not-allowed; opacity: 0.45; }
   /* Jigsaw */
-  .jig-area { background: linear-gradient(135deg, #ff9a9e, #fecfef); cursor: grab; user-select: none; touch-action: none; }
-  .jig-piece { position: absolute; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
-  .jig-piece.dragging { transform: rotate(5deg) scale(1.1); z-index: 10; }
-  .jig-piece.placed { background: linear-gradient(135deg, #ff6b6b, #ff9a9e); color: white; }
-  .jig-slot { position: absolute; width: 40px; height: 40px; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
+  .jig-area { background: linear-gradient(135deg, #ff9a9e, #fecfef); cursor: grab; user-select: none; touch-action: none; position: relative; }
+  .jig-piece { position: absolute; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: grab; transition: var(--transition); box-shadow: 0 6px 20px rgba(0,0,0,0.2); background: #fff4f6; color: #333; }
+  .jig-piece.dragging { transform: rotate(5deg) scale(1.06); z-index: 12; }
+  .jig-piece.placed { background: linear-gradient(135deg,#ff6b6b,#ff9a9e); color: white; cursor: default; }
+  .jig-slot { position: absolute; width: 40px; height: 40px; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.12); background: rgba(255,255,255,0.02); transform: translate(-50%,-50%); }
   /* Maze */
-  .maze-area { background: linear-gradient(135deg, #ff90a3, #ff7aa2); position: relative; }
-  .heart { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: var(--heart); font-size: 20px; transition: var(--transition); z-index: 5; }
-  .maze-wall { position: absolute; background: rgba(255,255,255,0.3); }
-  .goal { position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; border-radius: 50%; background: #ffd166; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 1; }
+  .maze-area { background: linear-gradient(135deg, #ff90a3, #ff7aa2); position: relative; overflow: hidden; }
+  .heart { position: absolute; width: 42px; height: 42px; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size:20px; background:var(--heart); transition: var(--transition); z-index: 20; transform: translate(-50%,-50%); }
+  .maze-wall { position: absolute; background: rgba(255,255,255,0.2); border-radius:6px; }
+  .goal { position: absolute; right: 6%; bottom: 6%; width: 44px; height: 44px; border-radius: 50%; background: #ffd166; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; transform: translate(0,0); }
   /* Dots */
-  .dot { width: 50px; height: 50px; border-radius: 50%; background: var(--glass); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); margin: 4px; }
-  .dot.active { background: var(--accent); color: white; transform: scale(1.2); }
+  .dot { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); margin: 4px; }
+  .dot.active { background: linear-gradient(90deg,#ff6b6b,#ff9a9e); color: white; transform: scale(1.12); }
   .connect-line { position: absolute; background: var(--accent); height: 2px; transform-origin: left; transition: var(--transition); }
   /* Timeline */
   .timeline { position: relative; padding-left: 20px; }
-  .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent), var(--heart)); border-radius: 1px; }
-  .milestone { display: flex; gap: 12px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: var(--transition); animation: slideIn 0.6s forwards; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg,#ff7b93,#ffb3c6); border-radius: 1px; }
+  .milestone { display: flex; gap: 12px; margin-bottom: 18px; opacity: 0; transform: translateX(-10px); transition: var(--transition); animation: slideIn 0.6s forwards; }
   .milestone.show { opacity: 1; transform: translateX(0); }
   @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-  .milestone-emoji { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .milestone-emoji { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#ff6b6b,#ff9a9e); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   /* Polaroids */
-  .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
-  .polaroid { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); cursor: pointer; transition: var(--transition); transform: rotate(0deg); position: relative; }
-  .polaroid:hover { transform: scale(1.05) rotate(2deg); box-shadow: 0 12px 32px rgba(255,107,107,0.3); }
-  .polaroid img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 8px; }
+  .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
+  .polaroid { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 8px 26px rgba(0,0,0,0.2); cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; }
+  .polaroid:hover { transform: scale(1.03) rotate(1deg); box-shadow: 0 14px 40px rgba(255,107,107,0.14); }
+  .polaroid img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 8px; display:block; }
   .polaroid-meta { text-align: center; color: #333; font-size: 12px; margin-top: 8px; }
   /* Modal */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 200; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.72); display: none; align-items: center; justify-content: center; z-index: 240; padding: 16px; }
   .modal.active { display: flex; }
-  .modal-box { background: white; border-radius: 20px; padding: 20px; max-width: 90%; max-height: 80%; overflow: auto; transform: scale(0.8); transition: var(--transition); color: #333; }
+  .modal-box { background: white; border-radius: 16px; padding: 16px; width: 100%; max-width: 460px; max-height: 86vh; overflow: auto; transform: scale(0.96); transition: var(--transition); color: #333; }
   .modal.active .modal-box { transform: scale(1); }
   /* Notepad */
-  .txtarea { width: 100%; min-height: 200px; border: none; border-radius: 12px; padding: 16px; font-family: 'Dancing Script', cursive; font-size: 18px; background: rgba(255,255,255,0.95); color: #333; resize: vertical; transition: var(--transition); }
-  .txtarea:focus { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+  .txtarea { width: 100%; min-height: 200px; border: none; border-radius: 12px; padding: 14px; font-family: 'Dancing Script', cursive; font-size: 18px; background: rgba(255,255,255,0.95); color: #333; resize: vertical; transition: var(--transition); }
+  .txtarea:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,107,107,0.08); }
   /* Animations */
-  @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
   .heart-beat { animation: heartBeat 1s infinite; }
-  /* Responsive */
-  @media (min-width: 768px) { :root { --maxw: 600px; } }
+  /* Responsive tweaks */
+  @media (min-width: 768px) { :root { --maxw: 640px; } .header-inner { padding: 14px 20px; } .title { font-size: 24px; } }
 </style>
 </head>
 <body>
@@ -101,13 +100,16 @@
   <header>
     <div class="header-inner">
       <div class="brand">
-        <button id="menuToggle" class="menu-btn">☰</button>
+        <button id="menuToggle" class="menu-btn" aria-label="menu">☰</button>
         <div>
           <h1>Saraaa ❤️</h1>
           <div class="small">My Eternal Flame</div>
         </div>
       </div>
-      <div class="small" id="winDisplay">Wins: 0 / 3</div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+        <div class="small" id="winDisplay">Wins: 0 / 3</div>
+        <div class="small" id="streakDisplay">Streak: 0/3</div>
+      </div>
     </div>
   </header>
 
@@ -117,39 +119,37 @@
       <div class="card">
         <div class="title">🔐 Unlock Our Story</div>
         <div class="subtitle">Win 3 SOS games in a row to reveal the magic</div>
-        <button id="howToPlayBtn" class="pill" style="display: block; margin: 0 auto 12px;">Kaise Khelen? (How to Play)</button>
-        <div class="sos-board" id="sosBoard"></div>
-        <div class="control-row" style="display: flex; gap: 8px; justify-content: center; margin: 12px 0;">
+        <button id="howToPlayBtn" class="pill" style="display:block; margin:10px auto;">Kaise Khelen? (Guide)</button>
+        <div class="sos-board" id="sosBoard" aria-label="SOS board"></div>
+        <div class="control-row" style="display:flex; gap:8px; justify-content:center; margin:12px 0;">
           <button id="selectS" class="pill active">S</button>
           <button id="selectO" class="pill">O</button>
           <button id="resetSos" class="pill">Reset Game</button>
         </div>
         <div class="progress"><div id="progBar"></div></div>
-        <div id="sosMessage" class="muted" style="text-align: center; margin-top: 12px;">Choose S or O, then tap an empty cell to place your letter.</div>
-        <div id="scoreDisplay" style="text-align: center; font-weight: 700; font-size: 18px; margin-top: 8px;">0 - 0</div>
-        <div id="streakDisplay" class="small" style="text-align: center;">Streak: 0/3</div>
+        <div id="sosMessage" class="muted" style="text-align:center; margin-top:10px;">Choose S or O, then tap an empty cell to place your letter.</div>
+        <div id="scoreDisplay" style="text-align:center; font-weight:700; font-size:18px; margin-top:10px;">0 - 0</div>
       </div>
     </section>
   </main>
 
   <!-- Hidden Pages -->
-  <main id="pagesMain" style="display: none;">
+  <main id="pagesMain" style="display:none;">
     <!-- Page 1: Videos & Messages -->
     <section id="page-0" class="page">
       <div class="card">
-        <div class="aspect9x16 center" id="videoSlot" style="background: var(--bg-primary); position: relative; overflow: hidden;">
-          <div id="videoPlaceholder" style="width: 100%; height: 100%; background: linear-gradient(135deg, #ff6b6b, #ff9a9e); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div id="videoEmoji" style="font-size: 64px; margin-bottom: 12px;">💕</div>
-            <div id="videoTitle" style="font-weight: 900; font-size: 18px; text-align: center; padding: 0 16px;">Our Eternal Flame</div>
-            <div class="muted">Tap to imagine our moments ❤️</div>
+        <div class="aspect9x16 center" id="videoSlot" style="background: linear-gradient(135deg,#ff6b6b,#ff9a9e); position:relative; overflow:hidden;">
+          <div id="videoPlaceholder" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:14px; text-align:center;">
+            <div id="videoEmoji" style="font-size:64px; margin-bottom:12px;">💕</div>
+            <div id="videoTitle" style="font-weight:900; font-size:20px; line-height:1.1;"></div>
+            <div id="videoLongMsg" class="muted" style="margin-top:10px; white-space:pre-line; font-size:14px; max-height:36%; overflow:auto;"></div>
           </div>
         </div>
-        <div style="display: flex; gap: 12px; justify-content: center; margin: 12px 0;">
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:12px; align-items:center;">
           <button id="prevVideo" class="pill">← Prev</button>
           <div id="videoCounter" class="pill">1 / 5</div>
           <button id="nextVideo" class="pill">Next →</button>
         </div>
-        <div id="messagesSection" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;"></div>
       </div>
     </section>
 
@@ -157,23 +157,24 @@
     <section id="page-1" class="page">
       <div class="card">
         <div class="title">🎮 Playful Moments</div>
-        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;">
+        <div style="display:flex; gap:8px; justify-content:center; margin-bottom:12px; flex-wrap:wrap;">
           <button class="pill active" data-tab="jig">🧩 Jigsaw</button>
           <button class="pill" data-tab="maze">❤️ Maze</button>
           <button class="pill" data-tab="dots">💌 Connect</button>
         </div>
         <!-- Jigsaw Tab -->
-        <div id="tab-jig" style="display: block;">
+        <div id="tab-jig" style="display:block;">
           <div class="aspect9x16 jig-area" id="jigArea"></div>
-          <button id="resetJig" class="pill" style="margin-top: 12px; display: block; margin-left: auto; margin-right: auto;">Reset Puzzle</button>
+          <button id="resetJig" class="pill" style="margin-top:12px; display:block; margin-left:auto; margin-right:auto;">Reset Puzzle</button>
         </div>
         <!-- Maze Tab -->
-        <div id="tab-maze" class="card" style="display: none;">
-          <div class="aspect9x16 maze-area" id="mazeArea">
-            <div id="mazeHeart" class="heart center" style="left: 10%; top: 10%;">❤️</div>
-            <div class="goal">⭐</div>
+        <div id="tab-maze" style="display:none; margin-top:12px;">
+          <div class="card" style="padding:0;">
+            <div class="aspect9x16 maze-area" id="mazeArea">
+              <!-- Maze heart and goal will be created dynamically in setupMaze() -->
+            </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px;">
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px;">
             <div></div>
             <button class="pill" onclick="moveMaze('up')">⬆️</button>
             <div></div>
@@ -183,10 +184,10 @@
           </div>
         </div>
         <!-- Dots Tab -->
-        <div id="tab-dots" class="card" style="display: none;">
-          <div style="position: relative; height: 200px; margin-bottom: 12px;" id="dotsArea">
-            <svg id="connectSvg" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; position: absolute; inset: 0; place-items: center;">
+        <div id="tab-dots" style="display:none; margin-top:12px;">
+          <div style="position:relative; height:240px; margin-bottom:12px;" id="dotsArea">
+            <svg id="connectSvg" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;"></svg>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; position:absolute; inset:8px; place-items:center;">
               <div id="dot0" class="dot" data-idx="0">1</div>
               <div id="dot1" class="dot" data-idx="1">2</div>
               <div id="dot2" class="dot" data-idx="2">3</div>
@@ -198,7 +199,7 @@
               <div id="dot8" class="dot" data-idx="8">9</div>
             </div>
           </div>
-          <button id="resetDots" class="pill" style="display: block; margin-left: auto; margin-right: auto;">Reset Hearts</button>
+          <button id="resetDots" class="pill" style="display:block; margin-left:auto; margin-right:auto;">Reset Hearts</button>
         </div>
       </div>
     </section>
@@ -224,7 +225,7 @@
       <div class="card">
         <div class="title">💌 Whispered Words</div>
         <textarea id="notes" class="txtarea" placeholder="Dearest Saraaa, in the quiet of my heart, I write..."></textarea>
-        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
           <button id="downloadNotes" class="btn">💾 Save as TXT</button>
           <button id="clearNotes" class="pill">Clear</button>
         </div>
@@ -233,7 +234,7 @@
   </main>
 
   <!-- Nav (Hidden until unlocked) -->
-  <div class="nav" id="nav" style="display: none;">
+  <div class="nav" id="nav" style="display:none;">
     <div class="nav-inner">
       <button data-page="0" class="active">Videos</button>
       <button data-page="1">Games</button>
@@ -244,18 +245,23 @@
   </div>
 
   <!-- Modal for Polaroid Zoom & How to Play -->
-  <div id="modal" class="modal">
+  <div id="modal" class="modal" aria-hidden="true">
     <div class="modal-box">
       <div id="modalContent"></div>
-      <button class="btn" onclick="closeModal()" style="margin-top: 16px; width: 100%;">Close ❤️</button>
+      <button class="btn" onclick="closeModal()" style="margin-top:12px; width:100%;">Close ❤️</button>
     </div>
   </div>
 </div>
 
 <script>
-/* Config */
-const SKIP_SOS = false; // Set true to bypass
+/* ========== Configuration ========== */
+/* Developer shortcut:
+   To instantly bypass the SOS unlock during development, set SKIP_SOS to true.
+   (Remember to set it back to false for the real site.)
+*/
+const SKIP_SOS = false; // ← change to true to skip unlock during testing
 const CHANCE_TO_MISTAKE = 0.35;
+
 let unlocked = SKIP_SOS;
 let winsInARow = 0;
 let currentPage = 0;
@@ -266,7 +272,7 @@ let sosScores = { human: 0, ai: 0 };
 let sosGameOver = false;
 let videoIndex = 0;
 
-/* Jigsaw Globals - Moved up to avoid init issues */
+/* Jigsaw Globals */
 const jigSlots = [
   {x:20, y:20}, {x:50, y:20}, {x:80, y:20},
   {x:20, y:50}, {x:50, y:50}, {x:80, y:50},
@@ -277,15 +283,15 @@ let jigPieces = [];
 /* Dots Globals */
 let connectedDots = [];
 const dotPositions = [
-  [15,15], [50,15], [85,15],
-  [15,50], [50,50], [85,50],
-  [15,85], [50,85], [85,85]
+  [10,10], [50,10], [90,10],
+  [10,50], [50,50], [90,50],
+  [10,90], [50,90], [90,90]
 ];
 
 /* Maze Globals */
-let mazePos = { x: 10, y: 10 };
+let mazePos = { x: 12, y: 12 };
 
-/* Data */
+/* Data (videos, timeline, polaroids remain as placeholders) */
 const videos = [
   { title: "Our Eternal Flame", emoji: "💕", bg: "linear-gradient(135deg, #ff6b6b, #ff9a9e)", msg: "From the stars above to the depths of my soul, you are my everything. Every beat of my heart whispers your name in the quiet night." },
   { title: "Whispers in the Night", emoji: "🌙", bg: "linear-gradient(135deg, #6d28d9, #a78bfa)", msg: "In the silence of midnight, your voice is my lullaby. We share dreams that dance like fireflies under the velvet sky." },
@@ -294,15 +300,15 @@ const videos = [
   { title: "Forever Blooms", emoji: "🌸", bg: "linear-gradient(135deg, #ff8a72, #ff6b6b)", msg: "Like roses in spring, our story never fades. You are the bloom that colors my world in hues of eternal spring." }
 ];
 const milestones = [
-  { emoji: '👀', title: 'First Glance', desc: 'Eyes locked, worlds collided in a spark of destiny.', date: 'Day 1', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
-  { emoji: '😘', title: 'First Kiss', desc: 'Sparks flew, time stood still in that magical embrace.', date: 'Week 2', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
-  { emoji: '🌟', title: 'Promises Made', desc: 'Under the moon, forever sealed with whispered vows.', date: 'Month 1', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
-  { emoji: '💍', title: 'Our Vows', desc: 'Eternity in a single yes, hearts forever bound.', date: 'Today', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' },
-  { emoji: '♾️', title: 'Infinite Us', desc: 'Love without end, a circle of joy unending.', date: 'Always', img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRjZCQzYiLz48L3N2Zz4=' }
+  { emoji: '👀', title: 'First Glance', desc: 'Eyes locked, worlds collided in a spark of destiny.', date: 'Day 1', img: '' },
+  { emoji: '😘', title: 'First Kiss', desc: 'Sparks flew, time stood still in that magical embrace.', date: 'Week 2', img: '' },
+  { emoji: '🌟', title: 'Promises Made', desc: 'Under the moon, forever sealed with whispered vows.', date: 'Month 1', img: '' },
+  { emoji: '💍', title: 'Our Vows', desc: 'Eternity in a single yes, hearts forever bound.', date: 'Today', img: '' },
+  { emoji: '♾️', title: 'Infinite Us', desc: 'Love without end, a circle of joy unending.', date: 'Always', img: '' }
 ];
 const polaroids = Array.from({length: 8}, (_, i) => ({
-  title: ['Sunset Stroll', 'Cozy Nights', 'Beach Whispers', 'Starlit Dances', 'Coffee Dates', 'Rainy Kisses', 'Festival Lights', 'Quiet Mornings'][i],
-  img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRkYiLz48L3N2Zz4=',
+  title: ['Sunset Stroll','Cozy Nights','Beach Whispers','Starlit Dances','Coffee Dates','Rainy Kisses','Festival Lights','Quiet Mornings'][i],
+  img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRkYiLz48L3N2Zz4=',
   desc: 'A snapshot of our joy, frozen in time forever.'
 }));
 
@@ -315,7 +321,6 @@ const nav = document.getElementById('nav');
 const winDisplay = document.getElementById('winDisplay');
 const progBar = document.getElementById('progBar');
 const scoreDisplay = document.getElementById('scoreDisplay');
-const streakDisplay = document.getElementById('streakDisplay');
 const sosMessage = document.getElementById('sosMessage');
 const sosBoardEl = document.getElementById('sosBoard');
 const selectS = document.getElementById('selectS');
@@ -329,14 +334,14 @@ const videoTitle = document.getElementById('videoTitle');
 const videoCounter = document.getElementById('videoCounter');
 const prevVideo = document.getElementById('prevVideo');
 const nextVideo = document.getElementById('nextVideo');
-const messagesSection = document.getElementById('messagesSection');
 const timelineList = document.getElementById('timelineList');
 const polaroidGrid = document.getElementById('polaroidGrid');
 const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modalContent');
 const notes = document.getElementById('notes');
+const streakDisplay = document.getElementById('streakDisplay');
 
-/* Init */
+/* ========== Init ========== */
 function init() {
   renderTimeline();
   renderPolaroids();
@@ -348,7 +353,7 @@ function init() {
   setupGames();
   goTo(0);
   renderVideo();
-  renderMessages();
+  bindUI();
 }
 init();
 
@@ -378,19 +383,13 @@ function renderVideo() {
   videoPlaceholder.style.background = v.bg;
   videoEmoji.textContent = v.emoji;
   videoTitle.textContent = v.title;
+  document.getElementById('videoLongMsg').textContent = v.msg;
   videoCounter.textContent = `${videoIndex + 1} / ${videos.length}`;
 }
-function renderMessages() {
-  messagesSection.innerHTML = videos.map((v, i) => `
-    <div class="card" style="text-align: center; opacity: ${i === videoIndex ? 1 : 0.7}; transition: opacity 0.5s;">
-      <div class="subtitle" style="white-space: pre-line;">${v.msg}</div>
-    </div>
-  `).join('');
-}
-prevVideo.onclick = () => { videoIndex = (videoIndex - 1 + videos.length) % videos.length; renderVideo(); renderMessages(); };
-nextVideo.onclick = () => { videoIndex = (videoIndex + 1) % videos.length; renderVideo(); renderMessages(); };
+prevVideo.onclick = () => { videoIndex = (videoIndex - 1 + videos.length) % videos.length; renderVideo(); };
+nextVideo.onclick = () => { videoIndex = (videoIndex + 1) % videos.length; renderVideo(); };
 
-/* SOS Game */
+/* ========== SOS Game ========== */
 function initSOS() {
   sosBoard = Array(9).fill(null);
   sosTurn = 'human';
@@ -402,7 +401,6 @@ function initSOS() {
   renderSOS();
   updateScore();
   updateProgress();
-  updateStreakDisplay();
   sosMessage.textContent = 'Choose S or O, then tap an empty cell to place your letter.';
 }
 function renderSOS() {
@@ -410,7 +408,7 @@ function renderSOS() {
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('button');
     cell.className = 'sos-cell';
-    cell.disabled = sosGameOver || sosTurn !== 'human';
+    cell.disabled = sosGameOver || sosTurn !== 'human' || sosBoard[i] !== null;
     cell.textContent = sosBoard[i] || '';
     cell.onclick = () => handleSOSClick(i);
     sosBoardEl.appendChild(cell);
@@ -419,101 +417,106 @@ function renderSOS() {
 function handleSOSClick(idx) {
   if (sosBoard[idx] !== null || sosTurn !== 'human' || sosGameOver) return;
   sosBoard[idx] = selectedLetter;
-  const newSOS = countNewSOS(idx);
+  const newSOS = countNewSOS(idx, sosBoard);
   sosScores.human += newSOS;
   renderSOS();
   updateScore();
   if (newSOS > 0) {
-    sosMessage.textContent = `Great! You formed ${newSOS} new SOS(es). Your turn again!`;
+    sosMessage.textContent = `Badhai! Aapne ${newSOS} SOS banaya. Aapka extra turn hai!`;
     if (isBoardFull()) finishGame();
-  } else {
-    sosTurn = 'ai';
-    sosMessage.textContent = 'AI\'s turn...';
-    setTimeout(aiTurn, 800);
+    return; // player goes again
   }
-  if (isBoardFull() && newSOS === 0) finishGame();
+  if (isBoardFull()) { finishGame(); return; }
+  sosTurn = 'ai';
+  sosMessage.textContent = `AI ka turn...`;
+  setTimeout(aiTurn, 650);
 }
 function aiTurn() {
   if (sosGameOver) return;
-  let move = getAIMove();
+  let { pos, letter } = getAIMove();
+  // chance to mistake (random move with random letter)
   if (Math.random() < CHANCE_TO_MISTAKE) {
     const empties = getEmptyIndices();
-    move = empties[Math.floor(Math.random() * empties.length)];
+    pos = empties[Math.floor(Math.random() * empties.length)];
+    letter = Math.random() < 0.5 ? 'S' : 'O';
   }
-  const letter = Math.random() < 0.6 ? 'S' : 'O'; // Slight bias to S for scoring
-  sosBoard[move] = letter;
-  const newSOS = countNewSOS(move);
+  sosBoard[pos] = letter;
+  const newSOS = countNewSOS(pos, sosBoard);
   sosScores.ai += newSOS;
   renderSOS();
   updateScore();
-  sosMessage.textContent = newSOS > 0 ? `AI formed ${newSOS} SOS(es). AI turn again!` : 'Your turn!';
-  if (newSOS > 0 || isBoardFull()) {
+  if (newSOS > 0) {
+    sosMessage.textContent = `AI ne ${newSOS} SOS banaya. AI ka extra turn...`;
     if (isBoardFull()) finishGame();
-    else setTimeout(aiTurn, 800);
-  } else {
-    sosTurn = 'human';
+    else setTimeout(aiTurn, 700);
+    return;
   }
+  if (isBoardFull()) { finishGame(); return; }
+  sosTurn = 'human';
+  sosMessage.textContent = `Aapki turn!`;
 }
 function getAIMove() {
   const empties = getEmptyIndices();
-  // Try to score
+  // 1) Try to score: pick a pos and letter that yields new SOS
   for (let pos of empties) {
-    if (countNewSOSForPos(pos, 'S') > 0) return pos;
-    if (countNewSOSForPos(pos, 'O') > 0) return pos;
+    if (countNewSOSForPos(pos, 'S') > 0) return { pos, letter:'S' };
+    if (countNewSOSForPos(pos, 'O') > 0) return { pos, letter:'O' };
   }
-  // Try to block human
+  // 2) Block human potential: if human would score by placing their selectedLetter, pick that pos and place opposite letter to block
   for (let pos of empties) {
-    if (countNewSOSForPos(pos, 'S') > 0 && selectedLetter === 'S') return pos; // Block with O
-    if (countNewSOSForPos(pos, 'O') > 0 && selectedLetter === 'O') return pos; // Block with S
+    if (countNewSOSForPos(pos, selectedLetter) > 0) {
+      const blockLetter = (selectedLetter === 'S') ? 'O' : 'S';
+      return { pos, letter: blockLetter };
+    }
   }
-  // Strategic: center first
+  // 3) Strategic center then corners then edges
   const strategic = [4, 0, 2, 6, 8, 1, 3, 5, 7];
-  for (let pos of strategic) {
-    if (sosBoard[pos] === null) return pos;
-  }
-  return empties[0];
+  for (let p of strategic) if (sosBoard[p] === null) return { pos: p, letter: Math.random() < 0.6 ? 'S' : 'O' };
+  // fallback
+  return { pos: empties[0], letter: Math.random() < 0.6 ? 'S' : 'O' };
 }
-function countNewSOS(idx) {
-  if (sosBoard[idx] === null) return 0;
+/* Count SOS newly formed due to placing at idx using the provided board (pure) */
+function countNewSOS(idx, board) {
+  if (!board || board[idx] === null) return 0;
   const lines = [
-    [0,1,2], [3,4,5], [6,7,8], // rows
-    [0,3,6], [1,4,7], [2,5,8], // cols
-    [0,4,8], [2,4,6] // diags
+    [0,1,2], [3,4,5], [6,7,8],
+    [0,3,6], [1,4,7], [2,5,8],
+    [0,4,8], [2,4,6]
   ];
   let count = 0;
   for (let line of lines) {
     if (line.includes(idx)) {
-      const [a, b, c] = line;
-      if (sosBoard[a] === 'S' && sosBoard[b] === 'O' && sosBoard[c] === 'S') count++;
+      const [a,b,c] = line;
+      if (board[a] === 'S' && board[b] === 'O' && board[c] === 'S') count++;
     }
   }
   return count;
 }
+/* Simulate placing letter at pos and count new SOSes (pure) */
 function countNewSOSForPos(pos, letter) {
-  const tempBoard = [...sosBoard];
-  tempBoard[pos] = letter;
-  const tempCount = { sosBoard: tempBoard };
-  return countNewSOS.call(tempCount, pos);
+  const temp = sosBoard.slice();
+  temp[pos] = letter;
+  return countNewSOS(pos, temp);
 }
 function getEmptyIndices() {
-  return sosBoard.map((cell, idx) => cell === null ? idx : null).filter(idx => idx !== null);
+  return sosBoard.map((cell, idx) => cell === null ? idx : null).filter(i => i !== null);
 }
 function isBoardFull() {
   return sosBoard.every(cell => cell !== null);
 }
 function finishGame() {
   sosGameOver = true;
-  renderSOS(); // Disable cells
+  renderSOS();
   let message = '';
   if (sosScores.human > sosScores.ai) {
     winsInARow++;
-    message = `You win this round! (${sosScores.human} - ${sosScores.ai}) Streak updated.`;
+    message = `Aap jeete! (${sosScores.human} - ${sosScores.ai}) Streak: ${winsInARow}/3`;
   } else if (sosScores.ai > sosScores.human) {
     winsInARow = 0;
-    message = `AI wins this round. (${sosScores.ai} - ${sosScores.human}) Streak reset.`;
+    message = `AI jeeti. (${sosScores.ai} - ${sosScores.human}) Streak reset.`;
   } else {
     winsInARow = 0;
-    message = `Tie! (${sosScores.human} - ${sosScores.ai}) Streak reset.`;
+    message = `Tie hai. (${sosScores.human} - ${sosScores.ai}) Streak reset.`;
   }
   sosMessage.textContent = message;
   updateStreakDisplay();
@@ -522,10 +525,11 @@ function finishGame() {
     setTimeout(() => {
       alert('🎉 Congratulations! All pages are now unlocked. Enjoy our story! ❤️');
       unlockAll();
-    }, 1000);
+    }, 700);
+    return;
   }
-  // Auto reset after 3s
-  setTimeout(initSOS, 3000);
+  // Reset board for next round (short delay for UX)
+  setTimeout(initSOS, 1200);
 }
 function updateScore() {
   scoreDisplay.textContent = `${sosScores.human} - ${sosScores.ai}`;
@@ -538,23 +542,24 @@ function updateStreakDisplay() {
 }
 function updateWinDisplay() {
   winDisplay.textContent = `Wins: ${winsInARow} / 3`;
+  updateProgress();
 }
-selectS.onclick = () => { selectedLetter = 'S'; selectS.classList.add('active'); selectO.classList.remove('active'); };
-selectO.onclick = () => { selectedLetter = 'O'; selectO.classList.add('active'); selectS.classList.remove('active'); };
-resetSos.onclick = initSOS;
+
+/* Guide modal (Hinglish) */
 howToPlayBtn.onclick = () => {
   modalContent.innerHTML = `
-    <h3 style="margin:0 0 12px; color:#ff6b6b;">SOS Game Kaise Khelen? ❤️</h3>
-    <p style="margin-bottom:8px;"><strong>Step 1:</strong> Upar S ya O button dabao to choose your letter.</p>
-    <p style="margin-bottom:8px;"><strong>Step 2:</strong> Grid mein koi empty cell tap karo to place the letter.</p>
-    <p style="margin-bottom:8px;"><strong>Rule:</strong> Agar horizontal, vertical ya diagonal mein S-O-S ban jaye (including your move), to aapko 1 point milta hai! Aur extra turn bhi.</p>
-    <p style="margin-bottom:8px;"><strong>Win:</strong> Zyada points banao AI se. 3 games continuously jeeto to all pages unlock ho jayenge! 💕</p>
-    <p style="font-style:italic; color:#666;">Easy peasy, bas love ki tarah simple hai! Good luck, jaan! 😘</p>
+    <h3 style="margin:0 0 12px; color:#ff6b6b;">SOS Game — Kaise Khelen? ❤️</h3>
+    <p style="margin:6px 0;"><strong>Step 1:</strong> Upar <strong>S</strong> ya <strong>O</strong> select karo.</p>
+    <p style="margin:6px 0;"><strong>Step 2:</strong> Grid mein kisi empty cell pe tap karo — tumhara letter wahaan jayega.</p>
+    <p style="margin:6px 0;"><strong>Rule:</strong> Agar horizontal / vertical / diagonal mein <strong>S-O-S</strong> ban gaya to aapko 1 point milta hai aur aapko extra turn milta hai.</p>
+    <p style="margin:6px 0;"><strong>Goal:</strong> AI se zyada points banao. 3 continuous jeet se sari pages unlock ho jaati hain.</p>
+    <p style="margin:8px 0; font-style:italic; color:#666;">Simple — jaise pyaar: dhyaan se khelna, patience rakhna, aur kabhi kabhi surprise moves marna. Good luck, jaan! 😘</p>
   `;
   modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
 };
 
-/* Games Setup */
+/* ========== Games Setup ========== */
 function setupGames() {
   setupJigsaw();
   setupMaze();
@@ -574,17 +579,28 @@ function setupGames() {
 /* Jigsaw */
 function setupJigsaw() {
   const area = document.getElementById('jigArea');
-  area.innerHTML = jigSlots.map(slot => `<div class="jig-slot" style="left:${slot.x}%; top:${slot.y}%;"></div>`).join('');
+  area.innerHTML = '';
+  // draw slots
+  jigSlots.forEach(slot => {
+    const s = document.createElement('div');
+    s.className = 'jig-slot';
+    s.style.left = slot.x + '%';
+    s.style.top = slot.y + '%';
+    s.style.width = '44px';
+    s.style.height = '44px';
+    area.appendChild(s);
+  });
   jigPieces = [];
   for (let i = 0; i < 9; i++) {
     const piece = document.createElement('div');
     piece.className = 'jig-piece';
     piece.dataset.idx = i;
-    piece.style.left = Math.random() * 80 + 10 + '%';
-    piece.style.top = Math.random() * 80 + 10 + '%';
+    piece.style.left = (10 + Math.random() * 70) + '%';
+    piece.style.top = (10 + Math.random() * 70) + '%';
     piece.innerHTML = i + 1;
     piece.draggable = true;
     piece.ondragstart = dragStart;
+    piece.ontouchstart = (ev) => { ev.target.dataset.touching = '1'; }; // small mobile friendly touch hint
     area.appendChild(piece);
     jigPieces.push(piece);
   }
@@ -607,21 +623,28 @@ function dropPiece(e) {
   jigSlots.forEach((slot, sIdx) => {
     const slotX = (slot.x / 100) * rect.width + rect.left;
     const slotY = (slot.y / 100) * rect.height + rect.top;
-    const dist = Math.sqrt((e.clientX - slotX)**2 + (e.clientY - slotY)**2);
+    const dist = Math.hypot(e.clientX - slotX, e.clientY - slotY);
     if (dist < minDist) {
       minDist = dist;
       nearestSlot = {slot, sIdx};
     }
   });
-  if (minDist < 60) { // Threshold for snap
+  if (minDist < 70) { // snap threshold improved for mobile
     const slot = nearestSlot.slot;
     piece.style.left = slot.x + '%';
     piece.style.top = slot.y + '%';
     piece.classList.add('placed');
     piece.dataset.placed = nearestSlot.sIdx;
+    // check completion
     if (jigPieces.every(p => p.classList.contains('placed'))) {
-      setTimeout(() => alert('Puzzle Complete! 🎉'), 500);
+      setTimeout(() => alert('Puzzle Complete! 🎉'), 360);
     }
+  } else {
+    // slightly move piece to drop point
+    const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+    const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+    piece.style.left = Math.max(4, Math.min(96, mouseX)) + '%';
+    piece.style.top = Math.max(4, Math.min(96, mouseY)) + '%';
   }
 }
 document.getElementById('resetJig').onclick = setupJigsaw;
@@ -629,12 +652,24 @@ document.getElementById('resetJig').onclick = setupJigsaw;
 /* Maze */
 function setupMaze() {
   const area = document.getElementById('mazeArea');
-  area.innerHTML = '<div class="goal">⭐</div>'; // Clear walls for simple maze
-  // Add some simple walls
+  area.innerHTML = ''; // clear (we will create heart + goal + walls)
+  // Create heart (player)
+  let heart = document.createElement('div');
+  heart.id = 'mazeHeart';
+  heart.className = 'heart';
+  heart.innerHTML = '❤️';
+  area.appendChild(heart);
+  // Create goal
+  const goal = document.createElement('div');
+  goal.className = 'goal';
+  goal.innerHTML = '⭐';
+  area.appendChild(goal);
+  // Add walls (simple shapes for now)
   const walls = [
-    {left: 40, top: 0, width: 20, height: 30},
-    {left: 0, top: 40, width: 30, height: 20},
-    // Add more as needed
+    {left: 40, top:0, width: 20, height: 30},
+    {left: 0, top:40, width: 30, height: 20},
+    {left: 60, top:50, width: 35, height: 12},
+    {left: 20, top:70, width: 50, height: 8}
   ];
   walls.forEach(w => {
     const wall = document.createElement('div');
@@ -645,50 +680,58 @@ function setupMaze() {
     wall.style.height = w.height + '%';
     area.appendChild(wall);
   });
+  // initial position
+  mazePos = { x:12, y:12 };
   renderMaze();
 }
 function renderMaze() {
   const heart = document.getElementById('mazeHeart');
+  if (!heart) return; // defensive
   heart.style.left = mazePos.x + '%';
   heart.style.top = mazePos.y + '%';
-  if (mazePos.x > 80 && mazePos.y > 80) {
+  // Check near goal
+  if (mazePos.x > 78 && mazePos.y > 78) {
     heart.classList.add('heart-beat');
     setTimeout(() => {
       alert('Maze Master! You reached the goal! ⭐❤️');
       heart.classList.remove('heart-beat');
-    }, 1000);
+      // reset position a bit
+      mazePos = { x:12, y:12 };
+      renderMaze();
+    }, 700);
   }
 }
 function moveMaze(dir) {
   const step = 10;
   let newX = mazePos.x;
   let newY = mazePos.y;
-  if (dir === 'up') newY = Math.max(0, mazePos.y - step);
-  if (dir === 'down') newY = Math.min(90, mazePos.y + step);
-  if (dir === 'left') newX = Math.max(0, mazePos.x - step);
-  if (dir === 'right') newX = Math.min(90, mazePos.x + step);
-  // Simple collision check (expand as needed)
-  mazePos = {x: newX, y: newY};
+  if (dir === 'up') newY = Math.max(6, mazePos.y - step);
+  if (dir === 'down') newY = Math.min(94, mazePos.y + step);
+  if (dir === 'left') newX = Math.max(6, mazePos.x - step);
+  if (dir === 'right') newX = Math.min(94, mazePos.x + step);
+  mazePos = { x: newX, y: newY };
   renderMaze();
 }
 // Touch support
-let touchStartX, touchStartY;
-document.getElementById('mazeArea').addEventListener('touchstart', (e) => {
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, {passive: true});
-document.getElementById('mazeArea').addEventListener('touchend', (e) => {
-  if (!touchStartX || !touchStartY) return;
-  const deltaX = e.changedTouches[0].clientX - touchStartX;
-  const deltaY = e.changedTouches[0].clientY - touchStartY;
-  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
-    moveMaze(deltaX > 0 ? 'right' : 'left');
-  } else if (Math.abs(deltaY) > 30) {
-    moveMaze(deltaY > 0 ? 'down' : 'up');
-  }
-  touchStartX = null;
-  touchStartY = null;
-}, {passive: true});
+(function attachMazeTouch() {
+  const area = document.getElementById('mazeArea');
+  let touchStartX, touchStartY;
+  area.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, {passive: true});
+  area.addEventListener('touchend', (e) => {
+    if (!touchStartX || !touchStartY) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+      moveMaze(deltaX > 0 ? 'right' : 'left');
+    } else if (Math.abs(deltaY) > 30) {
+      moveMaze(deltaY > 0 ? 'down' : 'up');
+    }
+    touchStartX = null; touchStartY = null;
+  }, {passive: true});
+})();
 
 /* Dots Connect */
 function setupDots() {
@@ -702,7 +745,7 @@ function setupDots() {
   });
 }
 function connectDot(idx) {
-  if (connectedDots.includes(idx)) return; // Allow any order, just tap all
+  if (connectedDots.includes(idx)) return;
   connectedDots.push(idx);
   const dot = document.getElementById(`dot${idx}`);
   dot.classList.add('active');
@@ -712,13 +755,17 @@ function connectDot(idx) {
   }
   if (connectedDots.length === 9) {
     const svg = document.getElementById('connectSvg');
-    svg.innerHTML += '<text x="50%" y="50%" font-size="60" fill="red" text-anchor="middle" dominant-baseline="middle">💖</text>';
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x','50%'); text.setAttribute('y','50%'); text.setAttribute('font-size','48');
+    text.setAttribute('fill','#ff6b6b'); text.setAttribute('text-anchor','middle'); text.setAttribute('dominant-baseline','middle');
+    text.textContent = '💖';
+    svg.appendChild(text);
     setTimeout(() => alert('Hearts Connected Perfectly! 💖'), 500);
   }
 }
 function drawLine(x1, y1, x2, y2) {
   const svg = document.getElementById('connectSvg');
-  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
   line.setAttribute('x1', x1 + '%');
   line.setAttribute('y1', y1 + '%');
   line.setAttribute('x2', x2 + '%');
@@ -733,41 +780,45 @@ document.getElementById('resetDots').onclick = setupDots;
 /* Timeline */
 function renderTimeline() {
   timelineList.innerHTML = milestones.map((m, i) => `
-    <div class="milestone" style="animation-delay: ${i * 0.2}s;">
+    <div class="milestone" style="animation-delay:${i*0.14}s;">
       <div class="milestone-emoji">${m.emoji}</div>
-      <div style="flex: 1;">
-        <div style="font-weight: 800; margin-bottom: 4px;">${m.title}</div>
-        <div class="muted">${m.desc}</div>
+      <div style="flex:1;">
+        <div style="font-weight:800; margin-bottom:6px;">${m.title}</div>
+        <div class="muted" style="margin-bottom:6px;">${m.desc}</div>
         <div class="small">${m.date}</div>
-        ${m.img ? `<img src="${m.img}" style="width:100%; aspect-ratio:9/16; border-radius:12px; margin-top:8px; display: block;" alt="${m.title}" />` : ''}
       </div>
     </div>
   `).join('');
-  setTimeout(() => document.querySelectorAll('.milestone').forEach(el => el.classList.add('show')), 100);
+  setTimeout(() => document.querySelectorAll('.milestone').forEach(el => el.classList.add('show')), 120);
 }
 
 /* Polaroids */
 function renderPolaroids() {
-  polaroidGrid.innerHTML = polaroids.map((p, i) => `
-    <div class="polaroid" style="transform: rotate(${ (i % 4 - 2) * 3 }deg);" onclick="openModal('${p.title.replace(/'/g, "\\'")}', '${p.img}', '${p.desc.replace(/'/g, "\\'")}')">
+  polaroidGrid.innerHTML = polaroids.map((p,i) => `
+    <div class="polaroid" style="transform: rotate(${(i%4-2)*2.5}deg);" onclick="openModal('${escapeJs(p.title)}','${p.img}','${escapeJs(p.desc)}')">
       <img src="${p.img}" alt="${p.title}" />
       <div class="polaroid-meta">
-        <div style="font-weight: 700; margin-bottom: 4px;">${p.title}</div>
-        <div style="font-size: 11px;">${p.desc}</div>
+        <div style="font-weight:700; margin-bottom:4px;">${p.title}</div>
+        <div style="font-size:11px;">${p.desc}</div>
       </div>
     </div>
   `).join('');
 }
+function escapeJs(s){
+  return (s||'').replace(/'/g,"\\'").replace(/"/g,"&quot;");
+}
 function openModal(title, img, desc) {
   modalContent.innerHTML = `
-    <img src="${img}" style="width:100%; max-height: 50vh; object-fit: cover; aspect-ratio:9/16; border-radius:12px;" alt="${title}" />
-    <h3 style="margin:12px 0 8px; color: #333;">${title}</h3>
+    <img src="${img}" style="width:100%; max-height:50vh; object-fit:cover; aspect-ratio:9/16; border-radius:10px;" alt="${title}" />
+    <h3 style="margin:12px 0 6px; color:#333;">${title}</h3>
     <p style="color:#666; margin:0;">${desc}</p>
   `;
   modal.classList.add('active');
+  modal.setAttribute('aria-hidden','false');
 }
 function closeModal() {
   modal.classList.remove('active');
+  modal.setAttribute('aria-hidden','true');
 }
 
 /* Notes */
@@ -785,19 +836,29 @@ document.getElementById('downloadNotes').onclick = () => {
 };
 document.getElementById('clearNotes').onclick = () => { notes.value = ''; };
 
-/* Menu Toggle */
-document.getElementById('menuToggle').onclick = () => goTo(currentPage === 0 ? 1 : 0);
-
-/* Nav Clicks */
+/* Menu Toggle and nav */
+document.getElementById('menuToggle').onclick = () => {
+  // If pages are unlocked, toggle between videos and games; otherwise, open guide
+  if (unlocked) goTo(currentPage === 0 ? 1 : 0);
+  else modalContent.innerHTML = `<h3 style="color:#ff6b6b;">Unlock Pehle ❤️</h3><p class="muted">Pehle SOS game khel ke 3 baar jeeto — phir pages khulenge.</p>`;
+  modal.classList.add('active');
+};
 navButtons.forEach(b => b.onclick = (e) => goTo(parseInt(e.target.dataset.page)));
 
-/* Expose globals */
+/* UI bindings */
+function bindUI() {
+  selectS.onclick = () => { selectedLetter = 'S'; selectS.classList.add('active'); selectO.classList.remove('active'); };
+  selectO.onclick = () => { selectedLetter = 'O'; selectO.classList.add('active'); selectS.classList.remove('active'); };
+  resetSos.onclick = initSOS;
+  document.body.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+}
+
+/* Expose a few utilities for debugging in console */
 window.moveMaze = moveMaze;
 window.openModal = openModal;
 window.closeModal = closeModal;
-window.dragStart = dragStart;
-window.dropPiece = dropPiece;
-window.connectDot = connectDot;
 window.setupJigsaw = setupJigsaw;
 window.setupMaze = setupMaze;
 window.setupDots = setupDots;
