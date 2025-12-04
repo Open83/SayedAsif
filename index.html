@@ -1,1053 +1,995 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Saraaa ❤️ — Eternal Love (Final)</title>
-<style>
-  /* ------------------------
-     Romantic gradient + mobile-first
-     ------------------------ */
-  :root{
-    --bg: linear-gradient(180deg,#120021 0%, #2b0036 55%, #3b0b2f 100%);
-    --card: rgba(255,255,255,0.06);
-    --glass-glow: rgba(255,107,107,0.12);
-    --accentA: #ff6b6b;
-    --accentB: #ff9aa2;
-    --accent-grad: linear-gradient(90deg,var(--accentA),var(--accentB));
-    --muted: rgba(255,255,255,0.85);
-    --radius: 16px;
-    --transition: 220ms cubic-bezier(.2,.9,.2,1);
-    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:var(--bg);color:#fff;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:680px;margin:0 auto;min-height:100vh;padding:86px 16px 120px}
-  header{position:fixed;left:0;right:0;top:0;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.02));backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.03);z-index:120}
-  .head-inner{max-width:680px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  h1{margin:0;font-size:18px;font-weight:900;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .small{font-size:12px;color:var(--muted)}
-  .pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.04);border:none;color:#fff;font-weight:700;cursor:pointer;transition:var(--transition)}
-  .card{background:var(--card);border-radius:var(--radius);padding:14px;border:1px solid var(--glass-glow);box-shadow:0 10px 30px rgba(0,0,0,0.28);margin-bottom:14px}
-  .title{font-weight:900;font-size:20px;margin:0 0 8px;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .subtitle{color:var(--muted);font-size:14px;margin:0 0 10px}
-  .muted{color:var(--muted)}
-  .nav{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;background:linear-gradient(180deg,rgba(0,0,0,0.32),rgba(0,0,0,0.02));backdrop-filter:blur(10px);display:flex;gap:10px;justify-content:center;z-index:130}
-  .nav button{flex:1;padding:10px 12px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:#fff;font-weight:800;cursor:pointer}
-  .nav button.active{background:var(--accent-grad);color:#fff;transform:scale(1.02)}
-
-  /* SOS board */
-  .sos-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .sos-cell{aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;border:none;color:#fff;cursor:pointer;transition:var(--transition)}
-  .sos-cell:disabled{opacity:0.45;cursor:not-allowed}
-  .controls{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-  .progress{height:8px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-top:12px}
-  .progress>div{height:100%;width:0;background:var(--accent-grad);transition:width .36s ease}
-
-  /* Settings area */
-  .settings { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px; }
-  .select { background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:10px; color:#fff; font-weight:700; border:none; cursor:pointer; }
-
-  /* video area */
-  .video-slot{width:100%;aspect-ratio:9/16;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#ff6b6b,#ff9aa2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center}
-  .video-emoji{font-size:58px;margin-bottom:8px}
-  .video-title{font-weight:900;font-size:18px;margin-bottom:6px}
-  .video-msg{font-size:14px;color:var(--muted);max-height:32%;overflow:auto;padding:6px 4px}
-
-  /* simple game cards layout */
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-
-  /* timeline */
-  .timeline{display:flex;flex-direction:column;gap:10px}
-  .milestone{display:flex;gap:10px;align-items:flex-start}
-  .milestone .dot{width:40px;height:40px;border-radius:50%;background:linear-gradient(90deg,#ff7b93,#ffb6c6);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
-
-  /* polaroid */
-  .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
-  .polaroid{background:#fff;border-radius:12px;padding:10px;color:#222;cursor:pointer}
-  .polaroid img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:8px}
-
-  /* notes */
-  .txtarea{width:100%;min-height:170px;border-radius:12px;padding:12px;border:none;font-family:'Dancing Script',cursive;font-size:18px;background:#fff;color:#222;resize:vertical}
-
-  /* modal */
-  .modal { position: fixed; inset: 0; display:none; align-items:center; justify-content:center; z-index:240; padding:16px; background: rgba(0,0,0,0.6); }
-  .modal .box { background:#fff; color:#222; padding:14px; border-radius:12px; width:100%; max-width:680px; max-height:90vh; overflow:auto; }
-
-  @media(min-width:760px){ .wrap{padding-left:30px;padding-right:30px} }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saraaa❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #9ecce3;
+            --deep: #195454;
+            --teal: #d7e7ee;
+            --warm: #996537;
+            --olive: #996537;
+        }
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--teal), var(--olive));
+            min-height: 100vh;
+        }
+        /* Navigation */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(25, 84, 84, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.3);
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px;
+        }
+        nav button.active {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+        /* Page Container */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 20px 15px 80px;
+            animation: fadeIn 0.5s;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Page 1 - Videos & Messages */
+        .video-section {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .video-container video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 9/16;
+            background: #000;
+        }
+        .message-box {
+            background: linear-gradient(135deg, rgba(158, 204, 227, 0.3), rgba(153, 101, 55, 0.3));
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            line-height: 1.8;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        /* Page 2 - Games */
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .game-title {
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Jigsaw */
+        #jigsaw-canvas {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            aspect-ratio: 1;
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            background: white;
+            touch-action: none;
+        }
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .game-controls button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .game-controls button:active {
+            transform: scale(0.95);
+            background: var(--deep);
+        }
+        /* Heart Maze */
+        #maze-canvas {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            aspect-ratio: 1;
+            border: 3px solid var(--warm);
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            background: white;
+            touch-action: none;
+        }
+        /* Dot Connect */
+        #dot-canvas {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            aspect-ratio: 1;
+            border: 3px solid var(--olive);
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            background: white;
+            touch-action: none;
+        }
+        /* Page 3 - Polaroid Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 900px;
+            }
+        }
+        .polaroid {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .polaroid:active {
+            transform: scale(0.98);
+        }
+        .polaroid img {
+            width: 100%;
+            aspect-ratio: 9/16;
+            object-fit: cover;
+            border-radius: 3px;
+            display: block;
+        }
+        .polaroid-caption {
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            font-size: 14px;
+        }
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal img {
+            max-width: 95%;
+            max-height: 95vh;
+            object-fit: contain;
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-prev { left: 20px; }
+        .modal-next { right: 20px; }
+        /* Page 4 - Timeline */
+        .timeline {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--olive));
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            animation: slideIn 0.6s;
+        }
+        .timeline-item:nth-child(odd) {
+            padding-right: 50%;
+            text-align: right;
+        }
+        .timeline-item:nth-child(even) {
+            padding-left: 50%;
+            text-align: left;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .timeline-date {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .timeline-text {
+            color: #333;
+            line-height: 1.6;
+        }
+        .timeline-image {
+            width: 100%;
+            max-width: 200px;
+            aspect-ratio: 9/16;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .timeline-heart {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--warm);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+        /* Page 5 - Notepad */
+        .notepad-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #d7e7ee, #9ecce3);
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .notepad-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 2px;
+            height: 100%;
+            background: #e8d4d4;
+        }
+        #notepad {
+            width: 100%;
+            min-height: 400px;
+            background: transparent;
+            border: none;
+            font-family: 'Caveat', cursive, 'Comic Sans MS', cursive;
+            font-size: 20px;
+            line-height: 2;
+            color: var(--deep);
+            padding: 10px 10px 10px 60px;
+            resize: vertical;
+            outline: none;
+        }
+        .notepad-btn {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 20px auto 0;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .notepad-btn:active {
+            transform: scale(0.95);
+            background: var(--deep);
+        }
+        /* Header */
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="head-inner">
-      <div style="display:flex;gap:12px;align-items:center">
-        <button id="devMenu" class="pill">☰</button>
-        <div>
-          <h1>Saraaa ❤️</h1>
-          <div class="small">My Eternal Flame</div>
+<!-- Page 1: Videos & Messages -->
+<div class="page active" id="page1">
+    <h1>Our Moments 💕</h1>
+   
+    <div class="video-section">
+        <div class="video-container">
+            <video controls>
+                <source src="assets/video1.mp4" type="video/mp4">
+                Your browser does not support videos.
+            </video>
         </div>
-      </div>
-      <div style="text-align:right">
-        <div id="winDisplay" class="small">Wins: 0 / 3</div>
-        <div id="streakDisplay" class="small">Streak: 0/3</div>
-      </div>
+        <div class="message-box">
+            <p>Every moment with you feels like a beautiful dream come true. From the first time I saw you, I knew my life would never be the same. You bring light to my darkest days and joy to every moment we share. Your smile is my favorite sight, and your laughter is my favorite sound. I promise to cherish every second we have together, to support your dreams, and to love you more with each passing day. You are my everything, Saraaa ❤️</p>
+        </div>
     </div>
-  </header>
-
-  <div class="wrap">
-    <!-- SOS unlock card -->
-    <section id="unlockCard" class="card">
-      <div class="title">🔐 Unlock Our Story</div>
-      <div class="subtitle">Win 3 SOS games in a row to reveal the whole site. Minimax AI enabled.</div>
-
-      <div id="sosMessage" class="muted" style="text-align:center;margin-bottom:10px;">Choose S or O then tap an empty cell.</div>
-
-      <div id="sosBoard" class="sos-board" aria-label="SOS board"></div>
-
-      <div class="controls">
-        <button id="selectS" class="pill">S</button>
-        <button id="selectO" class="pill">O</button>
-        <button id="resetGame" class="pill">Reset</button>
-        <button id="openGuide" class="pill">Guide</button>
-      </div>
-
-      <div style="display:flex;gap:10px;margin-top:10px;align-items:center;justify-content:center;flex-wrap:wrap">
-        <div class="settings">
-          <label class="small">AI Level</label>
-          <select id="aiLevel" class="select">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard (Minimax)</option>
-          </select>
+    <div class="video-section">
+        <div class="video-container">
+            <video controls>
+                <source src="assets/video2.mp4" type="video/mp4">
+                Your browser does not support videos.
+            </video>
         </div>
-        <div class="settings">
-          <label class="small">Mistake</label>
-          <input id="mistake" type="range" min="0" max="80" value="35" />
-          <div class="small" id="mistakeVal">35%</div>
+        <div class="message-box">
+            <p>When I think about our future together, my heart fills with excitement and love. I imagine all the adventures we'll have, the memories we'll create, and the life we'll build together. You make me want to be a better person every single day. Thank you for being patient with me, for understanding me, and for loving me exactly as I am. With you by my side, I feel like I can conquer anything. You are my partner, my best friend, and the love of my life. Forever yours 💕</p>
         </div>
-        <div class="settings">
-          <label class="small">Skip SOS</label>
-          <input id="skipSOS" type="checkbox" />
-        </div>
-      </div>
-
-      <div class="progress"><div id="progBar"></div></div>
-
-      <div style="display:flex;justify-content:space-between;margin-top:10px;align-items:center">
-        <div id="scoreDisplay" style="font-weight:900">0 - 0</div>
-        <div class="small" id="hint">AI: Full Minimax available</div>
-      </div>
-    </section>
-
-    <!-- Hidden pages container -->
-    <section id="pages" style="display:none">
-      <!-- Page 1: Videos & Messages -->
-      <div id="pageVideos" class="card">
-        <div class="title">🎞️ Videos & Messages</div>
-        <div class="subtitle">Swipe through romantic moments (9:16) and read the long messages.</div>
-        <div id="videoSlot" class="video-slot">
-          <div id="vEmoji" class="video-emoji">💕</div>
-          <div id="vTitle" class="video-title">Our Eternal Flame</div>
-          <div id="vMsg" class="video-msg"></div>
-        </div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:10px;align-items:center">
-          <button id="prevVideo" class="pill">← Prev</button>
-          <div id="videoCounter" class="pill" style="background:transparent;border:1px solid rgba(255,255,255,0.04)">1 / 5</div>
-          <button id="nextVideo" class="pill">Next →</button>
-        </div>
-      </div>
-
-      <!-- Page 2: Games -->
-      <div id="pageGames" class="card">
-        <div class="title">🎮 Playful Moments</div>
-        <div class="subtitle">Touch-friendly mini-games — Jigsaw, Maze, Connect.</div>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          <button id="startJig" class="pill">🧩 Jigsaw</button>
-          <button id="startMaze" class="pill">❤️ Maze</button>
-          <button id="startDots" class="pill">💌 Connect</button>
-        </div>
-        <div id="gamesArea" style="margin-top:12px"></div>
-      </div>
-
-      <!-- Page 3: Timeline -->
-      <div id="pageTimeline" class="card">
-        <div class="title">💕 Our Journey</div>
-        <div class="timeline" id="timelineList"></div>
-      </div>
-
-      <!-- Page 4: Polaroids -->
-      <div id="pageGallery" class="card">
-        <div class="title">📸 Cherished Snaps</div>
-        <div class="polaroid-grid" id="polaroidGrid"></div>
-      </div>
-
-      <!-- Page 5: Notes -->
-      <div id="pageNotes" class="card">
-        <div class="title">💌 Whispered Words</div>
-        <textarea id="notes" class="txtarea" placeholder="Dearest Saraaa, in the quiet of my heart..."></textarea>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button id="downloadNotes" class="pill">💾 Save TXT</button>
-          <button id="clearNotes" class="pill">Clear</button>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <nav class="nav" id="bottomNav" style="display:none">
-    <button data-i="0" class="active">Videos</button>
-    <button data-i="1">Games</button>
-    <button data-i="2">Timeline</button>
-    <button data-i="3">Gallery</button>
-    <button data-i="4">Notes</button>
-  </nav>
-
-  <!-- Modal (Guide / Zoom) -->
-  <div id="modal" class="modal" aria-hidden="true">
-    <div class="box">
-      <div id="modalContent"></div>
-      <div style="display:flex;justify-content:flex-end;margin-top:12px">
-        <button id="closeModal" class="pill">Close</button>
-      </div>
     </div>
-  </div>
-
+</div>
+<!-- Page 2: Games -->
+<div class="page" id="page2">
+    <h1>Play With Me 🎮</h1>
+   
+    <!-- Jigsaw Puzzle -->
+    <div class="game-container">
+        <div class="game-title">💗 Jigsaw Puzzle</div>
+        <div class="game-controls">
+            <button onclick="initJigsaw(9)">Easy (3×3)</button>
+            <button onclick="initJigsaw(16)">Medium (4×4)</button>
+            <button onclick="initJigsaw(25)">Hard (5×5)</button>
+        </div>
+        <canvas id="jigsaw-canvas"></canvas>
+    </div>
+    <!-- Heart Maze -->
+    <div class="game-container">
+        <div class="game-title">💕 Heart Maze</div>
+        <div class="game-controls">
+            <button onclick="resetMaze()">Reset</button>
+        </div>
+        <canvas id="maze-canvas"></canvas>
+        <p style="color: white; text-align: center; margin-top: 10px;">Drag/swipe to move! Reach the heart! ❤️</p>
+    </div>
+    <!-- Dot Heart Connect -->
+    <div class="game-container">
+        <div class="game-title">🔗 Connect The Heart</div>
+        <div class="game-controls">
+            <button onclick="undoDot()">Undo</button>
+            <button onclick="resetDots()">Reset</button>
+        </div>
+        <canvas id="dot-canvas"></canvas>
+        <p style="color: white; text-align: center; margin-top: 10px;">Click/tap the dots to draw a heart! 💕</p>
+    </div>
+</div>
+<!-- Page 3: Polaroid Gallery -->
+<div class="page" id="page3">
+    <h1>Our Gallery 📸</h1>
+    <div class="gallery-grid" id="gallery"></div>
+</div>
+<div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <button class="modal-nav modal-prev" onclick="prevImage()">‹</button>
+    <img id="modal-img" src="" alt="">
+    <button class="modal-nav modal-next" onclick="nextImage()">›</button>
+</div>
+<!-- Page 4: Timeline -->
+<div class="page" id="page4">
+    <h1>Our Story 💝</h1>
+    <div class="timeline" id="timeline"></div>
+</div>
+<!-- Page 5: Notepad -->
+<div class="page" id="page5">
+    <h1>Love Notes 💌</h1>
+    <div class="notepad-container">
+        <textarea id="notepad" placeholder="Write your heart out..."></textarea>
+        <button class="notepad-btn" onclick="downloadNote()">Download Note 📝</button>
+    </div>
+</div>
+<!-- Navigation -->
+<nav>
+    <button class="active" onclick="showPage(1)">🎬</button>
+    <button onclick="showPage(2)">🎮</button>
+    <button onclick="showPage(3)">📸</button>
+    <button onclick="showPage(4)">💝</button>
+    <button onclick="showPage(5)">💌</button>
+</nav>
 <script>
-/* ===========================
-   Configurable constants
-   =========================== */
-const CONFIG = {
-  AI_LEVEL: 'hard', // default 'easy' | 'medium' | 'hard'
-  MISTAKE_CHANCE: 0.35, // 0.0 - 1.0
-  SKIP_SOS: false
-};
-
-/* We'll wire UI controls to these live values later. */
-
-/* ===========================
-   Data (videos, timeline, polaroids)
-   Replace placeholders with real files if you have them
-   =========================== */
-const VIDEOS = [
-  {emoji:'💕', title:'Our Eternal Flame', msg:`From the stars above to the depths of my soul, you are my everything. Every beat of my heart whispers your name in the quiet night.`},
-  {emoji:'🌙', title:'Whispers in the Night', msg:`In the silence of midnight, your voice is my lullaby. We share dreams that dance like fireflies under the velvet sky.`},
-  {emoji:'✨', title:'Adventures Unwritten', msg:`Hand in hand, we'll chase horizons yet to see. Our path is paved with laughter, love, and endless possibility.`},
-  {emoji:'💞', title:'Hearts Intertwined', msg:`Our love, a tapestry woven with threads of gold. Each moment with you is a brushstroke on the canvas of forever.`},
-  {emoji:'🌸', title:'Forever Blooms', msg:`Like roses in spring, our story never fades. You are the bloom that colors my world in hues of eternal spring.`}
-];
-
-const MILESTONES = [
-  {emoji:'👀', title:'First Glance', desc:'Eyes locked, worlds collided in a spark of destiny.'},
-  {emoji:'😘', title:'First Kiss', desc:'Sparks flew, time stood still in that magical embrace.'},
-  {emoji:'🌟', title:'Promises Made', desc:'Under the moon, forever sealed with whispered vows.'},
-  {emoji:'💍', title:'Our Vows', desc:'Eternity in a single yes, hearts forever bound.'},
-  {emoji:'♾️', title:'Infinite Us', desc:'Love without end, a circle of joy unending.'}
-];
-
-const POLAROIDS = Array.from({length:8},(_,i)=>({
-  title:['Sunset Stroll','Cozy Nights','Beach Whispers','Starlit Dances','Coffee Dates','Rainy Kisses','Festival Lights','Quiet Mornings'][i],
-  // placeholder simple white svg; replace with data URLs or real paths
-  img:'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=',
-  desc:'A snapshot of our joy.'
-}));
-
-/* ===========================
-   SOS Game State
-   =========================== */
-let sosBoard = Array(9).fill(null); // null | 'S' | 'O'
-let humanTurn = true;
-let selectedLetter = 'S';
-let scores = {human:0, ai:0};
-let streak = 0;
-let unlocked = false;
-
-/* DOM references */
-const sosBoardEl = document.getElementById('sosBoard');
-const selectSBtn = document.getElementById('selectS');
-const selectOBtn = document.getElementById('selectO');
-const resetBtn = document.getElementById('resetGame');
-const guideBtn = document.getElementById('openGuide');
-const aiLevelEl = document.getElementById('aiLevel');
-const mistakeEl = document.getElementById('mistake');
-const mistakeValEl = document.getElementById('mistakeVal');
-const skipCheckbox = document.getElementById('skipSOS');
-const progBar = document.getElementById('progBar');
-const scoreDisplay = document.getElementById('scoreDisplay');
-const sosMessage = document.getElementById('sosMessage');
-const winDisplay = document.getElementById('winDisplay');
-const streakDisplay = document.getElementById('streakDisplay');
-const bottomNav = document.getElementById('bottomNav');
-const pagesSection = document.getElementById('pages');
-const unlockCard = document.getElementById('unlockCard');
-
-/* Video DOM */
-const vEmoji = document.getElementById('vEmoji');
-const vTitle = document.getElementById('vTitle');
-const vMsg = document.getElementById('vMsg');
-const prevVideo = document.getElementById('prevVideo');
-const nextVideo = document.getElementById('nextVideo');
-const videoCounter = document.getElementById('videoCounter');
-
-let videoIndex = 0;
-
-/* Modal */
-const modal = document.getElementById('modal');
-const modalContent = document.getElementById('modalContent');
-const closeModalBtn = document.getElementById('closeModal');
-
-/* Games area */
-const gamesArea = document.getElementById('gamesArea');
-
-/* Timeline & Polaroid DOM */
-const timelineList = document.getElementById('timelineList');
-const polaroidGrid = document.getElementById('polaroidGrid');
-
-/* Notes */
-const notesArea = document.getElementById('notes');
-const downloadNotesBtn = document.getElementById('downloadNotes');
-const clearNotesBtn = document.getElementById('clearNotes');
-
-/* Bottom nav buttons */
-document.querySelectorAll('.nav button').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    // scroll to approximate card (simple UX)
-    const idx = Number(btn.dataset.i);
-    const cards = Array.from(document.querySelectorAll('.card'));
-    if(cards[idx]) cards[idx].scrollIntoView({behavior:'smooth',block:'center'});
-  });
-});
-
-/* ===========================
-   Utility functions
-   =========================== */
-function updateScoreDisplay(){
-  scoreDisplay.textContent = `${scores.human} - ${scores.ai}`;
-}
-function updateProgress(){
-  progBar.style.width = `${Math.min(100,(streak/3)*100)}%`;
-  winDisplay.textContent = `Wins: ${streak} / 3`;
-  streakDisplay.textContent = `Streak: ${streak}/3`;
-}
-
-/* ===========================
-   SOS: rendering & interactions
-   =========================== */
-function renderSOS(){
-  sosBoardEl.innerHTML = '';
-  for(let i=0;i<9;i++){
-    const b = document.createElement('button');
-    b.className = 'sos-cell';
-    b.textContent = sosBoard[i] || '';
-    b.disabled = !!sosBoard[i] || !humanTurn || unlocked;
-    b.onclick = ()=>handleHumanMove(i);
-    sosBoardEl.appendChild(b);
-  }
-  updateScoreDisplay();
-}
-
-selectSBtn.addEventListener('click', ()=>{
-  selectedLetter='S';
-  selectSBtn.classList.add('pill','active');
-  selectOBtn.classList.remove('active');
-});
-selectOBtn.addEventListener('click', ()=>{
-  selectedLetter='O';
-  selectOBtn.classList.add('pill','active');
-  selectSBtn.classList.remove('active');
-});
-
-resetBtn.addEventListener('click', ()=>{resetRound();streak=0;updateProgress();});
-guideBtn.addEventListener('click', ()=>openGuideModal());
-
-mistakeEl.addEventListener('input', ()=>{
-  mistakeValEl.textContent = `${mistakeEl.value}%`;
-  CONFIG.MISTAKE_CHANCE = Number(mistakeEl.value)/100;
-});
-aiLevelEl.addEventListener('change', ()=>{CONFIG.AI_LEVEL = aiLevelEl.value;});
-skipCheckbox.addEventListener('change', ()=>{
-  CONFIG.SKIP_SOS = skipCheckbox.checked;
-  if(CONFIG.SKIP_SOS) unlockAll();
-});
-
-/* initialize UI controls to defaults */
-aiLevelEl.value = CONFIG.AI_LEVEL;
-mistakeEl.value = CONFIG.MISTAKE_CHANCE * 100;
-mistakeValEl.textContent = `${Math.round(CONFIG.MISTAKE_CHANCE*100)}%`;
-skipCheckbox.checked = CONFIG.SKIP_SOS;
-
-/* Human move */
-function handleHumanMove(i){
-  if(sosBoard[i]) return;
-  if(!humanTurn) return;
-  sosBoard[i] = selectedLetter;
-  const got = countNewSOS(i, sosBoard);
-  scores.human += got;
-  renderSOS();
-  if(got>0){
-    sosMessage.textContent = `Nice! You formed ${got} new SOS. Extra turn.`;
-    if(isBoardFull()) finishRound();
-    return; // human gets extra turn
-  }
-  if(isBoardFull()){ finishRound(); return; }
-  humanTurn = false;
-  sosMessage.textContent = `AI is thinking...`;
-  setTimeout(()=>aiPlay(), 450);
-}
-
-/* check if board full */
-function isBoardFull(){
-  return sosBoard.every(c=>c!==null);
-}
-
-/* count SOS that include index on a provided board */
-function countNewSOS(idx, board){
-  if(board[idx]===null) return 0;
-  const lines = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-  let c = 0;
-  for(const L of lines){
-    if(L.includes(idx)){
-      const [a,b,d] = L;
-      if(board[a]==='S' && board[b]==='O' && board[d]==='S') c++;
+    // Navigation
+    function showPage(n) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('page' + n).classList.add('active');
+        document.querySelectorAll('nav button')[n-1].classList.add('active');
     }
-  }
-  return c;
-}
-
-/* returns list of empty indices */
-function emptyIndices(board){
-  return board.map((v,i)=>v===null?i:null).filter(x=>x!==null);
-}
-
-/* ===========================
-   MINIMAX AI Implementation
-   - The state space is small; we will explore deeply.
-   - We'll implement alpha-beta and memoization.
-   - Evaluate final score difference (ai - human).
-   =========================== */
-
-/* helper to create memo key */
-function boardKey(board, turn){
-  return board.map(x=>x||'.').join('') + '|' + turn;
-}
-
-/* minimax: returns {score, move: idx, letter: 'S'|'O'} for maximizing player (AI)
-   We model the recursive game to completion: for each empty pos, try 'S' and 'O'
-   Score at each place = immediate points for the player (move) + subsequent recursion (with players swapped).
-   We compute (aiScore - humanScore) at leaves.
-*/
-function minimaxSolve(board, turn, alpha=-Infinity, beta=Infinity, memo=new Map()){
-  const key = boardKey(board, turn);
-  if(memo.has(key)) return memo.get(key);
-
-  const empties = emptyIndices(board);
-  if(empties.length===0){
-    // game over: no more moves
-    return { score: 0, move: null, letter: null };
-  }
-  const maximizing = (turn==='ai');
-  let best = maximizing ? {score:-Infinity, move:null, letter:null} : {score:Infinity, move:null, letter:null};
-
-  // For each move position and letter choice
-  for(const pos of empties){
-    for(const letter of ['S','O']){
-      // simulate
-      const nb = board.slice();
-      nb[pos] = letter;
-      const pts = countNewSOS(pos, nb); // points for player who played
-      // recurse: next turn is the other player
-      const res = minimaxSolve(nb, (turn==='ai'?'human':'ai'), alpha, beta, memo);
-      // combine: pts belongs to current player; res.score is the (ai - human) from the rest of game
-      let combined;
-      if(turn==='ai') {
-        // ai gets pts => combined score = pts + res.score
-        combined = pts + res.score;
-      } else {
-        // human gets pts => combined score = res.score - pts (because score is ai - human)
-        combined = res.score - pts;
-      }
-
-      if(maximizing){
-        if(combined > best.score){
-          best = {score: combined, move: pos, letter: letter};
+    // JIGSAW PUZZLE
+    let jigsawPieces = [];
+    let jigsawSize = 3;
+    let selectedPiece = null;
+    let jigsawCanvas, jigsawCtx;
+    function initJigsaw(pieces) {
+        jigsawCanvas = document.getElementById('jigsaw-canvas');
+        jigsawCtx = jigsawCanvas.getContext('2d');
+        jigsawSize = Math.sqrt(pieces);
+       
+        const size = 400;
+        jigsawCanvas.width = size;
+        jigsawCanvas.height = size;
+       
+        const pieceSize = size / jigsawSize;
+        jigsawPieces = [];
+       
+        for (let i = 0; i < jigsawSize; i++) {
+            for (let j = 0; j < jigsawSize; j++) {
+                jigsawPieces.push({
+                    correct: {x: j * pieceSize, y: i * pieceSize},
+                    current: {x: Math.random() * (size - pieceSize), y: Math.random() * (size - pieceSize)},
+                    srcX: j * pieceSize,
+                    srcY: i * pieceSize,
+                    size: pieceSize,
+                    placed: false
+                });
+            }
         }
-        alpha = Math.max(alpha, best.score);
-      } else {
-        if(combined < best.score){
-          best = {score: combined, move: pos, letter: letter};
+       
+        drawJigsaw();
+    }
+    function drawJigsaw() {
+        jigsawCtx.clearRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
+        jigsawCtx.fillStyle = '#f0f0f0';
+        jigsawCtx.fillRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
+       
+        jigsawPieces.forEach(piece => {
+            jigsawCtx.strokeStyle = '#195454';
+            jigsawCtx.lineWidth = 2;
+            jigsawCtx.strokeRect(piece.current.x, piece.current.y, piece.size, piece.size);
+            jigsawCtx.fillStyle = piece.placed ? '#996537' : '#9ecce3';
+            jigsawCtx.fillRect(piece.current.x, piece.current.y, piece.size, piece.size);
+            jigsawCtx.fillStyle = 'white';
+            jigsawCtx.font = '20px Arial';
+            jigsawCtx.textAlign = 'center';
+            jigsawCtx.fillText('❤️', piece.current.x + piece.size/2, piece.current.y + piece.size/2 + 7);
+        });
+    }
+    function handleJigsawMouseDown(e) {
+        const rect = jigsawCanvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
+       
+        for (let i = jigsawPieces.length - 1; i >= 0; i--) {
+            const p = jigsawPieces[i];
+            if (x >= p.current.x && x <= p.current.x + p.size &&
+                y >= p.current.y && y <= p.current.y + p.size) {
+                selectedPiece = p;
+                break;
+            }
         }
-        beta = Math.min(beta, best.score);
-      }
-      if(beta <= alpha) break; // prune
     }
-    if(beta <= alpha) break;
-  }
-
-  memo.set(key, best);
-  return best;
-}
-
-/* AI decision wrapper: uses CONFIG.AI_LEVEL and CONFIG.MISTAKE_CHANCE */
-function pickAIMove(board){
-  const empties = emptyIndices(board);
-  // easy: random
-  if(CONFIG.AI_LEVEL === 'easy'){
-    const pos = empties[Math.floor(Math.random()*empties.length)];
-    const letter = Math.random()<0.6 ? 'S' : 'O';
-    return {pos, letter, reason:'easy-random'};
-  }
-  // hard or medium: use minimax but medium may allow mistakes
-  // compute minimax best
-  const memo = new Map();
-  const best = minimaxSolve(board, 'ai', -Infinity, Infinity, memo);
-  // best.move and best.letter
-  if(best.move===null){
-    // fallback random
-    const pos = empties[Math.floor(Math.random()*empties.length)];
-    const letter = Math.random()<0.6 ? 'S' : 'O';
-    return {pos, letter, reason:'fallback'};
-  }
-
-  // Mistake chance handling: medium or specified mistake percentage
-  const mistake = CONFIG.MISTAKE_CHANCE;
-  if(CONFIG.AI_LEVEL === 'hard'){
-    // if hard -> no mistakes
-    return {pos: best.move, letter: best.letter, reason:'minimax-optimal'};
-  } else {
-    if(Math.random() < mistake){
-      // make a suboptimal move: random empty with random letter
-      const pos = empties[Math.floor(Math.random()*empties.length)];
-      const letter = Math.random()<0.6 ? 'S' : 'O';
-      return {pos, letter, reason:'mistake'};
-    }
-    return {pos: best.move, letter: best.letter, reason:'minimax'};
-  }
-}
-
-/* ===========================
-   AI play function
-   =========================== */
-function aiPlay(){
-  if(unlocked) return;
-  const pick = pickAIMove(sosBoard.slice());
-  // execute move
-  const pos = pick.pos;
-  const letter = pick.letter;
-  sosBoard[pos] = letter;
-  const newPts = countNewSOS(pos, sosBoard);
-  scores.ai += newPts;
-  renderSOS();
-  // update message
-  if(newPts>0){
-    sosMessage.textContent = `AI formed ${newPts} SOS. AI goes again.`;
-    if(isBoardFull()) finishRound();
-    else setTimeout(aiPlay, 420); // AI extra turn if scored
-    return;
-  }
-  if(isBoardFull()){ finishRound(); return; }
-  // give back to human
-  humanTurn = true;
-  sosMessage.textContent = `Your turn!`;
-}
-
-/* ===========================
-   Round & unlock logic
-   =========================== */
-function finishRound(){
-  // compare scores
-  if(scores.human > scores.ai){
-    streak++;
-    sosMessage.textContent = `You win this round! (${scores.human} - ${scores.ai}) Streak increased.`;
-  } else if(scores.ai > scores.human){
-    streak = 0;
-    sosMessage.textContent = `AI wins this round. (${scores.ai} - ${scores.human}) Streak reset.`;
-  } else {
-    streak = 0;
-    sosMessage.textContent = `Tie (${scores.human} - ${scores.ai}). Streak reset.`;
-  }
-  scores = {human:0, ai:0};
-  updateScoreDisplay();
-  updateProgress();
-
-  if(streak >= 3){
-    setTimeout(()=> {
-      unlockAll();
-    }, 700);
-    return;
-  }
-  // reset board after a short pause
-  setTimeout(()=>{ resetRound(); }, 900);
-}
-function resetRound(){
-  sosBoard = Array(9).fill(null);
-  humanTurn = true;
-  selectedLetter = 'S';
-  scores = {human:0, ai:0};
-  renderSOS();
-  updateScoreDisplay();
-  sosMessage.textContent = 'Choose S or O then tap an empty cell.';
-}
-function unlockAll(){
-  unlocked = true;
-  sosMessage.textContent = '🎉 Congratulations! All pages unlocked. Enjoy our story ❤️';
-  // hide unlock card and show pages
-  unlockCard.style.display = 'none';
-  pagesSection.style.display = 'block';
-  bottomNav.style.display = 'flex';
-  // set progress full
-  progBar.style.width = '100%';
-}
-
-/* ===========================
-   Initialize SOS UI & optionally skip
-   =========================== */
-function initSOS(){
-  // Map config UI to live config
-  CONFIG.AI_LEVEL = aiLevelEl.value;
-  CONFIG.MISTAKE_CHANCE = Number(mistakeEl.value)/100;
-  CONFIG.SKIP_SOS = skipCheckbox.checked;
-
-  if(CONFIG.SKIP_SOS){
-    streak = 3;
-    updateProgress();
-    unlockAll();
-    return;
-  }
-  // ensure clear
-  resetRound();
-  renderSOS();
-  updateProgress();
-}
-initSOS();
-
-/* ===========================
-   Render helper functions
-   =========================== */
-function renderSOS(){
-  renderSOSBoard();
-  updateScoreDisplay();
-}
-function renderSOSBoard(){
-  sosBoardEl.innerHTML = '';
-  for(let i=0;i<9;i++){
-    const b = document.createElement('button');
-    b.className = 'sos-cell';
-    b.textContent = sosBoard[i] || '';
-    b.disabled = !!sosBoard[i] || !humanTurn || unlocked;
-    (function(idx){
-      b.addEventListener('click', ()=>{
-        if(unlocked) return;
-        if(!humanTurn) return;
-        if(sosBoard[idx]) return;
-        sosBoard[idx] = selectedLetter;
-        const got = countNewSOS(idx, sosBoard);
-        scores.human += got;
-        renderSOSBoard();
-        updateScoreDisplay();
-        if(got > 0){
-          sosMessage.textContent = `Great! You formed ${got} SOS. Extra turn.`;
-          if(isBoardFull()) finishRound();
-          return;
+    function handleJigsawMouseMove(e) {
+        if (selectedPiece) {
+            const rect = jigsawCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
+            selectedPiece.current.x = x - selectedPiece.size / 2;
+            selectedPiece.current.y = y - selectedPiece.size / 2;
+            drawJigsaw();
         }
-        if(isBoardFull()){ finishRound(); return; }
-        humanTurn = false;
-        sosMessage.textContent = 'AI is thinking...';
-        setTimeout(aiPlay, 420);
-      });
-    })(i);
-    sosBoardEl.appendChild(b);
-  }
-}
-
-/* ===========================
-   Videos & messages UI
-   =========================== */
-function renderVideoIndex(){
-  const v = VIDEOS[videoIndex];
-  vEmoji.textContent = v.emoji;
-  vTitle.textContent = v.title;
-  vMsg.textContent = v.msg;
-  videoCounter.textContent = `${videoIndex+1} / ${VIDEOS.length}`;
-}
-document.getElementById('prevVideo').addEventListener('click', ()=>{
-  videoIndex = (videoIndex - 1 + VIDEOS.length) % VIDEOS.length;
-  renderVideoIndex();
-});
-document.getElementById('nextVideo').addEventListener('click', ()=>{
-  videoIndex = (videoIndex + 1) % VIDEOS.length;
-  renderVideoIndex();
-});
-renderVideoIndex();
-
-/* ===========================
-   Timeline & Polaroids
-   =========================== */
-function renderTimeline(){
-  timelineList.innerHTML = '';
-  MILESTONES.forEach((m,i)=>{
-    const el = document.createElement('div');
-    el.className = 'milestone';
-    el.innerHTML = `<div class="dot">${m.emoji}</div><div><div style="font-weight:800">${m.title}</div><div class="small">${m.desc}</div></div>`;
-    timelineList.appendChild(el);
-  });
-}
-renderTimeline();
-
-function renderPolaroids(){
-  polaroidGrid.innerHTML = '';
-  POLAROIDS.forEach(p=>{
-    const el = document.createElement('div');
-    el.className = 'polaroid';
-    el.innerHTML = `<img src="${p.img}" alt="${p.title}"><div style="font-weight:800;margin-top:8px">${p.title}</div><div class="small">${p.desc}</div>`;
-    el.addEventListener('click', ()=> openModal(`<img src="${p.img}" style="width:100%;aspect-ratio:9/16;border-radius:8px"><h3 style="margin:10px 0 6px">${p.title}</h3><p>${p.desc}</p>`));
-    polaroidGrid.appendChild(el);
-  });
-}
-renderPolaroids();
-
-/* ===========================
-   Notes download
-   =========================== */
-downloadNotesBtn.addEventListener('click', ()=>{
-  const text = notesArea.value || '';
-  const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `saraaa-love-${new Date().toISOString().slice(0,10)}.txt`;
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-});
-clearNotesBtn.addEventListener('click', ()=>{ notesArea.value = ''; });
-
-/* ===========================
-   Games: Jigsaw (simple, touch friendly),
-   Maze (swipe), Dots (connect)
-   These are functional and mobile-optimized
-   =========================== */
-
-/* Jigsaw: simple fiddly 9 piece drag+snap */
-function startJigsaw(){
-  gamesArea.innerHTML = '';
-  const area = document.createElement('div');
-  area.style.width = '100%';
-  area.style.aspectRatio = '9/16';
-  area.style.background = 'linear-gradient(135deg,#ffc1cc,#ffdede)';
-  area.style.borderRadius = '12px';
-  area.style.position = 'relative';
-  area.style.overflow = 'hidden';
-  gamesArea.appendChild(area);
-
-  const slots = [
-    {x:20,y:18},{x:50,y:18},{x:80,y:18},
-    {x:20,y:50},{x:50,y:50},{x:80,y:50},
-    {x:20,y:82},{x:50,y:82},{x:80,y:82}
-  ];
-  // create slots
-  slots.forEach(s=>{
-    const el = document.createElement('div');
-    el.style.position='absolute';
-    el.style.left = s.x + '%';
-    el.style.top = s.y + '%';
-    el.style.width='64px';
-    el.style.height='64px';
-    el.style.transform='translate(-50%,-50%)';
-    el.style.border='2px dashed rgba(255,255,255,0.5)';
-    el.style.borderRadius='8px';
-    area.appendChild(el);
-  });
-
-  // create movable pieces
-  const pieces = [];
-  for(let i=0;i<9;i++){
-    const p = document.createElement('div');
-    p.className = 'jig-piece';
-    p.style.position = 'absolute';
-    p.style.left = (10 + Math.random()*70) + '%';
-    p.style.top = (10 + Math.random()*70) + '%';
-    p.style.width = '58px';
-    p.style.height = '58px';
-    p.style.background = '#fff';
-    p.style.color = '#333';
-    p.style.borderRadius = '8px';
-    p.style.display='flex';
-    p.style.alignItems='center';
-    p.style.justifyContent='center';
-    p.style.fontWeight='900';
-    p.style.boxShadow='0 8px 26px rgba(0,0,0,0.15)';
-    p.draggable = true;
-    p.textContent = (i+1);
-    area.appendChild(p);
-    pieces.push(p);
-    p.addEventListener('dragstart', (ev)=>{ ev.dataTransfer.setData('text/plain', i); setTimeout(()=>p.style.opacity='0.6',0);});
-    p.addEventListener('dragend', ()=>{ p.style.opacity='1';});
-  }
-  area.addEventListener('dragover', (e)=>e.preventDefault());
-  area.addEventListener('drop', (e)=>{
-    e.preventDefault();
-    const idx = Number(e.dataTransfer.getData('text/plain'));
-    const rect = area.getBoundingClientRect();
-    const mouseX = ((e.clientX - rect.left)/rect.width)*100;
-    const mouseY = ((e.clientY - rect.top)/rect.height)*100;
-    // find nearest slot
-    let minD=Infinity, nearest=null;
-    slots.forEach((s,j)=>{
-      const dx = s.x - mouseX, dy = s.y - mouseY;
-      const d = Math.hypot(dx,dy);
-      if(d<minD){ minD=d; nearest={s,j}; }
-    });
-    const piece = pieces[idx];
-    if(minD < 15){
-      piece.style.left = nearest.s.x + '%'; piece.style.top = nearest.s.y + '%';
-      piece.style.background = 'linear-gradient(90deg,#ff6b6b,#ff9aa2)';
-      piece.style.color='#fff';
-      piece.setAttribute('data-placed', nearest.j);
-    } else {
-      piece.style.left = Math.max(4, Math.min(96, mouseX)) + '%';
-      piece.style.top = Math.max(4, Math.min(96, mouseY)) + '%';
     }
-    // check complete
-    if(pieces.every(p=>p.hasAttribute('data-placed'))){
-      setTimeout(()=>alert('Puzzle Complete! 🎉'), 420);
+    function handleJigsawMouseUp(e) {
+        if (selectedPiece) {
+            const dx = Math.abs(selectedPiece.current.x - selectedPiece.correct.x);
+            const dy = Math.abs(selectedPiece.current.y - selectedPiece.correct.y);
+            if (dx < 20 && dy < 20) {
+                selectedPiece.current = {...selectedPiece.correct};
+                selectedPiece.placed = true;
+            }
+            selectedPiece = null;
+            drawJigsaw();
+        }
     }
-  });
-}
-
-/* Maze: simple swipe/tap movement */
-function startMaze(){
-  gamesArea.innerHTML='';
-  const area = document.createElement('div');
-  area.style.width='100%'; area.style.aspectRatio='9/16'; area.style.background='linear-gradient(135deg,#ffdede,#ffe6f0)'; area.style.borderRadius='12px'; area.style.position='relative'; area.style.overflow='hidden';
-  gamesArea.appendChild(area);
-  // heart
-  const heart = document.createElement('div');
-  heart.id='mazeHeart';
-  heart.style.position='absolute';
-  heart.style.left='12%'; heart.style.top='12%';
-  heart.style.transform='translate(-50%,-50%)';
-  heart.style.width='44px'; heart.style.height='44px'; heart.style.borderRadius='50%';
-  heart.style.display='flex'; heart.style.alignItems='center'; heart.style.justifyContent='center';
-  heart.style.background='linear-gradient(90deg,#ff6b6b,#ff9aa2)';
-  heart.style.fontSize='20px'; heart.textContent='❤️';
-  area.appendChild(heart);
-  // goal
-  const goal = document.createElement('div');
-  goal.style.position='absolute'; goal.style.right='8%'; goal.style.bottom='8%'; goal.style.width='44px'; goal.style.height='44px'; goal.style.borderRadius='50%'; goal.style.background='#ffd166'; goal.style.display='flex'; goal.style.alignItems='center'; goal.style.justifyContent='center'; goal.textContent='⭐';
-  area.appendChild(goal);
-  // walls (simple)
-  const walls = [
-    {l:36,t:0,w:8,h:46},{l:0,t:40,w:30,h:8},{l:65,t:52,w:35,h:8}
-  ];
-  walls.forEach(w=>{
-    const el = document.createElement('div');
-    el.style.position='absolute'; el.style.left = w.l+'%'; el.style.top = w.t+'%'; el.style.width = w.w+'%'; el.style.height = w.h+'%';
-    el.style.background='rgba(0,0,0,0.12)'; el.style.borderRadius='6px';
-    area.appendChild(el);
-  });
-  // movement via touch swipe
-  let tx, ty;
-  area.addEventListener('touchstart', (e)=>{ tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
-  area.addEventListener('touchend', (e)=>{
-    if(!tx) return;
-    const dx = e.changedTouches[0].clientX - tx;
-    const dy = e.changedTouches[0].clientY - ty;
-    const absX = Math.abs(dx), absY = Math.abs(dy);
-    if(Math.max(absX,absY) < 30) { tx=null; return; }
-    if(absX>absY){
-      if(dx>0) moveMaze('right', heart, area, goal);
-      else moveMaze('left', heart, area, goal);
-    } else {
-      if(dy>0) moveMaze('down', heart, area, goal);
-      else moveMaze('up', heart, area, goal);
+    jigsawCanvas = document.getElementById('jigsaw-canvas');
+    jigsawCanvas.addEventListener('mousedown', handleJigsawMouseDown);
+    jigsawCanvas.addEventListener('mousemove', handleJigsawMouseMove);
+    jigsawCanvas.addEventListener('mouseup', handleJigsawMouseUp);
+    jigsawCanvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        const rect = jigsawCanvas.getBoundingClientRect();
+        const x = (e.touches[0].clientX - rect.left) * (jigsawCanvas.width / rect.width);
+        const y = (e.touches[0].clientY - rect.top) * (jigsawCanvas.height / rect.height);
+       
+        for (let i = jigsawPieces.length - 1; i >= 0; i--) {
+            const p = jigsawPieces[i];
+            if (x >= p.current.x && x <= p.current.x + p.size &&
+                y >= p.current.y && y <= p.current.y + p.size) {
+                selectedPiece = p;
+                break;
+            }
+        }
+    });
+    jigsawCanvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (selectedPiece) {
+            const rect = jigsawCanvas.getBoundingClientRect();
+            const x = (e.touches[0].clientX - rect.left) * (jigsawCanvas.width / rect.width);
+            const y = (e.touches[0].clientY - rect.top) * (jigsawCanvas.height / rect.height);
+            selectedPiece.current.x = x - selectedPiece.size / 2;
+            selectedPiece.current.y = y - selectedPiece.size / 2;
+            drawJigsaw();
+        }
+    });
+    jigsawCanvas.addEventListener('touchend', e => {
+        e.preventDefault();
+        if (selectedPiece) {
+            const dx = Math.abs(selectedPiece.current.x - selectedPiece.correct.x);
+            const dy = Math.abs(selectedPiece.current.y - selectedPiece.correct.y);
+            if (dx < 20 && dy < 20) {
+                selectedPiece.current = {...selectedPiece.correct};
+                selectedPiece.placed = true;
+            }
+            selectedPiece = null;
+            drawJigsaw();
+        }
+    });
+    initJigsaw(9);
+    // HEART MAZE
+    const mazeCanvas = document.getElementById('maze-canvas');
+    const mazeCtx = mazeCanvas.getContext('2d');
+    const mazeSize = 400;
+    mazeCanvas.width = mazeSize;
+    mazeCanvas.height = mazeSize;
+   
+    let playerPos = {x: 50, y: 350};
+    let goalPos = {x: 350, y: 50};
+    let touchStart = null;
+    let mouseStart = null;
+   
+    function drawMaze() {
+        mazeCtx.fillStyle = '#f0f0f0';
+        mazeCtx.fillRect(0, 0, mazeSize, mazeSize);
+       
+        // Simple heart-shaped path
+        mazeCtx.strokeStyle = '#996537';
+        mazeCtx.lineWidth = 40;
+        mazeCtx.beginPath();
+        mazeCtx.moveTo(50, 350);
+        mazeCtx.lineTo(50, 200);
+        mazeCtx.bezierCurveTo(50, 100, 150, 50, 200, 100);
+        mazeCtx.bezierCurveTo(250, 50, 350, 100, 350, 200);
+        mazeCtx.lineTo(350, 50);
+        mazeCtx.stroke();
+       
+        // Player
+        mazeCtx.fillStyle = '#9ecce3';
+        mazeCtx.beginPath();
+        mazeCtx.arc(playerPos.x, playerPos.y, 15, 0, Math.PI * 2);
+        mazeCtx.fill();
+       
+        // Goal
+        mazeCtx.fillStyle = '#ff6b9d';
+        mazeCtx.font = '30px Arial';
+        mazeCtx.textAlign = 'center';
+        mazeCtx.fillText('❤️', goalPos.x, goalPos.y + 10);
+       
+        // Check win
+        const dist = Math.hypot(playerPos.x - goalPos.x, playerPos.y - goalPos.y);
+        if (dist < 30) {
+            mazeCtx.fillStyle = 'rgba(158, 204, 227, 0.8)';
+            mazeCtx.fillRect(0, 0, mazeSize, mazeSize);
+            mazeCtx.fillStyle = 'white';
+            mazeCtx.font = '40px Arial';
+            mazeCtx.textAlign = 'center';
+            mazeCtx.fillText('You Win! 💕', mazeSize/2, mazeSize/2);
+        }
     }
-    tx=null;
-  }, {passive:true});
-  // arrow buttons fallback
-  const controls = document.createElement('div');
-  controls.style.display='flex'; controls.style.gap='8px'; controls.style.marginTop='10px'; controls.style.justifyContent='center';
-  ['⬆️','⬅️','⬇️','➡️'].forEach((label,idx)=>{
-    const btn = document.createElement('button'); btn.className='pill'; btn.textContent=label;
-    btn.addEventListener('click', ()=> {
-      if(label==='⬆️') moveMaze('up',heart,area,goal);
-      if(label==='⬇️') moveMaze('down',heart,area,goal);
-      if(label==='⬅️') moveMaze('left',heart,area,goal);
-      if(label==='➡️') moveMaze('right',heart,area,goal);
+   
+    function handleMazeTouchStart(e) {
+        e.preventDefault();
+        const rect = mazeCanvas.getBoundingClientRect();
+        touchStart = {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top
+        };
+    }
+   
+    function handleMazeTouchEnd(e) {
+        e.preventDefault();
+        if (!touchStart) return;
+       
+        const rect = mazeCanvas.getBoundingClientRect();
+        const touchEnd = {
+            x: e.changedTouches[0].clientX - rect.left,
+            y: e.changedTouches[0].clientY - rect.top
+        };
+       
+        const scaleX = mazeSize / rect.width;
+        const scaleY = mazeSize / rect.height;
+        const dx = (touchEnd.x - touchStart.x) * scaleX;
+        const dy = (touchEnd.y - touchStart.y) * scaleY;
+        const step = 30;
+       
+        if (Math.abs(dx) > Math.abs(dy)) {
+            playerPos.x += dx > 0 ? step : -step;
+        } else {
+            playerPos.y += dy > 0 ? step : -step;
+        }
+       
+        playerPos.x = Math.max(20, Math.min(mazeSize - 20, playerPos.x));
+        playerPos.y = Math.max(20, Math.min(mazeSize - 20, playerPos.y));
+       
+        touchStart = null;
+        drawMaze();
+    }
+
+    function handleMazeMouseDown(e) {
+        const rect = mazeCanvas.getBoundingClientRect();
+        mouseStart = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+   
+    function handleMazeMouseUp(e) {
+        if (!mouseStart) return;
+       
+        const rect = mazeCanvas.getBoundingClientRect();
+        const mouseEnd = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+       
+        const scaleX = mazeSize / rect.width;
+        const scaleY = mazeSize / rect.height;
+        const dx = (mouseEnd.x - mouseStart.x) * scaleX;
+        const dy = (mouseEnd.y - mouseStart.y) * scaleY;
+        const step = 30;
+       
+        if (Math.abs(dx) > Math.abs(dy)) {
+            playerPos.x += dx > 0 ? step : -step;
+        } else {
+            playerPos.y += dy > 0 ? step : -step;
+        }
+       
+        playerPos.x = Math.max(20, Math.min(mazeSize - 20, playerPos.x));
+        playerPos.y = Math.max(20, Math.min(mazeSize - 20, playerPos.y));
+       
+        mouseStart = null;
+        drawMaze();
+    }
+   
+    mazeCanvas.addEventListener('touchstart', handleMazeTouchStart);
+    mazeCanvas.addEventListener('touchend', handleMazeTouchEnd);
+    mazeCanvas.addEventListener('mousedown', handleMazeMouseDown);
+    mazeCanvas.addEventListener('mouseup', handleMazeMouseUp);
+   
+    function resetMaze() {
+        playerPos = {x: 50, y: 350};
+        drawMaze();
+    }
+   
+    drawMaze();
+    // DOT CONNECT
+    const dotCanvas = document.getElementById('dot-canvas');
+    const dotCtx = dotCanvas.getContext('2d');
+    const dotSize = 400;
+    dotCanvas.width = dotSize;
+    dotCanvas.height = dotSize;
+   
+    const heartDots = [
+        {x: 200, y: 100}, {x: 150, y: 80}, {x: 100, y: 100},
+        {x: 80, y: 150}, {x: 100, y: 250}, {x: 150, y: 320},
+        {x: 200, y: 370}, {x: 250, y: 320}, {x: 300, y: 250},
+        {x: 320, y: 150}, {x: 300, y: 100}, {x: 250, y: 80}
+    ];
+   
+    let connectedDots = [];
+   
+    function drawDots() {
+        dotCtx.fillStyle = '#f0f0f0';
+        dotCtx.fillRect(0, 0, dotSize, dotSize);
+       
+        // Draw lines
+        if (connectedDots.length > 1) {
+            dotCtx.strokeStyle = '#195454';
+            dotCtx.lineWidth = 3;
+            dotCtx.beginPath();
+            dotCtx.moveTo(connectedDots[0].x, connectedDots[0].y);
+            for (let i = 1; i < connectedDots.length; i++) {
+                dotCtx.lineTo(connectedDots[i].x, connectedDots[i].y);
+            }
+            dotCtx.stroke();
+        }
+       
+        // Draw dots
+        heartDots.forEach((dot, i) => {
+            const connected = connectedDots.includes(dot);
+            dotCtx.fillStyle = connected ? '#996537' : '#d7e7ee';
+            dotCtx.beginPath();
+            dotCtx.arc(dot.x, dot.y, 8, 0, Math.PI * 2);
+            dotCtx.fill();
+           
+            dotCtx.fillStyle = 'white';
+            dotCtx.font = '12px Arial';
+            dotCtx.textAlign = 'center';
+            dotCtx.fillText(i + 1, dot.x, dot.y + 4);
+        });
+       
+        // Check completion
+        if (connectedDots.length === heartDots.length) {
+            dotCtx.strokeStyle = '#ff6b9d';
+            dotCtx.lineWidth = 5;
+            dotCtx.shadowBlur = 20;
+            dotCtx.shadowColor = '#ff6b9d';
+            dotCtx.beginPath();
+            dotCtx.moveTo(connectedDots[0].x, connectedDots[0].y);
+            connectedDots.forEach(dot => dotCtx.lineTo(dot.x, dot.y));
+            dotCtx.closePath();
+            dotCtx.stroke();
+            dotCtx.shadowBlur = 0;
+        }
+    }
+
+    function handleDotMouseDown(e) {
+        const rect = dotCanvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (dotSize / rect.width);
+        const y = (e.clientY - rect.top) * (dotSize / rect.height);
+       
+        const clicked = heartDots.find(dot =>
+            Math.hypot(dot.x - x, dot.y - y) < 20
+        );
+       
+        if (clicked && !connectedDots.includes(clicked)) {
+            connectedDots.push(clicked);
+            drawDots();
+        }
+    }
+   
+    dotCanvas.addEventListener('mousedown', handleDotMouseDown);
+    dotCanvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        const rect = dotCanvas.getBoundingClientRect();
+        const x = (e.touches[0].clientX - rect.left) * (dotSize / rect.width);
+        const y = (e.touches[0].clientY - rect.top) * (dotSize / rect.height);
+       
+        const clicked = heartDots.find(dot =>
+            Math.hypot(dot.x - x, dot.y - y) < 20
+        );
+       
+        if (clicked && !connectedDots.includes(clicked)) {
+            connectedDots.push(clicked);
+            drawDots();
+        }
     });
-    controls.appendChild(btn);
-  });
-  gamesArea.appendChild(controls);
-}
-function moveMaze(dir, heart, area, goal){
-  const step = 12; // percent
-  const rect = area.getBoundingClientRect();
-  const curX = parseFloat(heart.style.left);
-  const curY = parseFloat(heart.style.top);
-  let nx = curX, ny = curY;
-  if(dir==='up') ny = Math.max(6, curY - step);
-  if(dir==='down') ny = Math.min(94, curY + step);
-  if(dir==='left') nx = Math.max(6, curX - step);
-  if(dir==='right') nx = Math.min(94, curX + step);
-  heart.style.left = nx+'%'; heart.style.top = ny+'%';
-  // check goal proximity (goal is bottom-right)
-  if(nx>78 && ny>78){
-    heart.classList.add('pulse');
-    setTimeout(()=>{ alert('Maze Master! You reached the goal! ⭐❤️'); heart.classList.remove('pulse'); heart.style.left='12%'; heart.style.top='12%'; }, 600);
-  }
-}
-
-/* Dots Connect */
-function startDots(){
-  gamesArea.innerHTML = '';
-  const area = document.createElement('div');
-  area.style.width='100%'; area.style.height='240px'; area.style.position='relative';
-  gamesArea.appendChild(area);
-  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('viewBox','0 0 100 100'); svg.style.position='absolute'; svg.style.inset='0'; svg.style.width='100%'; svg.style.height='100%';
-  area.appendChild(svg);
-  const grid = document.createElement('div');
-  grid.style.position='absolute'; grid.style.inset='6px'; grid.style.display='grid'; grid.style.gridTemplateColumns='repeat(3,1fr)'; grid.style.gap='12px';
-  area.appendChild(grid);
-
-  const positions = [
-    [15,15],[50,15],[85,15],
-    [15,50],[50,50],[85,50],
-    [15,85],[50,85],[85,85]
-  ];
-  let connected = [];
-  for(let i=0;i<9;i++){
-    const d = document.createElement('div');
-    d.className='pill'; d.style.width='52px'; d.style.height='52px'; d.style.borderRadius='50%'; d.style.display='flex'; d.style.alignItems='center'; d.style.justifyContent='center';
-    d.textContent = i+1; d.style.fontWeight='900';
-    d.addEventListener('click', ()=> {
-      if(connected.includes(i)) return;
-      connected.push(i);
-      d.style.background = 'linear-gradient(90deg,#ff6b6b,#ff9aa2)'; d.style.color='#fff';
-      if(connected.length>1){
-        const a = positions[connected[connected.length-2]];
-        const b = positions[connected[connected.length-1]];
-        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-        line.setAttribute('x1', a[0]); line.setAttribute('y1', a[1]); line.setAttribute('x2', b[0]); line.setAttribute('y2', b[1]);
-        line.setAttribute('stroke','#ff6b6b'); line.setAttribute('stroke-width','2'); line.setAttribute('stroke-linecap','round');
-        svg.appendChild(line);
-      }
-      if(connected.length===9){
-        const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-        t.setAttribute('x','50'); t.setAttribute('y','50'); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle');
-        t.setAttribute('font-size','8'); t.textContent='💖';
-        svg.appendChild(t);
-        setTimeout(()=>alert('Hearts Connected! 💖'),400);
-      }
+   
+    function undoDot() {
+        connectedDots.pop();
+        drawDots();
+    }
+   
+    function resetDots() {
+        connectedDots = [];
+        drawDots();
+    }
+   
+    drawDots();
+    // GALLERY
+    const images = [
+        {src: 'assets/img1.jpg', caption: 'Forever Together 💕'},
+        {src: 'assets/img2.jpg', caption: 'My Favorite Smile ❤️'},
+        {src: 'assets/img3.jpg', caption: 'Beautiful Moments 🌸'},
+        {src: 'assets/img4.jpg', caption: 'You & Me 💑'},
+        {src: 'assets/img5.jpg', caption: 'Perfect Day 🌟'},
+        {src: 'assets/img6.jpg', caption: 'Love Always 💝'}
+    ];
+   
+    let currentImageIndex = 0;
+   
+    function loadGallery() {
+        const gallery = document.getElementById('gallery');
+        gallery.innerHTML = images.map((img, i) => `
+            <div class="polaroid" onclick="openModal(${i})">
+                <img src="${img.src}" alt="${img.caption}">
+                <div class="polaroid-caption">${img.caption}</div>
+            </div>
+        `).join('');
+    }
+   
+    function openModal(index) {
+        currentImageIndex = index;
+        document.getElementById('modal-img').src = images[index].src;
+        document.getElementById('modal').classList.add('active');
+    }
+   
+    function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+    }
+   
+    function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        document.getElementById('modal-img').src = images[currentImageIndex].src;
+    }
+   
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        document.getElementById('modal-img').src = images[currentImageIndex].src;
+    }
+   
+    loadGallery();
+    // TIMELINE
+    const timeline = [
+        {
+            date: 'The Beginning',
+            text: 'The day we first met, I knew something special was about to begin. Your eyes captured my heart instantly.',
+            image: 'assets/timeline1.jpg'
+        },
+        {
+            date: 'First Date',
+            text: 'Our first date was magical. Every moment talking with you felt like time stood still. I never wanted it to end.',
+            image: 'assets/timeline2.jpg'
+        },
+        {
+            date: 'Falling Deeper',
+            text: 'With each passing day, I fell more in love with you. Your kindness, your laugh, your beautiful soul.',
+            image: 'assets/timeline3.jpg'
+        },
+        {
+            date: 'Our Adventure',
+            text: 'Every adventure with you is my favorite. You make ordinary moments extraordinary.',
+            image: 'assets/timeline4.jpg'
+        },
+        {
+            date: 'Forever Promise',
+            text: 'I promise to love you today, tomorrow, and for all the days after. You are my forever, Saraaa ❤️',
+            image: 'assets/timeline5.jpg'
+        }
+    ];
+   
+    function loadTimeline() {
+        const timelineEl = document.getElementById('timeline');
+        timelineEl.innerHTML = timeline.map(item => `
+            <div class="timeline-item">
+                <div class="timeline-heart">❤️</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">${item.date}</div>
+                    <div class="timeline-text">${item.text}</div>
+                    ${item.image ? `<img src="${item.image}" alt="${item.date}" class="timeline-image">` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+   
+    loadTimeline();
+    // NOTEPAD
+    const notepad = document.getElementById('notepad');
+   
+    // Load saved note
+    const saved = localStorage.getItem('loveNote');
+    if (saved) notepad.value = saved;
+   
+    // Auto-save
+    notepad.addEventListener('input', () => {
+        localStorage.setItem('loveNote', notepad.value);
     });
-    grid.appendChild(d);
-  }
-}
-
-/* hook up game buttons */
-document.getElementById('startJig').addEventListener('click', ()=>{ startJigsaw(); });
-document.getElementById('startMaze').addEventListener('click', ()=>{ startMaze(); });
-document.getElementById('startDots').addEventListener('click', ()=>{ startDots(); });
-
-/* ===========================
-   Modal helpers (guide + generic)
-   =========================== */
-function openModal(html){
-  modalContent.innerHTML = html;
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
-}
-closeModalBtn.addEventListener('click', ()=>{ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
-
-function openGuideModal(){
-  openModal(`<h2 style="margin-top:0;color:#333">SOS Guide — Hinglish</h2>
-  <div class="small" style="color:#333">
-    <p><strong>Step 1:</strong> Upar S ya O select karo.</p>
-    <p><strong>Step 2:</strong> Grid mein kisi empty cell pe tap karo — tumhara letter wahaan jayega.</p>
-    <p><strong>Rule:</strong> Agar kisi horizontal, vertical ya diagonal line mein S-O-S ban jaata hai to usko ek point milega aur jo player ne woh move kiya usko extra turn milta hai.</p>
-    <p><strong>Goal:</strong> AI se zyada points banao. 3 continuous wins se sari pages unlock hongi.</p>
-    <p style="font-style:italic">Simple — jaise pyaar: patience, surprises, aur thoda strategy. Good luck! 😘</p>
-    <hr>
-    <div><strong>Developer shortcuts</strong><br>Use the settings on the SOS card to change AI level, mistake chance, or skip SOS for testing.</div>
-  </div>`);
-}
-
-/* Open dev menu */
-document.getElementById('devMenu').addEventListener('click', ()=>{
-  openModal(`<h3>Developer Controls</h3>
-  <div class="small">
-  <p><button id="devSkip" class="pill">Skip SOS (unlock)</button> <button id="devReset" class="pill">Reset site</button></p>
-  <p>AI Level: <select id="devAi"><option>easy</option><option selected>medium</option><option>hard</option></select></p>
-  </div>`);
-  document.getElementById('devSkip').addEventListener('click', ()=>{
-    streak = 3; updateProgress(); unlockAll(); modal.style.display='none';
-  });
-  document.getElementById('devReset').addEventListener('click', ()=>{
-    location.reload();
-  });
-  document.getElementById('devAi').addEventListener('change', (e)=>{ aiLevelEl.value = e.target.value; CONFIG.AI_LEVEL = e.target.value; });
-});
-
-/* ===========================
-   Initialize pages / UI
-   =========================== */
-function initPages(){
-  // hide pages until unlocked
-  pagesSection.style.display = 'none';
-  bottomNav.style.display = 'none';
-  // fill videos, timeline, polaroids
-  renderVideoIndex();
-  renderTimeline();
-  renderPolaroids();
-}
-initPages();
-
-/* render video index */
-function renderVideoIndex(){
-  const v = VIDEOS[videoIndex];
-  vEmoji.textContent = v.emoji;
-  vTitle.textContent = v.title;
-  vMsg.textContent = v.msg;
-  videoCounter.textContent = `${videoIndex+1} / ${VIDEOS.length}`;
-}
-prevVideo.addEventListener('click', ()=>{ videoIndex = (videoIndex-1 + VIDEOS.length) % VIDEOS.length; renderVideoIndex(); });
-nextVideo.addEventListener('click', ()=>{ videoIndex = (videoIndex+1) % VIDEOS.length; renderVideoIndex(); });
-
-/* render timeline and polaroids (done above) */
-function renderTimeline(){
-  timelineList.innerHTML = '';
-  MILESTONES.forEach((m,i)=>{
-    const el = document.createElement('div'); el.className='milestone';
-    el.innerHTML = `<div class="dot">${m.emoji}</div><div><div style="font-weight:800">${m.title}</div><div class="small">${m.desc}</div></div>`;
-    timelineList.appendChild(el);
-  });
-}
-function renderPolaroids(){
-  polaroidGrid.innerHTML = '';
-  POLAROIDS.forEach(p=>{
-    const el = document.createElement('div'); el.className='polaroid';
-    el.innerHTML = `<img src="${p.img}" alt="${p.title}"><div style="font-weight:800;margin-top:8px">${p.title}</div><div class="small">${p.desc}</div>`;
-    el.addEventListener('click', ()=>openModal(`<img src="${p.img}" style="width:100%;aspect-ratio:9/16;border-radius:8px"><h3 style="margin:12px 0 6px">${p.title}</h3><p>${p.desc}</p>`));
-    polaroidGrid.appendChild(el);
-  });
-}
-renderTimeline();
-renderPolaroids();
-
-/* ===========================
-   Final small helpers / start
-   =========================== */
-updateScoreDisplay();
-updateProgress();
-
-/* expose some functions to window for debugging (optional) */
-window._debug = {
-  sos: ()=>sosBoard,
-  resetRound,
-  pickAIMove
-};
+   
+    function downloadNote() {
+        const text = notepad.value || 'My love note for you... ❤️';
+        const blob = new Blob([text], {type: 'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Love_Note_for_Saraaa.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    // Swipe gestures for modal
+    let touchStartX = 0;
+    const modal = document.getElementById('modal');
+   
+    modal.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+    });
+   
+    modal.addEventListener('touchend', e => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+       
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) nextImage();
+            else prevImage();
+        }
+    });
 </script>
 </body>
 </html>
