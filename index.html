@@ -1,320 +1,804 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saraaa ❤️</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #9ecce3;
-            --deep: #195454;
-            --teal: #d7e7ee;
-            --warm: #996537;
-        }
-        body {
-            font-family: 'Georgia', serif;
-            overflow-x: hidden;
-            background: linear-gradient(135deg, #9ecce3, #d7e7ee, #195454, #996537);
-            min-height: 100vh;
-        }
-        nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(25,84,84,0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 1000;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.3);
-        }
-        nav button {
-            background: none; border: none; color: white;
-            font-size: 24px; padding: 10px 15px; cursor: pointer;
-            transition: all 0.3s; border-radius: 10px;
-        }
-        nav button.active { background: var(--primary); transform: scale(1.1); }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Saraaa ❤️</title>
+<meta name="description" content="Saraaa ❤️ — Romantic interactive site" />
+<style>
+  /* ---------- Palette (user provided) ---------- */
+  :root{
+    --p1:#278062;
+    --p2:#105a4e;
+    --p3:#176c5e;
+    --p4:#8c933f;
+    --p5:#a9a971;
+    --glass: rgba(255,255,255,0.06);
+    --text-on-primary: #fff;
+    --card-bg: rgba(255,255,255,0.06);
+    --accent-dark: rgba(0,0,0,0.18);
+  }
 
-        .page { display: none; min-height: 100vh; padding: 20px 15px 80px; animation: fadeIn 0.5s; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  /* ---------- Base ---------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(135deg, var(--p1), var(--p3) 30%, var(--p4) 65%, var(--p5) 100%);
+    color: #0f1f1a;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
 
-        .video-section { margin-bottom: 40px; background: rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; backdrop-filter: blur(10px); }
-        .video-container { max-width: 400px; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .video-container video { width: 100%; aspect-ratio: 9/16; background: #000; }
-        .message-box { background: linear-gradient(135deg, rgba(158,204,227,0.3), rgba(153,101,55,0.3)); padding: 20px; border-radius: 15px; color: white; line-height: 1.8; font-size: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+  /* ---------- Top header ---------- */
+  header{
+    width:100%;
+    padding:14px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    max-width:1100px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;color:var(--text-on-primary);
+    text-shadow:0 3px 12px rgba(0,0,0,0.25);
+  }
+  .brand h1{font-size:18px;letter-spacing:0.6px}
+  .brand .heart{
+    width:44px;height:44px;border-radius:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+    display:grid;place-items:center;font-size:20px;color:var(--text-on-primary);
+    box-shadow:0 6px 18px rgba(16,24,20,0.25);
+  }
 
-        .game-container { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .game-title { color: white; text-align: center; font-size: 24px; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        #jigsaw-canvas, #maze-canvas, #dot-canvas {
-            width: 100%; max-width: 400px; height: auto; aspect-ratio: 1;
-            border: 3px solid var(--primary); border-radius: 10px;
-            display: block; margin: 0 auto; background: white; touch-action: none;
-        }
-        .game-controls { display: flex; gap: 10px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
-        .game-controls button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 25px; font-size: 14px; cursor: pointer; }
+  /* ---------- Pages container ---------- */
+  main{width:100%;max-width:1100px;padding:10px 16px 82px;flex:1;display:block}
+  .page{display:none;padding-bottom:40px}
+  .page.active{display:block}
+  h2{color:var(--text-on-primary);text-align:center;margin-bottom:16px;font-size:20px;text-shadow:0 6px 18px rgba(0,0,0,0.25)}
 
-        h1 { text-align: center; color: white; font-size: 32px; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+  /* ---------- Card ---------- */
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    padding:14px;border-radius:18px;margin:12px auto;box-shadow:0 10px 30px var(--accent-dark);
+    max-width:920px;
+  }
 
-        .win-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; flex-direction: column; }
-        .win-modal.active { display: flex; }
-        .win-message { background: linear-gradient(135deg, var(--primary), var(--teal)); color: var(--deep); padding: 40px; border-radius: 20px; text-align: center; font-size: 22px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.4); animation: bounceIn 0.6s; }
-        .win-btn { margin-top: 20px; background: var(--warm); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 18px; cursor: pointer; }
-        @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 50%{transform:scale(1.05)} 70%{transform:scale(0.9)} 100%{transform:scale(1);opacity:1} }
+  /* ---------- Responsive canvas sizing ---------- */
+  .canvas-wrap{width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:10px;align-items:center}
+  canvas{width:100%;height:auto;border-radius:12px;background:#fff;touch-action:none}
 
-        .gallery-grid { display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 500px; margin: 0 auto; }
-        @media(min-width:768px){ .gallery-grid{grid-template-columns:repeat(2,1fr); max-width:900px;} }
-        .polaroid { background:white; padding:15px; border-radius:5px; box-shadow:0 10px 30px rgba(0,0,0,0.3); cursor:pointer; }
-        .polaroid img { width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:3px; }
-        .polaroid-caption { text-align:center; margin-top:10px; font-family:'Courier New',monospace; color:#333; }
+  /* ---------- Controls ---------- */
+  .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .btn{padding:10px 14px;border-radius:999px;background:var(--p1);color:white;border:none;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.18)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text-on-primary)}
+  .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;display:flex;gap:8px;padding:8px;background:rgba(0,0,0,0.14);backdrop-filter: blur(6px);border-radius:999px;z-index:999}
+  .nav button{background:transparent;border:none;color:white;font-size:20px;padding:8px 12px;border-radius:10px;cursor:pointer}
+  .nav button.active{background:linear-gradient(90deg,var(--p1),var(--p3));transform:scale(1.06)}
 
-        .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.95); z-index:2000; justify-content:center; align-items:center; }
-        .modal.active { display:flex; }
-        .modal img { max-width:95%; max-height:95vh; object-fit:contain; }
+  /* ---------- Modal overlays (win screens) ---------- */
+  .overlay{
+    position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,0.5),rgba(0,0,0,0.6));z-index:3000;
+  }
+  .overlay.show{display:flex}
+  .toast{
+    background:white;border-radius:18px;padding:22px 20px;max-width:420px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35)
+  }
+  .toast h3{margin-bottom:12px;font-size:20px}
+  .toast p{color:#334;line-height:1.5}
+  .small{font-size:13px;color:#23614f;margin-top:8px;font-weight:600}
 
-        .timeline { position:relative; max-width:500px; margin:0 auto; padding:20px 0; }
-        .timeline::before { content:''; position:absolute; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(var(--primary),var(--warm)); }
-        .timeline-item { position:relative; margin-bottom:50px; }
-        .timeline-item:nth-child(odd) { padding-right:50%; text-align:right; }
-        .timeline-item:nth-child(even) { padding-left:50%; text-align:left; }
-        .timeline-heart { position:absolute; left:50%; transform:translateX(-50%); width:30px; height:30px; background:var(--warm); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; box-shadow:0 3px 10px rgba(0,0,0,0.3); z-index:1; }
-        .timeline-content { background:rgba(255,255,255,0.95); padding:20px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.2); }
-        .timeline-date { color:var(--primary); font-weight:bold; margin-bottom:10px; font-size:18px; }
+  /* ---------- Gallery polaroids ---------- */
+  .gallery-grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:920px;margin:0 auto}
+  @media(min-width:720px){.gallery-grid{grid-template-columns:repeat(2,1fr)}}
+  .polaroid{background:white;padding:10px;border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,0.22);cursor:pointer}
+  .polaroid img{width:100%;height:auto;border-radius:8px;display:block}
 
-        .notepad-container { max-width:500px; margin:0 auto; background:linear-gradient(to bottom,#d7e7ee,#9ecce3); border-radius:10px; padding:30px 20px; box-shadow:0 10px 40px rgba(0,0,0,0.3); position:relative; }
-        .notepad-container::before { content:''; position:absolute; top:0; left:40px; width:2px; height:100%; background:#e8d4d4; }
-        #notepad { width:100%; min-height:400px; background:transparent; border:none; font-family:'Caveat',cursive; font-size:20px; line-height:2; color:var(--deep); padding:10px 10px 10px 60px; resize:vertical; outline:none; }
-        .notepad-btn { display:block; width:100%; max-width:200px; margin:20px auto 0; background:var(--primary); color:white; border:none; padding:15px; border-radius:25px; font-size:16px; cursor:pointer; }
-    </style>
+  /* ---------- timeline ---------- */
+  .timeline{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  .timeline-item{background:white;padding:14px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+
+  /* ---------- notepad ---------- */
+  .notepad-container{max-width:720px;margin:0 auto;padding:16px;border-radius:12px}
+  textarea{width:100%;min-height:240px;border:none;border-radius:8px;padding:14px;font-size:18px;resize:vertical;outline:none}
+
+  /* ---------- helpers ---------- */
+  .muted{opacity:0.9;color:rgba(255,255,255,0.95)}
+  footer{width:100%;padding:18px 0;text-align:center;color:rgba(255,255,255,0.85);font-size:13px}
+</style>
 </head>
 <body>
+<header>
+  <div class="brand">
+    <div class="heart">💕</div>
+    <div>
+      <h1>Saraaa ❤️ — My Forever</h1>
+      <div style="font-size:12px;color:rgba(255,255,255,0.9)">Tap the icons below to explore</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <button class="btn ghost" onclick="showPage(1)">Home</button>
+    <button class="btn ghost" onclick="showPage(2)">Games</button>
+  </div>
+</header>
 
-<!-- Pages -->
-<div class="page active" id="page1"> <!-- Videos & Messages --> ... (same as before) </div>
-<div class="page" id="page2"> <!-- Games --> ... (same HTML) </div>
-<div class="page" id="page3"> <!-- Gallery --> ... </div>
-<div class="page" id="page4"> <!-- Timeline --> ... </div>
-<div class="page" id="page5"> <!-- Notepad --> ... </div>
+<main>
+  <!-- Page 1 -->
+  <section id="page1" class="page active">
+    <h2>Our Moments 💕</h2>
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+        <div class="canvas-wrap" style="max-width:720px">
+          <!-- video 9:16 -->
+          <div style="width:100%;max-width:420px;border-radius:14px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.18)">
+            <video style="width:100%;display:block" controls playsinline>
+              <source src="assets/video1.mp4" type="video/mp4">
+              Your browser doesn't support video
+            </video>
+          </div>
 
-<!-- Win Modal -->
-<div class="win-modal" id="win-modal">
-    <div class="win-message" id="win-text"></div>
-    <button class="win-btn" onclick="closeWin()">Play Again!</button>
-</div>
+          <div style="margin-top:12px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));padding:12px;border-radius:10px;color:white">
+            <p style="font-size:15px;line-height:1.6">Every moment with you feels like a beautiful dream come true. From the first time I saw you, I knew my life would never be the same. You are my everything, Saraaa ❤️</p>
+          </div>
 
-<!-- Navigation -->
-<nav>
-    <button class="active" onclick="showPage(1)">Video</button>
-    <button onclick="showPage(2)">Games</button>
-    <button onclick="showPage(3)">Photos</button>
-    <button onclick="showPage(4">Story</button>
-    <button onclick="showPage(5)">Notes</button>
+          <div style="width:100%;max-width:420px;margin-top:12px;border-radius:14px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.18)">
+            <video style="width:100%;display:block" controls playsinline>
+              <source src="assets/video2.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Page 2: Games -->
+  <section id="page2" class="page">
+    <h2>Play With Me 🎮</h2>
+
+    <!-- Jigsaw -->
+    <div class="card" id="jigsawCard">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+        <div style="font-weight:700;color:var(--text-on-primary)">💗 Jigsaw Puzzle</div>
+        <div class="canvas-wrap">
+          <canvas id="jigsawCanvas"></canvas>
+          <div class="controls">
+            <button class="btn" data-size="3">Easy (3×3)</button>
+            <button class="btn" data-size="4">Medium (4×4)</button>
+            <button class="btn" data-size="5">Hard (5×5)</button>
+            <button class="btn ghost" id="shuffleJigsaw">Shuffle</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heart Maze -->
+    <div class="card" id="mazeCard" style="margin-top:14px">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+        <div style="font-weight:700;color:var(--text-on-primary)">💕 Heart Maze</div>
+        <div class="canvas-wrap">
+          <canvas id="mazeCanvas"></canvas>
+          <div class="controls">
+            <div style="display:flex;gap:8px">
+              <button class="btn" id="mazeReset">Reset</button>
+              <button class="btn ghost" id="mazeSolve">Show Path</button>
+            </div>
+          </div>
+          <div style="margin-top:6px;display:flex;gap:8px;justify-content:center">
+            <button class="btn ghost" id="up">↑</button>
+            <button class="btn ghost" id="left">←</button>
+            <button class="btn ghost" id="down">↓</button>
+            <button class="btn ghost" id="right">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dot Connect -->
+    <div class="card" id="dotCard" style="margin-top:14px">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+        <div style="font-weight:700;color:var(--text-on-primary)">🔗 Connect The Heart</div>
+        <div class="canvas-wrap">
+          <canvas id="dotCanvas"></canvas>
+          <div class="controls">
+            <button class="btn ghost" id="undoDot">Undo</button>
+            <button class="btn" id="resetDot">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Page 3: Gallery -->
+  <section id="page3" class="page">
+    <h2>Our Gallery 📸</h2>
+    <div class="gallery-grid" id="gallery"></div>
+  </section>
+
+  <!-- Page 4: Timeline -->
+  <section id="page4" class="page">
+    <h2>Our Story 💝</h2>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <!-- Page 5: Notepad -->
+  <section id="page5" class="page">
+    <h2>Love Notes 💌</h2>
+    <div class="card notepad-container">
+      <textarea id="notepad" placeholder="Write your heart out..."></textarea>
+      <div style="text-align:center;margin-top:12px"><button class="btn" id="downloadNote">Download Note 📝</button></div>
+    </div>
+  </section>
+</main>
+
+<!-- Navigation bottom -->
+<nav class="nav" aria-label="Main navigation">
+  <button class="active" onclick="showPage(1)" title="Home">🎬</button>
+  <button onclick="showPage(2)" title="Games">🎮</button>
+  <button onclick="showPage(3)" title="Gallery">📸</button>
+  <button onclick="showPage(4)" title="Timeline">💝</button>
+  <button onclick="showPage(5)" title="Notepad">💌</button>
 </nav>
 
+<!-- Win overlays -->
+<div id="overlay" class="overlay" role="dialog" aria-modal="true">
+  <div class="toast" id="overlayToast">
+    <h3 id="overlayTitle">You Win! 💕</h3>
+    <p id="overlayText">Bahut khoobsurat khela — main bahut proud hoon. 💖</p>
+    <div style="margin-top:12px">
+      <button class="btn" onclick="closeOverlay()">Chalo fir — aur khelte hain!</button>
+    </div>
+    <div class="small">Saraaa ❤️</div>
+  </div>
+</div>
+
+<footer>Made with ❤️ for Saraaa — Mobile friendly & responsive</footer>
+
 <script>
-// ==== FIXED & WORKING SCRIPT STARTS HERE ====
+/* --------------------- Utilities --------------------- */
+function $(sel){return document.querySelector(sel)}
+function $all(sel){return Array.from(document.querySelectorAll(sel))}
+
+/* ---------- Navigation ---------- */
 function showPage(n){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-    document.getElementById('page'+n).classList.add('active');
-    document.querySelectorAll('nav button')[n-1].classList.add('active');
+  $all('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+n).classList.add('active');
+  $all('.nav button').forEach(b=>b.classList.remove('active'));
+  $all('.nav button')[n-1].classList.add('active');
+  // small visual
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// Win Modal
-function showWin(msg, resetFunc){
-    document.getElementById('win-text').innerHTML = msg;
-    document.getElementById('win-modal').classList.add('active');
-    window.currentReset = resetFunc;
+/* ---------- Overlay (win messages) ---------- */
+const overlay = $('#overlay'), overlayTitle = $('#overlayTitle'), overlayText = $('#overlayText');
+function showOverlay(title, text){
+  overlayTitle.textContent = title;
+  overlayText.textContent = text;
+  overlay.classList.add('show');
 }
-function closeWin(){
-    document.getElementById('win-modal').classList.remove('active');
-    if(window.currentReset) window.currentReset();
-}
+function closeOverlay(){ overlay.classList.remove('show') }
+overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
 
-// ==================== JIGSAW ====================
-let jigsawPieces = [], selectedPiece = null;
-function initJigsaw(pieces){
-    const canvas = document.getElementById('jigsaw-canvas');
+/* --------------------- DOM READY INIT --------------------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+
+  /* ----------------- JIGSAW ----------------- */
+  (function initJigsawModule(){
+    const canvas = $('#jigsawCanvas');
     const ctx = canvas.getContext('2d');
-    const size = 400; canvas.width = canvas.height = size;
-    const n = Math.sqrt(pieces);
-    const pieceSize = size/n;
-    jigsawPieces = [];
-    for(let i=0;i<n;i++)for(let j=0;j<n;j++){
-        jigsawPieces.push({
-            correct:{x:j*pieceSize,y:i*pieceSize},
-            current:{x:Math.random()*(size-pieceSize)+pieceSize/2, y:Math.random()*(size-pieceSize)+pieceSize/2},
-            size:pieceSize, placed:false
+    let size = 3; // NxN
+    let pieces = [], pieceW=0, pieceH=0, dragging=null, offset={x:0,y:0};
+    let boardSize = Math.min(520, Math.floor(window.innerWidth * 0.86));
+    function resizeCanvas(){
+      boardSize = Math.min(520, Math.floor(window.innerWidth * 0.86));
+      canvas.width = boardSize; canvas.height = boardSize;
+      draw();
+    }
+
+    function createPieces(n){
+      pieces = [];
+      pieceW = canvas.width / n; pieceH = canvas.height / n;
+      for(let r=0;r<n;r++){
+        for(let c=0;c<n;c++){
+          pieces.push({
+            r,c,
+            w:pieceW,h:pieceH,
+            correctX:c*pieceW, correctY:r*pieceH,
+            x:Math.random()*(canvas.width-pieceW),
+            y:Math.random()*(canvas.height-pieceH),
+            placed:false
+          });
+        }
+      }
+      draw();
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // bg
+      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      for(let i=0;i<pieces.length;i++){
+        const p=pieces[i];
+        ctx.save();
+        ctx.strokeStyle = '#0d362e'; ctx.lineWidth=2;
+        ctx.fillStyle = p.placed ? 'rgba(40,30,20,0.07)' : '#e6fbf6';
+        ctx.fillRect(p.x,p.y,p.w,p.h);
+        ctx.strokeRect(p.x,p.y,p.w,p.h);
+        ctx.fillStyle='#105a4e'; ctx.font = `${Math.max(14, p.w/6|0)}px serif`;
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('❤️', p.x + p.w/2, p.y + p.h/2 + 6);
+        ctx.restore();
+      }
+    }
+
+    function pickPiece(mx,my){
+      for(let i=pieces.length-1;i>=0;i--){
+        const p=pieces[i];
+        if(mx>=p.x && mx<=p.x+p.w && my>=p.y && my<=p.y+p.h) return p;
+      }
+      return null;
+    }
+
+    function onDown(e){
+      const rect=canvas.getBoundingClientRect();
+      const x = ((e.touches?e.touches[0].clientX:e.clientX)-rect.left)*(canvas.width/rect.width);
+      const y = ((e.touches?e.touches[0].clientY:e.clientY)-rect.top)*(canvas.height/rect.height);
+      const p = pickPiece(x,y);
+      if(p && !p.placed){ dragging=p; offset.x = x - p.x; offset.y = y - p.y; }
+    }
+    function onMove(e){
+      if(!dragging) return;
+      const rect=canvas.getBoundingClientRect();
+      const x = ((e.touches?e.touches[0].clientX:e.clientX)-rect.left)*(canvas.width/rect.width);
+      const y = ((e.touches?e.touches[0].clientY:e.clientY)-rect.top)*(canvas.height/rect.height);
+      dragging.x = x - offset.x; dragging.y = y - offset.y;
+      draw();
+    }
+    function onUp(){
+      if(!dragging) return;
+      const dx = Math.abs(dragging.x - dragging.correctX);
+      const dy = Math.abs(dragging.y - dragging.correctY);
+      if(dx < Math.max(12, dragging.w*0.2) && dy < Math.max(12, dragging.h*0.2)){
+        dragging.x = dragging.correctX; dragging.y = dragging.correctY; dragging.placed = true;
+      }
+      dragging = null; draw();
+      checkJigsawWin();
+    }
+    function shuffle(){
+      pieces.forEach(p => {
+        p.x = Math.random()*(canvas.width-p.w);
+        p.y = Math.random()*(canvas.height-p.h);
+        p.placed = false;
+      });
+      draw();
+    }
+    function checkJigsawWin(){
+      if(pieces.every(p=>p.placed)){
+        // Show hinglish win text
+        showOverlay('Wah! Badhiya laga 🎉', 'Tumne puzzle complete kar diya — sach mein amazing! Bahut proud hoon. ❤️');
+      }
+    }
+
+    // events
+    canvas.addEventListener('mousedown', onDown);
+    canvas.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    canvas.addEventListener('touchstart', onDown,{passive:false});
+    canvas.addEventListener('touchmove', onMove,{passive:false});
+    canvas.addEventListener('touchend', onUp);
+
+    // controls
+    $all('#jigsawCard .btn[data-size]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ size = parseInt(btn.dataset.size); createPieces(size); });
+    });
+    $('#shuffleJigsaw').addEventListener('click', shuffle);
+
+    // init
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    createPieces(3);
+  })();
+
+  /* ----------------- DOT CONNECT ----------------- */
+  (function initDotModule(){
+    const canvas = $('#dotCanvas'), ctx = canvas.getContext('2d');
+    let size = Math.min(520, Math.floor(window.innerWidth * 0.86));
+    function resize(){ size = Math.min(520, Math.floor(window.innerWidth * 0.86)); canvas.width = size; canvas.height = size; draw(); }
+    // dots form a heart outline
+    const H = [
+      {x:0.5,y:0.18},{x:0.38,y:0.12},{x:0.25,y:0.18},{x:0.15,y:0.28},
+      {x:0.12,y:0.4},{x:0.15,y:0.56},{x:0.25,y:0.7},{x:0.38,y:0.82},
+      {x:0.5,y:0.9},{x:0.62,y:0.82},{x:0.75,y:0.7},{x:0.85,y:0.56},
+      {x:0.88,y:0.4},{x:0.85,y:0.28},{x:0.75,y:0.18},{x:0.62,y:0.12}
+    ];
+    const dots = H.map(p=>({x: p.x*size, y: p.y*size}));
+    let connected = [];
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      // lines
+      if(connected.length>1){
+        ctx.beginPath();
+        ctx.lineWidth = 4; ctx.strokeStyle='#105a4e';
+        ctx.moveTo(connected[0].x, connected[0].y);
+        for(let i=1;i<connected.length;i++) ctx.lineTo(connected[i].x, connected[i].y);
+        ctx.stroke();
+      }
+      // dots
+      dots.forEach((d,i)=>{
+        const sel = connected.indexOf(d) !== -1;
+        ctx.beginPath();
+        ctx.fillStyle = sel ? '#8c933f' : '#d7e7ee';
+        ctx.arc(d.x,d.y,10,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = sel ? '#fff' : '#105a4e'; ctx.font='12px serif'; ctx.textAlign='center'; ctx.fillText(i+1, d.x, d.y+4);
+      });
+
+      // complete check
+      if(connected.length === dots.length){
+        // flourish
+        ctx.lineWidth = 6; ctx.strokeStyle = '#ff6b9d'; ctx.shadowBlur = 18; ctx.shadowColor = '#ff6b9d';
+        ctx.beginPath(); ctx.moveTo(dots[0].x,dots[0].y); dots.forEach(d=>ctx.lineTo(d.x,d.y)); ctx.closePath(); ctx.stroke();
+        ctx.shadowBlur = 0;
+        // show win
+        setTimeout(()=> showOverlay('Lovely! ❤️', 'Tumne sab dots connect kar diye — kitni sweet baat hai!'), 220);
+      }
+    }
+
+    function hitTest(x,y){
+      return dots.find(d => Math.hypot(d.x-x,d.y-y) < 20);
+    }
+
+    canvas.addEventListener('mousedown', e=>{
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left)*(canvas.width/rect.width);
+      const y = (e.clientY - rect.top)*(canvas.height/rect.height);
+      const clicked = hitTest(x,y);
+      if(clicked && !connected.includes(clicked)){ connected.push(clicked); draw(); }
+    });
+    canvas.addEventListener('touchstart', e=>{
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.touches[0].clientX - rect.left)*(canvas.width/rect.width);
+      const y = (e.touches[0].clientY - rect.top)*(canvas.height/rect.height);
+      const clicked = hitTest(x,y);
+      if(clicked && !connected.includes(clicked)){ connected.push(clicked); draw(); }
+    }, {passive:false});
+
+    $('#undoDot').addEventListener('click', ()=>{ connected.pop(); draw(); });
+    $('#resetDot').addEventListener('click', ()=>{ connected = []; draw(); });
+    window.addEventListener('resize', ()=>{ // reposition internal coords
+      // recompute absolute dots and redraw
+      const w = Math.min(520, Math.floor(window.innerWidth * 0.86));
+      canvas.width = w; canvas.height = w;
+      // map based on H
+      for(let i=0;i<H.length;i++){ dots[i].x = H[i].x * w; dots[i].y = H[i].y * w; }
+      draw();
+    });
+    // init
+    resize();
+    draw();
+  })();
+
+  /* ----------------- MAZE (heart shaped) ----------------- */
+  (function initMazeModule(){
+    const canvas = $('#mazeCanvas'), ctx = canvas.getContext('2d');
+    let W = Math.min(520, Math.floor(window.innerWidth * 0.86));
+    let cols = 21, rows = 21; // odd numbers for cell walls
+    const cellSize = ()=> Math.floor(W / cols);
+    let maze = [], start = null, goal = null, player = null, pathShown=false;
+
+    function resize(){
+      W = Math.min(520, Math.floor(window.innerWidth * 0.86));
+      canvas.width = W; canvas.height = W;
+      draw();
+    }
+
+    // Create grid cells (0 = wall, 1 = path)
+    function carveMaze(){
+      // initialize full walls
+      const grid = Array(rows).fill(0).map(()=>Array(cols).fill(0));
+      // DFS carve on odd coordinates
+      function inBounds(r,c){ return r>0 && r<rows-1 && c>0 && c<cols-1; }
+      const stack = [];
+      const startR = 1, startC = 1;
+      grid[startR][startC] = 1;
+      stack.push([startR,startC]);
+      const dirs = [[0,2],[0,-2],[2,0],[-2,0]];
+      while(stack.length){
+        const [r,c] = stack[stack.length-1];
+        const neighbors = dirs.filter(d=>{
+          const nr=r+d[0], nc=c+d[1];
+          return inBounds(nr,nc) && grid[nr][nc]===0;
         });
+        if(neighbors.length===0){ stack.pop(); continue; }
+        const [dr,dc] = neighbors[Math.floor(Math.random()*neighbors.length)];
+        const nr = r+dr, nc = c+dc;
+        grid[nr][nc]=1; grid[r+dr/2][c+dc/2]=1;
+        stack.push([nr,nc]);
+      }
+      // set heart mask: cells outside heart become walls
+      const heartMask = makeHeartMask(W, rows, cols);
+      for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) if(!heartMask[r][c]) grid[r][c]=0;
+      maze = grid;
+      // find start/goal inside mask near bottom-left / top-right-ish
+      start = findNearestOpen(Math.floor(rows-2),1);
+      goal = findNearestOpen(1,Math.floor(cols-2));
+      player = {r:start.r, c:start.c};
+      pathShown = false;
+      draw();
     }
-    drawJigsaw();
-}
-function drawJigsaw(){
-    const canvas = document.getElementById('jigsaw-canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0,0,400,400);
-    ctx.fillStyle='#f0f0f0'; ctx.fillRect(0,0,400,400);
-    let won=true;
-    jigsawPieces.forEach(p=>{
-        ctx.strokeStyle='#195454'; ctx.lineWidth=2;
-        ctx.strokeRect(p.current.x-p.size/2, p.current.y-p.size/2, p.size, p.size);
-        ctx.fillStyle = p.placed ? '#996537' : '#9ecce3';
-        ctx.fillRect(p.current.x-p.size/2, p.current.y-p.size/2, p.size, p.size);
-        ctx.fillStyle='white'; ctx.font='20px Arial'; ctx.textAlign='center';
-        ctx.fillText('❤️', p.current.x, p.current.y+7);
-        if(!p.placed) won=false;
+
+    function findNearestOpen(r,c){
+      // BFS outward to find first open cell
+      const q=[[r,c]]; const seen=Array(rows).fill(0).map(()=>Array(cols).fill(false)); seen[r][c]=true;
+      while(q.length){
+        const [rr,cc]=q.shift();
+        if(maze[rr][cc]===1) return {r:rr,c:cc};
+        [[1,0],[-1,0],[0,1],[0,-1]].forEach(d=>{
+          const nr=rr+d[0], nc=cc+d[1];
+          if(nr>=0 && nr<rows && nc>=0 && nc<cols && !seen[nr][nc]){ seen[nr][nc]=true; q.push([nr,nc]); }
+        });
+      }
+      // fallback
+      return {r:1,c:1};
+    }
+
+    // build heart mask: returns boolean grid where true = allowed path
+    function makeHeartMask(Wpx, R, C){
+      const s = canvas; // use temporary
+      const temp = document.createElement('canvas'); temp.width = Wpx; temp.height = Wpx;
+      const tctx = temp.getContext('2d');
+      // draw heart path thick
+      tctx.fillStyle = 'black';
+      drawHeartPath(tctx, Wpx, Wpx, /*thickness*/ Math.max(22, Math.floor(Wpx/12)));
+      // sample into R x C cells
+      const img = tctx.getImageData(0,0,Wpx,Wpx).data;
+      const mask = Array(R).fill(0).map(()=>Array(C).fill(false));
+      for(let r=0;r<R;r++){
+        for(let c=0;c<C;c++){
+          // sample center of cell
+          const cx = Math.floor((c + 0.5) * (Wpx/C));
+          const cy = Math.floor((r + 0.5) * (Wpx/R));
+          const idx = (cy*Wpx + cx)*4;
+          mask[r][c] = img[idx+3] > 10; // alpha > threshold
+        }
+      }
+      return mask;
+    }
+
+    // draw heart onto given ctx (filled path)
+    function drawHeartPath(cctx, w, h, thickness){
+      cctx.clearRect(0,0,w,h);
+      cctx.save();
+      cctx.translate(w/2, h/2.2);
+      const scale = Math.min(w,h)/520;
+      cctx.beginPath();
+      // param heart using bezier-ish curve (nice shape)
+      cctx.moveTo(0, -120*scale);
+      cctx.bezierCurveTo(90*scale, -200*scale, 210*scale, -80*scale, 0, 120*scale);
+      cctx.bezierCurveTo(-210*scale, -80*scale, -90*scale, -200*scale, 0, -120*scale);
+      cctx.closePath();
+      cctx.lineWidth = thickness;
+      cctx.strokeStyle = 'black';
+      cctx.fillStyle = 'black';
+      cctx.fill();
+      cctx.restore();
+    }
+
+    // drawing maze clipped to heart
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // background
+      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      // draw heart silhouette for outline
+      ctx.save();
+      ctx.translate(canvas.width/2, canvas.height/2.2);
+      const scale = Math.min(canvas.width, canvas.height)/520;
+      // create heart path to clip to
+      ctx.beginPath();
+      ctx.moveTo(0, -120*scale);
+      ctx.bezierCurveTo(90*scale, -200*scale, 210*scale, -80*scale, 0, 120*scale);
+      ctx.bezierCurveTo(-210*scale, -80*scale, -90*scale, -200*scale, 0, -120*scale);
+      ctx.closePath();
+      ctx.clip();
+
+      // paint maze floor
+      ctx.fillStyle = '#fefefe';
+      ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
+
+      // draw walls based on maze grid
+      const cs = cellSize();
+      ctx.translate(-canvas.width/2, -canvas.height/2);
+      ctx.strokeStyle = '#105a4e'; ctx.lineWidth = Math.max(2, cs/10);
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          if(maze[r][c]===0){
+            ctx.fillStyle = '#8c933f';
+            ctx.fillRect(c*cs, r*cs, cs, cs);
+          }
+        }
+      }
+      // draw path grid lines lightly
+      ctx.strokeStyle = 'rgba(16,36,30,0.06)';
+      ctx.lineWidth = 1;
+      for(let r=0;r<=rows;r++){ ctx.beginPath(); ctx.moveTo(0, r*cs); ctx.lineTo(cols*cs, r*cs); ctx.stroke(); }
+      for(let c=0;c<=cols;c++){ ctx.beginPath(); ctx.moveTo(c*cs, 0); ctx.lineTo(c*cs, rows*cs); ctx.stroke(); }
+
+      // draw player
+      ctx.fillStyle = '#dff6ef';
+      if(player) ctx.beginPath(), ctx.arc((player.c+0.5)*cs, (player.r+0.5)*cs, cs*0.36, 0, Math.PI*2), ctx.fill();
+
+      // draw goal heart emoji at goal
+      if(goal){
+        ctx.font = `${Math.floor(cs*0.9)}px serif`;
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('❤️', (goal.c+0.5)*cs, (goal.r+0.5)*cs+2);
+      }
+
+      // optionally show solution path
+      if(pathShown){
+        const solution = findPath(player, goal);
+        if(solution){
+          ctx.beginPath(); ctx.lineWidth = Math.max(6, cs*0.25); ctx.strokeStyle='rgba(255,107,157,0.95)';
+          ctx.moveTo((solution[0].c+0.5)*cs, (solution[0].r+0.5)*cs);
+          for(let i=1;i<solution.length;i++) ctx.lineTo((solution[i].c+0.5)*cs, (solution[i].r+0.5)*cs);
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+
+      // outline heart border
+      ctx.save();
+      ctx.translate(canvas.width/2, canvas.height/2.2);
+      ctx.beginPath();
+      ctx.moveTo(0, -120*scale);
+      ctx.bezierCurveTo(90*scale, -200*scale, 210*scale, -80*scale, 0, 120*scale);
+      ctx.bezierCurveTo(-210*scale, -80*scale, -90*scale, -200*scale, 0, -120*scale);
+      ctx.closePath();
+      ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(16,36,30,0.12)'; ctx.stroke();
+      ctx.restore();
+    }
+
+    // BFS for pathfinding
+    function findPath(from, to){
+      const q = [[from.r, from.c]]; const seen = Array(rows).fill(0).map(()=>Array(cols).fill(false));
+      const parent = Array(rows).fill(0).map(()=>Array(cols).fill(null));
+      seen[from.r][from.c]=true;
+      while(q.length){
+        const [r,c] = q.shift();
+        if(r===to.r && c===to.c) break;
+        for(const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]]){
+          const nr=r+dr, nc=c+dc;
+          if(nr>=0 && nr<rows && nc>=0 && nc<cols && !seen[nr][nc] && maze[nr][nc]===1){
+            seen[nr][nc]=true; parent[nr][nc]=[r,c]; q.push([nr,nc]);
+          }
+        }
+      }
+      if(!parent[to.r][to.c]) return null;
+      const path=[]; let cur = [to.r,to.c];
+      while(cur){ path.push({r:cur[0],c:cur[1]}); cur = parent[cur[0]][cur[1]]; }
+      return path.reverse();
+    }
+
+    function movePlayer(dr,dc){
+      const nr = player.r + dr, nc = player.c + dc;
+      if(nr<0||nr>=rows||nc<0||nc>=cols) return;
+      if(maze[nr][nc]===1){ player.r = nr; player.c = nc; draw(); }
+      // check win
+      if(player.r === goal.r && player.c === goal.c){
+        // show hinglish win message
+        setTimeout(()=> showOverlay('Ohooo — Jeet gaya! 🏆', 'Kitna pyaara chalaya — tumne dil jeet liya! Chal, ab aur celebrate karte hain ❤️'), 220);
+      }
+    }
+
+    // swipe handling for mobile + arrow buttons
+    let touchStart = null;
+    canvas.addEventListener('touchstart', e=>{ touchStart = {x:e.touches[0].clientX, y:e.touches[0].clientY}; }, {passive:true});
+    canvas.addEventListener('touchend', e=>{
+      if(!touchStart) return;
+      const dx = e.changedTouches[0].clientX - touchStart.x;
+      const dy = e.changedTouches[0].clientY - touchStart.y;
+      const s = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+      if(Math.abs(dx) > 30 || Math.abs(dy) > 30){
+        if(Math.abs(dx) > Math.abs(dy)){
+          movePlayer(0, dx>0?1:-1);
+        } else {
+          movePlayer(dy>0?1:-1, 0);
+        }
+      }
+      touchStart = null;
+    }, {passive:true});
+
+    $('#up').addEventListener('click', ()=> movePlayer(-1,0));
+    $('#down').addEventListener('click', ()=> movePlayer(1,0));
+    $('#left').addEventListener('click', ()=> movePlayer(0,-1));
+    $('#right').addEventListener('click', ()=> movePlayer(0,1));
+
+    $('#mazeReset').addEventListener('click', ()=> { carveMaze(); });
+    $('#mazeSolve').addEventListener('click', ()=>{
+      pathShown = !pathShown;
+      draw();
     });
-    if(won) showWin('Wah Saraaa! Puzzle perfect ban gaya! Tum bhi meri life mein perfect fit ho! ❤️',()=>initJigsaw(9));
-}
-canvas.addEventListener('mousedown',e=>{
-    const rect=canvas.getBoundingClientRect();
-    const x=(e.clientX-rect.left)*(400/rect.width);
-    const y=(e.clientY-rect.top)*(400/rect.height);
-    for(let i=jigsawPieces.length-1;i>=0;i--){
-        const p=jigsawPieces[i];
-        if(Math.abs(x-p.current.x)<p.size/2 && Math.abs(y-p.current.y)<p.size/2){ selectedPiece=p; break; }
-    }
-});
-document.addEventListener('mousemove',e=>{
-    if(selectedPiece){
-        const rect=canvas.getBoundingClientRect();
-        selectedPiece.current.x = (e.clientX-rect.left)*(400/rect.width);
-        selectedPiece.current.y = (e.clientY-rect.top)*(400/rect.height);
-        drawJigsaw();
-    }
-});
-document.addEventListener('mouseup',()=>{
-    if(selectedPiece){
-        const dx=Math.abs(selectedPiece.current.x-selectedPiece.correct.x);
-        const dy=Math.abs(selectedPiece.current.y-selectedPiece.correct.y);
-        if(dx<25&&dy<25){ selectedPiece.current={...selectedPiece.correct}; selectedPiece.placed=true; }
-        selectedPiece=null; drawJigsaw();
-    }
-});
-initJigsaw(9);
 
-// ==================== HEART MAZE (FIXED) ====================
-const heartMaze = [
-    [1,1,1,1,1,1,1,0,0,0,1,1,0,1,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1],
-    [1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1],
-    [1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1],
-    [1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1],
-    [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1],
-    [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-    [0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0],
-    [0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,1],
-    [0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1],
-    [1,1,0,1,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1,0,1,1,1],
-    [1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
-const mazeCanvas = document.getElementById('maze-canvas');
-const mctx = mazeCanvas.getContext('2d');
-let player = {r:0, c:12}, goal = {r:14, c:12};
+    window.addEventListener('resize', resize);
 
-function drawMaze(){
-    const size = Math.min(mazeCanvas.parentElement.clientWidth, 400);
-    mazeCanvas.width = mazeCanvas.height = size;
-    const cell = size / 25;
-    mctx.fillStyle='#f0f0f0'; mctx.fillRect(0,0,size,size);
-    for(let r=0;r<15;r++)for(let c=0;c<25;c++)if(heartMaze[r][c]){
-        mctx.fillStyle='#996537';
-        mctx.fillRect(c*cell, r*cell, cell, cell);
-    }
-    mctx.fillStyle='#9ecce3';
-    mctx.beginPath(); mctx.arc((player.c+0.5)*cell, (player.r+0.5)*cell, cell/3, 0, Math.PI*2); mctx.fill();
-    mctx.fillStyle='#ff6b9d'; mctx.font=(cell/1.5)+'px Arial'; mctx.textAlign='center'; mctx.textBaseline='middle';
-    mctx.fillText('❤️',(goal.c+0.5)*cell,(goal.r+0.5)*cell);
-    if(player.r===goal.r && player.c===goal.c){
-        showWin('Yayy Saraaa! Maze solve kar diya! Jaise tumne mera dil chura liya! ❤️',resetMaze);
-    }
-}
-function move(dr,dc){
-    const nr=player.r+dr, nc=player.c+dc;
-    if(nr>=0&&nr<15&&nc>=0&&nc<25&&heartMaze[nr][nc]===0){
-        player.r=nr; player.c=nc; drawMaze();
-    }
-}
-document.addEventListener('keydown',e=>{
-    if(!document.getElementById('page2').classList.contains('active')) return;
-    if(e.key==='ArrowUp') move(-1,0);
-    if(e.key==='ArrowDown') move(1,0);
-    if(e.key==='ArrowLeft') move(0,-1);
-    if(e.key==='ArrowRight') move(0,1);
-});
-mazeCanvas.addEventListener('click',e=>{
-    const rect=mazeCanvas.getBoundingClientRect();
-    const x=e.clientX-rect.left, y=e.clientY-rect.top;
-    const c=Math.floor(x/(rect.width/25)), r=Math.floor(y/(rect.height/15));
-    const dc=c-player.c, dr=r-player.r;
-    if(Math.abs(dc)+Math.abs(dr)===1) move(dr,dc);
-});
-function resetMaze(){ player={r:0,c:12}; drawMaze(); }
-drawMaze();
+    // initial build
+    carveMaze();
 
-// ==================== DOT CONNECT ====================
-const dotCanvas=document.getElementById('dot-canvas');
-const dctx=dotCanvas.getContext('2d');
-dotCanvas.width=dotCanvas.height=400;
-const dots=[{x:200,y:100},{x:150,y:80},{x:100,y:100},{x:80,y:150},{x:100,y:250},{x:150,y:320},{x:200,y:370},{x:250,y:320},{x:300,y:250},{x:320,y:150},{x:300,y:100},{x:250,y:80}];
-let connected=[];
-function drawDots(){
-    dctx.fillStyle='#f0f0f0'; dctx.fillRect(0,0,400,400);
-    if(connected.length>1){
-        dctx.strokeStyle='#195454'; dctx.lineWidth=4; dctx.beginPath();
-        dctx.moveTo(connected[0].x,connected[0].y);
-        connected.forEach(p=>dctx.lineTo(p.x,p.y)); dctx.stroke();
-    }
-    dots.forEach((d,i)=>{
-        dctx.fillStyle=connected.includes(d)?'#996537':'#d7e7ee';
-        dctx.beginPath(); dctx.arc(d.x,d.y,10,0,Math.PI*2); dctx.fill();
-        dctx.fillStyle='white'; dctx.font='12px Arial'; dctx.textAlign='center';
-        dctx.fillText(i+1,d.x,d.y+4);
+    // expose for debug
+    window._maze = {carveMaze, draw, maze};
+  })();
+
+  /* ----------------- GALLERY & TIMELINE & NOTEPAD ----------------- */
+  (function initContent(){
+    const images = [
+      {src:'assets/img1.jpg', caption:'Forever Together 💕'},
+      {src:'assets/img2.jpg', caption:'My Favorite Smile ❤️'},
+      {src:'assets/img3.jpg', caption:'Beautiful Moments 🌸'},
+      {src:'assets/img4.jpg', caption:'You & Me 💑'},
+      {src:'assets/img5.jpg', caption:'Perfect Day 🌟'},
+      {src:'assets/img6.jpg', caption:'Love Always 💝'}
+    ];
+    const gallery = $('#gallery');
+    gallery.innerHTML = images.map((img,i)=>`<div class="polaroid" data-i="${i}"><img src="${img.src}" alt="${img.caption}"></div>`).join('');
+    gallery.addEventListener('click', e=>{
+      const p = e.target.closest('.polaroid'); if(!p) return;
+      const idx = +p.dataset.i;
+      openModal(idx);
     });
-    if(connected.length===12){
-        showWin('Perfect Saraaa! Heart bana diya! Ab mera dil bhi tumhara hai forever! ❤️',()=>{connected=[];drawDots();});
+
+    function openModal(i){
+      const modal = document.createElement('div');
+      modal.style.position='fixed'; modal.style.inset=0; modal.style.background='rgba(0,0,0,0.85)'; modal.style.display='grid';
+      modal.style.placeItems='center'; modal.style.zIndex=5000;
+      modal.innerHTML = `<div style="max-width:90%;max-height:90%;position:relative">
+        <img src="${images[i].src}" style="max-width:100%;max-height:100%;border-radius:12px;display:block">
+        <button style="position:absolute;right:-10px;top:-10px;background:var(--p1);border:none;padding:10px;border-radius:999px;cursor:pointer">×</button>
+      </div>`;
+      modal.querySelector('button').addEventListener('click', ()=>modal.remove());
+      document.body.appendChild(modal);
     }
-}
-dotCanvas.addEventListener('click',e=>{
-    const rect=dotCanvas.getBoundingClientRect();
-    const x=(e.clientX-rect.left)*(400/rect.width);
-    const y=(e.clientY-rect.top)*(400/rect.height);
-    const idx=dots.findIndex(d=>Math.hypot(d.x-x,d.y-y)<25);
-    if(idx===connected.length){ connected.push(dots[idx]); drawDots(); }
-});
-function resetDots(){ connected=[]; drawDots(); }
-drawDots();
 
-// Gallery, Timeline, Notepad — all working (same as previous working version)
-document.getElementById('gallery').innerHTML = [1,2,3,4,5,6].map(i=>`
-    <div class="polaroid" onclick="alert('Photo ${i} - Real photos add kar dena!')">
-        <img src="https://via.placeholder.com/400x600/9ecce3/195454?text=Photo+${i}" alt="">
-        <div class="polaroid-caption">Beautiful Memory ${i} ❤️</div>
-    </div>`).join('');
+    // timeline
+    const timelineData = [
+      {date:'The Beginning', text:'The day we first met — duniya thodi slow ho gayi thi.'},
+      {date:'First Date', text:'Wo pal jab tumne muskura ke kaha — yaad hai?'},
+      {date:'Falling Deeper', text:'Har roz tumse pyaar badhta gaya.'},
+      {date:'Our Adventure', text:'Choti choti safar, magar yaadein lambe waqt tak.'},
+      {date:'Forever Promise', text:'Aaj aur hamesha — tumhara mera vaada.'}
+    ];
+    const timelineEl = $('#timeline');
+    timelineEl.innerHTML = timelineData.map(it=>`<div class="timeline-item"><strong>${it.date}</strong><p style="margin-top:8px">${it.text}</p></div>`).join('');
 
-document.getElementById('timeline').innerHTML = [
-    "The Beginning","First Date","Falling Deeper","Our Adventure","Forever Promise"
-].map((t,i)=>`
-    <div class="timeline-item">
-        <div class="timeline-heart">❤️</div>
-        <div class="timeline-content">
-            <div class="timeline-date">${t}</div>
-            <div class="timeline-text">Saraaa, yeh moment kabhi bhool nahi sakta! ❤️</div>
-        </div>
-    </div>`).join('');
+    // notepad
+    const noteEl = $('#notepad');
+    noteEl.value = localStorage.getItem('loveNote') || '';
+    noteEl.addEventListener('input', ()=> localStorage.setItem('loveNote', noteEl.value) );
+    $('#downloadNote').addEventListener('click', ()=> {
+      const text = noteEl.value || 'My love note for you... ❤️';
+      const blob = new Blob([text], {type:'text/plain'}); const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'Love_Note_for_Saraaa.txt'; a.click();
+      URL.revokeObjectURL(url);
+    });
+  })();
 
-const notepad=document.getElementById('notepad');
-notepad.value=localStorage.getItem('loveNote')||'';
-notepad.addEventListener('input',()=>localStorage.setItem('loveNote',notepad.value));
-function downloadNote(){
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob([notepad.value||'Love you Saraaa ❤️'],{type:'text/plain'}));
-    a.download='Love_Note_Saraaa.txt'; a.click();
-}
+  /* ---------- keyboard navigation for accessibility ---------- */
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === '1') showPage(1);
+    if(e.key === '2') showPage(2);
+    if(e.key === '3') showPage(3);
+    if(e.key === '4') showPage(4);
+    if(e.key === '5') showPage(5);
+  });
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
