@@ -2,866 +2,1052 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Saraaa ❤️ — Eternal Love</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Saraaa ❤️ — Eternal Love (Final)</title>
 <style>
-  /* Romantic gradient theme: pinks, purples, soft glows */
-  :root {
-    --bg-primary: linear-gradient(180deg, #1e0f2a 0%, #0f0f23 50%, #0a0a1a 100%);
-    --glass: rgba(255, 255, 255, 0.06);
-    --glass-glow: rgba(255, 107, 107, 0.12);
-    --accent: linear-gradient(135deg, #ff6b6b, #ff9a9e);
-    --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.9);
-    --text-muted: rgba(255, 255, 255, 0.7);
-    --heart: #ff4d6d;
-    --maxw: 100%;
-    --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ------------------------
+     Romantic gradient + mobile-first
+     ------------------------ */
+  :root{
+    --bg: linear-gradient(180deg,#120021 0%, #2b0036 55%, #3b0b2f 100%);
+    --card: rgba(255,255,255,0.06);
+    --glass-glow: rgba(255,107,107,0.12);
+    --accentA: #ff6b6b;
+    --accentB: #ff9aa2;
+    --accent-grad: linear-gradient(90deg,var(--accentA),var(--accentB));
+    --muted: rgba(255,255,255,0.85);
+    --radius: 16px;
+    --transition: 220ms cubic-bezier(.2,.9,.2,1);
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; font-family: 'Inter', -apple-system, sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-  body { background: var(--bg-primary); color: var(--text-primary); }
-  .wrap { max-width: var(--maxw); margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 96px; }
-  header { position: fixed; left: 0; right: 0; top: 0; background: rgba(0,0,0,0.35); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,0.03); z-index: 120; }
-  .header-inner { max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; gap:12px; }
-  .brand { display: flex; gap: 12px; align-items: center; }
-  .brand h1 { margin: 0; font-size: 18px; font-weight: 900; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .small { font-size: 12px; color: var(--text-muted); }
-  .menu-btn { background: var(--glass); border-radius: 12px; padding: 8px; border: none; color: var(--text-primary); cursor: pointer; transition: var(--transition); min-width:44px; }
-  main { padding-top: 72px; }
-  .page { display: none; padding: 16px; opacity: 0; transform: translateY(10px); transition: var(--transition); }
-  .page.active { display: block; opacity: 1; transform: translateY(0); }
-  .card { background: var(--glass); border-radius: 18px; padding: 18px; border: 1px solid var(--glass-glow); box-shadow: 0 8px 30px rgba(0,0,0,0.25); backdrop-filter: blur(8px); margin-bottom: 18px; }
-  .aspect9x16 { width: 100%; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; position: relative; }
-  .center { display: flex; align-items: center; justify-content: center; }
-  .title { font-weight: 900; font-size: 22px; margin: 0 0 8px; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .subtitle { color: var(--text-secondary); font-weight: 600; font-size: 14px; }
-  .nav { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.38); backdrop-filter: blur(18px); border-top: 1px solid rgba(255,255,255,0.02); padding: 10px; z-index: 80; }
-  .nav-inner { max-width: var(--maxw); margin: 0 auto; display: flex; gap: 8px; }
-  .nav button { flex: 1; padding: 10px; border-radius: 14px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); font-size:13px; }
-  .nav button.active { background: linear-gradient(90deg,#ff7b93,#ff9ab3); color: #fff; transform: scale(1.02); }
-  .pill { padding: 8px 14px; border-radius: 20px; border: none; background: var(--glass); color: var(--text-primary); font-weight: 700; cursor: pointer; transition: var(--transition); font-size:13px; }
-  .pill.active, .pill:hover { background: var(--glass-glow); transform: scale(1.03); }
-  .btn { padding: 10px 16px; border-radius: 14px; border: none; background: linear-gradient(90deg,#ff6b6b,#ff9a9e); color: #fff; font-weight: 800; cursor: pointer; transition: var(--transition); }
-  .muted { color: var(--text-muted); font-size: 13px; }
-  .progress { height: 8px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; margin: 10px 0; }
-  .progress > div { height: 100%; background: linear-gradient(90deg,#ff6b6b,#ff9a9e); transition: width 0.45s ease; border-radius: 6px; width:0; }
-  /* SOS */
-  .sos-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
-  .sos-cell { aspect-ratio: 1; border-radius: 12px; background: rgba(255,255,255,0.03); border: none; font-size: 28px; font-weight: 900; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; color: var(--text-primary); }
-  .sos-cell:hover:not(:disabled) { background: rgba(255,107,107,0.08); transform: scale(1.05); }
-  .sos-cell:disabled { cursor: not-allowed; opacity: 0.45; }
-  /* Jigsaw */
-  .jig-area { background: linear-gradient(135deg, #ff9a9e, #fecfef); cursor: grab; user-select: none; touch-action: none; position: relative; }
-  .jig-piece { position: absolute; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: grab; transition: var(--transition); box-shadow: 0 6px 20px rgba(0,0,0,0.2); background: #fff4f6; color: #333; }
-  .jig-piece.dragging { transform: rotate(5deg) scale(1.06); z-index: 12; }
-  .jig-piece.placed { background: linear-gradient(135deg,#ff6b6b,#ff9a9e); color: white; cursor: default; }
-  .jig-slot { position: absolute; width: 40px; height: 40px; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.12); background: rgba(255,255,255,0.02); transform: translate(-50%,-50%); }
-  /* Maze */
-  .maze-area { background: linear-gradient(135deg, #ff90a3, #ff7aa2); position: relative; overflow: hidden; }
-  .heart { position: absolute; width: 42px; height: 42px; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size:20px; background:var(--heart); transition: var(--transition); z-index: 20; transform: translate(-50%,-50%); }
-  .maze-wall { position: absolute; background: rgba(255,255,255,0.2); border-radius:6px; }
-  .goal { position: absolute; right: 6%; bottom: 6%; width: 44px; height: 44px; border-radius: 50%; background: #ffd166; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; transform: translate(0,0); }
-  /* Dots */
-  .dot { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); margin: 4px; }
-  .dot.active { background: linear-gradient(90deg,#ff6b6b,#ff9a9e); color: white; transform: scale(1.12); }
-  .connect-line { position: absolute; background: var(--accent); height: 2px; transform-origin: left; transition: var(--transition); }
-  /* Timeline */
-  .timeline { position: relative; padding-left: 20px; }
-  .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg,#ff7b93,#ffb3c6); border-radius: 1px; }
-  .milestone { display: flex; gap: 12px; margin-bottom: 18px; opacity: 0; transform: translateX(-10px); transition: var(--transition); animation: slideIn 0.6s forwards; }
-  .milestone.show { opacity: 1; transform: translateX(0); }
-  @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-  .milestone-emoji { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#ff6b6b,#ff9a9e); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  /* Polaroids */
-  .polaroid-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
-  .polaroid { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 8px 26px rgba(0,0,0,0.2); cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; }
-  .polaroid:hover { transform: scale(1.03) rotate(1deg); box-shadow: 0 14px 40px rgba(255,107,107,0.14); }
-  .polaroid img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 8px; display:block; }
-  .polaroid-meta { text-align: center; color: #333; font-size: 12px; margin-top: 8px; }
-  /* Modal */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.72); display: none; align-items: center; justify-content: center; z-index: 240; padding: 16px; }
-  .modal.active { display: flex; }
-  .modal-box { background: white; border-radius: 16px; padding: 16px; width: 100%; max-width: 460px; max-height: 86vh; overflow: auto; transform: scale(0.96); transition: var(--transition); color: #333; }
-  .modal.active .modal-box { transform: scale(1); }
-  /* Notepad */
-  .txtarea { width: 100%; min-height: 200px; border: none; border-radius: 12px; padding: 14px; font-family: 'Dancing Script', cursive; font-size: 18px; background: rgba(255,255,255,0.95); color: #333; resize: vertical; transition: var(--transition); }
-  .txtarea:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,107,107,0.08); }
-  /* Animations */
-  @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-  .heart-beat { animation: heartBeat 1s infinite; }
-  /* Responsive tweaks */
-  @media (min-width: 768px) { :root { --maxw: 640px; } .header-inner { padding: 14px 20px; } .title { font-size: 24px; } }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:#fff;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;min-height:100vh;padding:86px 16px 120px}
+  header{position:fixed;left:0;right:0;top:0;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.02));backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.03);z-index:120}
+  .head-inner{max-width:680px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  h1{margin:0;font-size:18px;font-weight:900;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .small{font-size:12px;color:var(--muted)}
+  .pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.04);border:none;color:#fff;font-weight:700;cursor:pointer;transition:var(--transition)}
+  .card{background:var(--card);border-radius:var(--radius);padding:14px;border:1px solid var(--glass-glow);box-shadow:0 10px 30px rgba(0,0,0,0.28);margin-bottom:14px}
+  .title{font-weight:900;font-size:20px;margin:0 0 8px;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .subtitle{color:var(--muted);font-size:14px;margin:0 0 10px}
+  .muted{color:var(--muted)}
+  .nav{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;background:linear-gradient(180deg,rgba(0,0,0,0.32),rgba(0,0,0,0.02));backdrop-filter:blur(10px);display:flex;gap:10px;justify-content:center;z-index:130}
+  .nav button{flex:1;padding:10px 12px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:#fff;font-weight:800;cursor:pointer}
+  .nav button.active{background:var(--accent-grad);color:#fff;transform:scale(1.02)}
+
+  /* SOS board */
+  .sos-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .sos-cell{aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;border:none;color:#fff;cursor:pointer;transition:var(--transition)}
+  .sos-cell:disabled{opacity:0.45;cursor:not-allowed}
+  .controls{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+  .progress{height:8px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-top:12px}
+  .progress>div{height:100%;width:0;background:var(--accent-grad);transition:width .36s ease}
+
+  /* Settings area */
+  .settings { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+  .select { background:rgba(255,255,255,0.03); padding:6px 10px; border-radius:10px; color:#fff; font-weight:700; border:none; cursor:pointer; }
+
+  /* video area */
+  .video-slot{width:100%;aspect-ratio:9/16;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#ff6b6b,#ff9aa2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center}
+  .video-emoji{font-size:58px;margin-bottom:8px}
+  .video-title{font-weight:900;font-size:18px;margin-bottom:6px}
+  .video-msg{font-size:14px;color:var(--muted);max-height:32%;overflow:auto;padding:6px 4px}
+
+  /* simple game cards layout */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+  /* timeline */
+  .timeline{display:flex;flex-direction:column;gap:10px}
+  .milestone{display:flex;gap:10px;align-items:flex-start}
+  .milestone .dot{width:40px;height:40px;border-radius:50%;background:linear-gradient(90deg,#ff7b93,#ffb6c6);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+
+  /* polaroid */
+  .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+  .polaroid{background:#fff;border-radius:12px;padding:10px;color:#222;cursor:pointer}
+  .polaroid img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:8px}
+
+  /* notes */
+  .txtarea{width:100%;min-height:170px;border-radius:12px;padding:12px;border:none;font-family:'Dancing Script',cursive;font-size:18px;background:#fff;color:#222;resize:vertical}
+
+  /* modal */
+  .modal { position: fixed; inset: 0; display:none; align-items:center; justify-content:center; z-index:240; padding:16px; background: rgba(0,0,0,0.6); }
+  .modal .box { background:#fff; color:#222; padding:14px; border-radius:12px; width:100%; max-width:680px; max-height:90vh; overflow:auto; }
+
+  @media(min-width:760px){ .wrap{padding-left:30px;padding-right:30px} }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Header -->
   <header>
-    <div class="header-inner">
-      <div class="brand">
-        <button id="menuToggle" class="menu-btn" aria-label="menu">☰</button>
+    <div class="head-inner">
+      <div style="display:flex;gap:12px;align-items:center">
+        <button id="devMenu" class="pill">☰</button>
         <div>
           <h1>Saraaa ❤️</h1>
           <div class="small">My Eternal Flame</div>
         </div>
       </div>
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-        <div class="small" id="winDisplay">Wins: 0 / 3</div>
-        <div class="small" id="streakDisplay">Streak: 0/3</div>
+      <div style="text-align:right">
+        <div id="winDisplay" class="small">Wins: 0 / 3</div>
+        <div id="streakDisplay" class="small">Streak: 0/3</div>
       </div>
     </div>
   </header>
 
-  <!-- SOS Unlock Screen (Initial Page) -->
-  <main id="unlockMain">
-    <section id="unlockPage" class="page active">
-      <div class="card">
-        <div class="title">🔐 Unlock Our Story</div>
-        <div class="subtitle">Win 3 SOS games in a row to reveal the magic</div>
-        <button id="howToPlayBtn" class="pill" style="display:block; margin:10px auto;">Kaise Khelen? (Guide)</button>
-        <div class="sos-board" id="sosBoard" aria-label="SOS board"></div>
-        <div class="control-row" style="display:flex; gap:8px; justify-content:center; margin:12px 0;">
-          <button id="selectS" class="pill active">S</button>
-          <button id="selectO" class="pill">O</button>
-          <button id="resetSos" class="pill">Reset Game</button>
+  <div class="wrap">
+    <!-- SOS unlock card -->
+    <section id="unlockCard" class="card">
+      <div class="title">🔐 Unlock Our Story</div>
+      <div class="subtitle">Win 3 SOS games in a row to reveal the whole site. Minimax AI enabled.</div>
+
+      <div id="sosMessage" class="muted" style="text-align:center;margin-bottom:10px;">Choose S or O then tap an empty cell.</div>
+
+      <div id="sosBoard" class="sos-board" aria-label="SOS board"></div>
+
+      <div class="controls">
+        <button id="selectS" class="pill">S</button>
+        <button id="selectO" class="pill">O</button>
+        <button id="resetGame" class="pill">Reset</button>
+        <button id="openGuide" class="pill">Guide</button>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:10px;align-items:center;justify-content:center;flex-wrap:wrap">
+        <div class="settings">
+          <label class="small">AI Level</label>
+          <select id="aiLevel" class="select">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard (Minimax)</option>
+          </select>
         </div>
-        <div class="progress"><div id="progBar"></div></div>
-        <div id="sosMessage" class="muted" style="text-align:center; margin-top:10px;">Choose S or O, then tap an empty cell to place your letter.</div>
-        <div id="scoreDisplay" style="text-align:center; font-weight:700; font-size:18px; margin-top:10px;">0 - 0</div>
+        <div class="settings">
+          <label class="small">Mistake</label>
+          <input id="mistake" type="range" min="0" max="80" value="35" />
+          <div class="small" id="mistakeVal">35%</div>
+        </div>
+        <div class="settings">
+          <label class="small">Skip SOS</label>
+          <input id="skipSOS" type="checkbox" />
+        </div>
+      </div>
+
+      <div class="progress"><div id="progBar"></div></div>
+
+      <div style="display:flex;justify-content:space-between;margin-top:10px;align-items:center">
+        <div id="scoreDisplay" style="font-weight:900">0 - 0</div>
+        <div class="small" id="hint">AI: Full Minimax available</div>
       </div>
     </section>
-  </main>
 
-  <!-- Hidden Pages -->
-  <main id="pagesMain" style="display:none;">
-    <!-- Page 1: Videos & Messages -->
-    <section id="page-0" class="page">
-      <div class="card">
-        <div class="aspect9x16 center" id="videoSlot" style="background: linear-gradient(135deg,#ff6b6b,#ff9a9e); position:relative; overflow:hidden;">
-          <div id="videoPlaceholder" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:14px; text-align:center;">
-            <div id="videoEmoji" style="font-size:64px; margin-bottom:12px;">💕</div>
-            <div id="videoTitle" style="font-weight:900; font-size:20px; line-height:1.1;"></div>
-            <div id="videoLongMsg" class="muted" style="margin-top:10px; white-space:pre-line; font-size:14px; max-height:36%; overflow:auto;"></div>
-          </div>
+    <!-- Hidden pages container -->
+    <section id="pages" style="display:none">
+      <!-- Page 1: Videos & Messages -->
+      <div id="pageVideos" class="card">
+        <div class="title">🎞️ Videos & Messages</div>
+        <div class="subtitle">Swipe through romantic moments (9:16) and read the long messages.</div>
+        <div id="videoSlot" class="video-slot">
+          <div id="vEmoji" class="video-emoji">💕</div>
+          <div id="vTitle" class="video-title">Our Eternal Flame</div>
+          <div id="vMsg" class="video-msg"></div>
         </div>
-        <div style="display:flex; gap:10px; justify-content:center; margin-top:12px; align-items:center;">
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:10px;align-items:center">
           <button id="prevVideo" class="pill">← Prev</button>
-          <div id="videoCounter" class="pill">1 / 5</div>
+          <div id="videoCounter" class="pill" style="background:transparent;border:1px solid rgba(255,255,255,0.04)">1 / 5</div>
           <button id="nextVideo" class="pill">Next →</button>
         </div>
       </div>
-    </section>
 
-    <!-- Page 2: Games -->
-    <section id="page-1" class="page">
-      <div class="card">
+      <!-- Page 2: Games -->
+      <div id="pageGames" class="card">
         <div class="title">🎮 Playful Moments</div>
-        <div style="display:flex; gap:8px; justify-content:center; margin-bottom:12px; flex-wrap:wrap;">
-          <button class="pill active" data-tab="jig">🧩 Jigsaw</button>
-          <button class="pill" data-tab="maze">❤️ Maze</button>
-          <button class="pill" data-tab="dots">💌 Connect</button>
+        <div class="subtitle">Touch-friendly mini-games — Jigsaw, Maze, Connect.</div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button id="startJig" class="pill">🧩 Jigsaw</button>
+          <button id="startMaze" class="pill">❤️ Maze</button>
+          <button id="startDots" class="pill">💌 Connect</button>
         </div>
-        <!-- Jigsaw Tab -->
-        <div id="tab-jig" style="display:block;">
-          <div class="aspect9x16 jig-area" id="jigArea"></div>
-          <button id="resetJig" class="pill" style="margin-top:12px; display:block; margin-left:auto; margin-right:auto;">Reset Puzzle</button>
-        </div>
-        <!-- Maze Tab -->
-        <div id="tab-maze" style="display:none; margin-top:12px;">
-          <div class="card" style="padding:0;">
-            <div class="aspect9x16 maze-area" id="mazeArea">
-              <!-- Maze heart and goal will be created dynamically in setupMaze() -->
-            </div>
-          </div>
-          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px;">
-            <div></div>
-            <button class="pill" onclick="moveMaze('up')">⬆️</button>
-            <div></div>
-            <button class="pill" onclick="moveMaze('left')">⬅️</button>
-            <button class="pill" onclick="moveMaze('down')">⬇️</button>
-            <button class="pill" onclick="moveMaze('right')">➡️</button>
-          </div>
-        </div>
-        <!-- Dots Tab -->
-        <div id="tab-dots" style="display:none; margin-top:12px;">
-          <div style="position:relative; height:240px; margin-bottom:12px;" id="dotsArea">
-            <svg id="connectSvg" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;"></svg>
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; position:absolute; inset:8px; place-items:center;">
-              <div id="dot0" class="dot" data-idx="0">1</div>
-              <div id="dot1" class="dot" data-idx="1">2</div>
-              <div id="dot2" class="dot" data-idx="2">3</div>
-              <div id="dot3" class="dot" data-idx="3">4</div>
-              <div id="dot4" class="dot" data-idx="4">5</div>
-              <div id="dot5" class="dot" data-idx="5">6</div>
-              <div id="dot6" class="dot" data-idx="6">7</div>
-              <div id="dot7" class="dot" data-idx="7">8</div>
-              <div id="dot8" class="dot" data-idx="8">9</div>
-            </div>
-          </div>
-          <button id="resetDots" class="pill" style="display:block; margin-left:auto; margin-right:auto;">Reset Hearts</button>
-        </div>
+        <div id="gamesArea" style="margin-top:12px"></div>
       </div>
-    </section>
 
-    <!-- Page 3: Timeline -->
-    <section id="page-2" class="page">
-      <div class="card">
+      <!-- Page 3: Timeline -->
+      <div id="pageTimeline" class="card">
         <div class="title">💕 Our Journey</div>
         <div class="timeline" id="timelineList"></div>
       </div>
-    </section>
 
-    <!-- Page 4: Polaroids -->
-    <section id="page-3" class="page">
-      <div class="card">
+      <!-- Page 4: Polaroids -->
+      <div id="pageGallery" class="card">
         <div class="title">📸 Cherished Snaps</div>
         <div class="polaroid-grid" id="polaroidGrid"></div>
       </div>
-    </section>
 
-    <!-- Page 5: Notes -->
-    <section id="page-4" class="page">
-      <div class="card">
+      <!-- Page 5: Notes -->
+      <div id="pageNotes" class="card">
         <div class="title">💌 Whispered Words</div>
-        <textarea id="notes" class="txtarea" placeholder="Dearest Saraaa, in the quiet of my heart, I write..."></textarea>
-        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-          <button id="downloadNotes" class="btn">💾 Save as TXT</button>
+        <textarea id="notes" class="txtarea" placeholder="Dearest Saraaa, in the quiet of my heart..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="downloadNotes" class="pill">💾 Save TXT</button>
           <button id="clearNotes" class="pill">Clear</button>
         </div>
       </div>
     </section>
-  </main>
-
-  <!-- Nav (Hidden until unlocked) -->
-  <div class="nav" id="nav" style="display:none;">
-    <div class="nav-inner">
-      <button data-page="0" class="active">Videos</button>
-      <button data-page="1">Games</button>
-      <button data-page="2">Timeline</button>
-      <button data-page="3">Gallery</button>
-      <button data-page="4">Notes</button>
-    </div>
   </div>
 
-  <!-- Modal for Polaroid Zoom & How to Play -->
+  <nav class="nav" id="bottomNav" style="display:none">
+    <button data-i="0" class="active">Videos</button>
+    <button data-i="1">Games</button>
+    <button data-i="2">Timeline</button>
+    <button data-i="3">Gallery</button>
+    <button data-i="4">Notes</button>
+  </nav>
+
+  <!-- Modal (Guide / Zoom) -->
   <div id="modal" class="modal" aria-hidden="true">
-    <div class="modal-box">
+    <div class="box">
       <div id="modalContent"></div>
-      <button class="btn" onclick="closeModal()" style="margin-top:12px; width:100%;">Close ❤️</button>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button id="closeModal" class="pill">Close</button>
+      </div>
     </div>
   </div>
-</div>
 
 <script>
-/* ========== Configuration ========== */
-/* Developer shortcut:
-   To instantly bypass the SOS unlock during development, set SKIP_SOS to true.
-   (Remember to set it back to false for the real site.)
-*/
-const SKIP_SOS = true; // ← change to true to skip unlock during testing
-const CHANCE_TO_MISTAKE = 0.35;
+/* ===========================
+   Configurable constants
+   =========================== */
+const CONFIG = {
+  AI_LEVEL: 'hard', // default 'easy' | 'medium' | 'hard'
+  MISTAKE_CHANCE: 0.35, // 0.0 - 1.0
+  SKIP_SOS: false
+};
 
-let unlocked = SKIP_SOS;
-let winsInARow = 0;
-let currentPage = 0;
-let sosBoard = Array(9).fill(null);
-let sosTurn = 'human';
-let selectedLetter = 'S';
-let sosScores = { human: 0, ai: 0 };
-let sosGameOver = false;
-let videoIndex = 0;
+/* We'll wire UI controls to these live values later. */
 
-/* Jigsaw Globals */
-const jigSlots = [
-  {x:20, y:20}, {x:50, y:20}, {x:80, y:20},
-  {x:20, y:50}, {x:50, y:50}, {x:80, y:50},
-  {x:20, y:80}, {x:50, y:80}, {x:80, y:80}
-];
-let jigPieces = [];
-
-/* Dots Globals */
-let connectedDots = [];
-const dotPositions = [
-  [10,10], [50,10], [90,10],
-  [10,50], [50,50], [90,50],
-  [10,90], [50,90], [90,90]
+/* ===========================
+   Data (videos, timeline, polaroids)
+   Replace placeholders with real files if you have them
+   =========================== */
+const VIDEOS = [
+  {emoji:'💕', title:'Our Eternal Flame', msg:`From the stars above to the depths of my soul, you are my everything. Every beat of my heart whispers your name in the quiet night.`},
+  {emoji:'🌙', title:'Whispers in the Night', msg:`In the silence of midnight, your voice is my lullaby. We share dreams that dance like fireflies under the velvet sky.`},
+  {emoji:'✨', title:'Adventures Unwritten', msg:`Hand in hand, we'll chase horizons yet to see. Our path is paved with laughter, love, and endless possibility.`},
+  {emoji:'💞', title:'Hearts Intertwined', msg:`Our love, a tapestry woven with threads of gold. Each moment with you is a brushstroke on the canvas of forever.`},
+  {emoji:'🌸', title:'Forever Blooms', msg:`Like roses in spring, our story never fades. You are the bloom that colors my world in hues of eternal spring.`}
 ];
 
-/* Maze Globals */
-let mazePos = { x: 12, y: 12 };
+const MILESTONES = [
+  {emoji:'👀', title:'First Glance', desc:'Eyes locked, worlds collided in a spark of destiny.'},
+  {emoji:'😘', title:'First Kiss', desc:'Sparks flew, time stood still in that magical embrace.'},
+  {emoji:'🌟', title:'Promises Made', desc:'Under the moon, forever sealed with whispered vows.'},
+  {emoji:'💍', title:'Our Vows', desc:'Eternity in a single yes, hearts forever bound.'},
+  {emoji:'♾️', title:'Infinite Us', desc:'Love without end, a circle of joy unending.'}
+];
 
-/* Data (videos, timeline, polaroids remain as placeholders) */
-const videos = [
-  { title: "Our Eternal Flame", emoji: "💕", bg: "linear-gradient(135deg, #ff6b6b, #ff9a9e)", msg: "From the stars above to the depths of my soul, you are my everything. Every beat of my heart whispers your name in the quiet night." },
-  { title: "Whispers in the Night", emoji: "🌙", bg: "linear-gradient(135deg, #6d28d9, #a78bfa)", msg: "In the silence of midnight, your voice is my lullaby. We share dreams that dance like fireflies under the velvet sky." },
-  { title: "Adventures Unwritten", emoji: "✨", bg: "linear-gradient(135deg, #ffd166, #f97316)", msg: "Hand in hand, we'll chase horizons yet to see. Our path is paved with laughter, love, and endless possibility." },
-  { title: "Hearts Intertwined", emoji: "💞", bg: "linear-gradient(135deg, #ff90a3, #ff7aa2)", msg: "Our love, a tapestry woven with threads of gold. Each moment with you is a brushstroke on the canvas of forever." },
-  { title: "Forever Blooms", emoji: "🌸", bg: "linear-gradient(135deg, #ff8a72, #ff6b6b)", msg: "Like roses in spring, our story never fades. You are the bloom that colors my world in hues of eternal spring." }
-];
-const milestones = [
-  { emoji: '👀', title: 'First Glance', desc: 'Eyes locked, worlds collided in a spark of destiny.', date: 'Day 1', img: '' },
-  { emoji: '😘', title: 'First Kiss', desc: 'Sparks flew, time stood still in that magical embrace.', date: 'Week 2', img: '' },
-  { emoji: '🌟', title: 'Promises Made', desc: 'Under the moon, forever sealed with whispered vows.', date: 'Month 1', img: '' },
-  { emoji: '💍', title: 'Our Vows', desc: 'Eternity in a single yes, hearts forever bound.', date: 'Today', img: '' },
-  { emoji: '♾️', title: 'Infinite Us', desc: 'Love without end, a circle of joy unending.', date: 'Always', img: '' }
-];
-const polaroids = Array.from({length: 8}, (_, i) => ({
-  title: ['Sunset Stroll','Cozy Nights','Beach Whispers','Starlit Dances','Coffee Dates','Rainy Kisses','Festival Lights','Quiet Mornings'][i],
-  img: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSIgdmlld0JveD0iMCAwIDIwMCAzNTUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNGRkYiLz48L3N2Zz4=',
-  desc: 'A snapshot of our joy, frozen in time forever.'
+const POLAROIDS = Array.from({length:8},(_,i)=>({
+  title:['Sunset Stroll','Cozy Nights','Beach Whispers','Starlit Dances','Coffee Dates','Rainy Kisses','Festival Lights','Quiet Mornings'][i],
+  // placeholder simple white svg; replace with data URLs or real paths
+  img:'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjM1NSI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzNTUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=',
+  desc:'A snapshot of our joy.'
 }));
 
-/* Elements */
-const pages = Array.from(document.querySelectorAll('.page'));
-const navButtons = Array.from(document.querySelectorAll('[data-page]'));
-const unlockMain = document.getElementById('unlockMain');
-const pagesMain = document.getElementById('pagesMain');
-const nav = document.getElementById('nav');
-const winDisplay = document.getElementById('winDisplay');
+/* ===========================
+   SOS Game State
+   =========================== */
+let sosBoard = Array(9).fill(null); // null | 'S' | 'O'
+let humanTurn = true;
+let selectedLetter = 'S';
+let scores = {human:0, ai:0};
+let streak = 0;
+let unlocked = false;
+
+/* DOM references */
+const sosBoardEl = document.getElementById('sosBoard');
+const selectSBtn = document.getElementById('selectS');
+const selectOBtn = document.getElementById('selectO');
+const resetBtn = document.getElementById('resetGame');
+const guideBtn = document.getElementById('openGuide');
+const aiLevelEl = document.getElementById('aiLevel');
+const mistakeEl = document.getElementById('mistake');
+const mistakeValEl = document.getElementById('mistakeVal');
+const skipCheckbox = document.getElementById('skipSOS');
 const progBar = document.getElementById('progBar');
 const scoreDisplay = document.getElementById('scoreDisplay');
 const sosMessage = document.getElementById('sosMessage');
-const sosBoardEl = document.getElementById('sosBoard');
-const selectS = document.getElementById('selectS');
-const selectO = document.getElementById('selectO');
-const resetSos = document.getElementById('resetSos');
-const howToPlayBtn = document.getElementById('howToPlayBtn');
-const videoSlot = document.getElementById('videoSlot');
-const videoPlaceholder = document.getElementById('videoPlaceholder');
-const videoEmoji = document.getElementById('videoEmoji');
-const videoTitle = document.getElementById('videoTitle');
-const videoCounter = document.getElementById('videoCounter');
+const winDisplay = document.getElementById('winDisplay');
+const streakDisplay = document.getElementById('streakDisplay');
+const bottomNav = document.getElementById('bottomNav');
+const pagesSection = document.getElementById('pages');
+const unlockCard = document.getElementById('unlockCard');
+
+/* Video DOM */
+const vEmoji = document.getElementById('vEmoji');
+const vTitle = document.getElementById('vTitle');
+const vMsg = document.getElementById('vMsg');
 const prevVideo = document.getElementById('prevVideo');
 const nextVideo = document.getElementById('nextVideo');
-const timelineList = document.getElementById('timelineList');
-const polaroidGrid = document.getElementById('polaroidGrid');
+const videoCounter = document.getElementById('videoCounter');
+
+let videoIndex = 0;
+
+/* Modal */
 const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modalContent');
-const notes = document.getElementById('notes');
-const streakDisplay = document.getElementById('streakDisplay');
+const closeModalBtn = document.getElementById('closeModal');
 
-/* ========== Init ========== */
-function init() {
-  renderTimeline();
-  renderPolaroids();
-  if (SKIP_SOS) {
-    unlockAll();
-  } else {
-    initSOS();
-  }
-  setupGames();
-  goTo(0);
-  renderVideo();
-  bindUI();
-}
-init();
+/* Games area */
+const gamesArea = document.getElementById('gamesArea');
 
-/* Unlock System */
-function unlockAll() {
-  unlocked = true;
-  unlockMain.style.display = 'none';
-  pagesMain.style.display = 'block';
-  nav.style.display = 'block';
-  winsInARow = 3;
-  updateWinDisplay();
-  updateStreakDisplay();
+/* Timeline & Polaroid DOM */
+const timelineList = document.getElementById('timelineList');
+const polaroidGrid = document.getElementById('polaroidGrid');
+
+/* Notes */
+const notesArea = document.getElementById('notes');
+const downloadNotesBtn = document.getElementById('downloadNotes');
+const clearNotesBtn = document.getElementById('clearNotes');
+
+/* Bottom nav buttons */
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    // scroll to approximate card (simple UX)
+    const idx = Number(btn.dataset.i);
+    const cards = Array.from(document.querySelectorAll('.card'));
+    if(cards[idx]) cards[idx].scrollIntoView({behavior:'smooth',block:'center'});
+  });
+});
+
+/* ===========================
+   Utility functions
+   =========================== */
+function updateScoreDisplay(){
+  scoreDisplay.textContent = `${scores.human} - ${scores.ai}`;
+}
+function updateProgress(){
+  progBar.style.width = `${Math.min(100,(streak/3)*100)}%`;
+  winDisplay.textContent = `Wins: ${streak} / 3`;
+  streakDisplay.textContent = `Streak: ${streak}/3`;
 }
 
-/* Navigation */
-function goTo(idx) {
-  if (idx < 0) return;
-  if (!unlocked) return;
-  pages.forEach((p, i) => p.classList.toggle('active', i === idx));
-  navButtons.forEach((b, i) => b.classList.toggle('active', i === idx));
-  currentPage = idx;
-}
-
-/* Page 1: Videos & Messages */
-function renderVideo() {
-  const v = videos[videoIndex];
-  videoPlaceholder.style.background = v.bg;
-  videoEmoji.textContent = v.emoji;
-  videoTitle.textContent = v.title;
-  document.getElementById('videoLongMsg').textContent = v.msg;
-  videoCounter.textContent = `${videoIndex + 1} / ${videos.length}`;
-}
-prevVideo.onclick = () => { videoIndex = (videoIndex - 1 + videos.length) % videos.length; renderVideo(); };
-nextVideo.onclick = () => { videoIndex = (videoIndex + 1) % videos.length; renderVideo(); };
-
-/* ========== SOS Game ========== */
-function initSOS() {
-  sosBoard = Array(9).fill(null);
-  sosTurn = 'human';
-  selectedLetter = 'S';
-  sosScores = { human: 0, ai: 0 };
-  sosGameOver = false;
-  selectS.classList.add('active');
-  selectO.classList.remove('active');
-  renderSOS();
-  updateScore();
-  updateProgress();
-  sosMessage.textContent = 'Choose S or O, then tap an empty cell to place your letter.';
-}
-function renderSOS() {
+/* ===========================
+   SOS: rendering & interactions
+   =========================== */
+function renderSOS(){
   sosBoardEl.innerHTML = '';
-  for (let i = 0; i < 9; i++) {
-    const cell = document.createElement('button');
-    cell.className = 'sos-cell';
-    cell.disabled = sosGameOver || sosTurn !== 'human' || sosBoard[i] !== null;
-    cell.textContent = sosBoard[i] || '';
-    cell.onclick = () => handleSOSClick(i);
-    sosBoardEl.appendChild(cell);
+  for(let i=0;i<9;i++){
+    const b = document.createElement('button');
+    b.className = 'sos-cell';
+    b.textContent = sosBoard[i] || '';
+    b.disabled = !!sosBoard[i] || !humanTurn || unlocked;
+    b.onclick = ()=>handleHumanMove(i);
+    sosBoardEl.appendChild(b);
   }
+  updateScoreDisplay();
 }
-function handleSOSClick(idx) {
-  if (sosBoard[idx] !== null || sosTurn !== 'human' || sosGameOver) return;
-  sosBoard[idx] = selectedLetter;
-  const newSOS = countNewSOS(idx, sosBoard);
-  sosScores.human += newSOS;
+
+selectSBtn.addEventListener('click', ()=>{
+  selectedLetter='S';
+  selectSBtn.classList.add('pill','active');
+  selectOBtn.classList.remove('active');
+});
+selectOBtn.addEventListener('click', ()=>{
+  selectedLetter='O';
+  selectOBtn.classList.add('pill','active');
+  selectSBtn.classList.remove('active');
+});
+
+resetBtn.addEventListener('click', ()=>{resetRound();streak=0;updateProgress();});
+guideBtn.addEventListener('click', ()=>openGuideModal());
+
+mistakeEl.addEventListener('input', ()=>{
+  mistakeValEl.textContent = `${mistakeEl.value}%`;
+  CONFIG.MISTAKE_CHANCE = Number(mistakeEl.value)/100;
+});
+aiLevelEl.addEventListener('change', ()=>{CONFIG.AI_LEVEL = aiLevelEl.value;});
+skipCheckbox.addEventListener('change', ()=>{
+  CONFIG.SKIP_SOS = skipCheckbox.checked;
+  if(CONFIG.SKIP_SOS) unlockAll();
+});
+
+/* initialize UI controls to defaults */
+aiLevelEl.value = CONFIG.AI_LEVEL;
+mistakeEl.value = CONFIG.MISTAKE_CHANCE * 100;
+mistakeValEl.textContent = `${Math.round(CONFIG.MISTAKE_CHANCE*100)}%`;
+skipCheckbox.checked = CONFIG.SKIP_SOS;
+
+/* Human move */
+function handleHumanMove(i){
+  if(sosBoard[i]) return;
+  if(!humanTurn) return;
+  sosBoard[i] = selectedLetter;
+  const got = countNewSOS(i, sosBoard);
+  scores.human += got;
   renderSOS();
-  updateScore();
-  if (newSOS > 0) {
-    sosMessage.textContent = `Badhai! Aapne ${newSOS} SOS banaya. Aapka extra turn hai!`;
-    if (isBoardFull()) finishGame();
-    return; // player goes again
+  if(got>0){
+    sosMessage.textContent = `Nice! You formed ${got} new SOS. Extra turn.`;
+    if(isBoardFull()) finishRound();
+    return; // human gets extra turn
   }
-  if (isBoardFull()) { finishGame(); return; }
-  sosTurn = 'ai';
-  sosMessage.textContent = `AI ka turn...`;
-  setTimeout(aiTurn, 650);
+  if(isBoardFull()){ finishRound(); return; }
+  humanTurn = false;
+  sosMessage.textContent = `AI is thinking...`;
+  setTimeout(()=>aiPlay(), 450);
 }
-function aiTurn() {
-  if (sosGameOver) return;
-  let { pos, letter } = getAIMove();
-  // chance to mistake (random move with random letter)
-  if (Math.random() < CHANCE_TO_MISTAKE) {
-    const empties = getEmptyIndices();
-    pos = empties[Math.floor(Math.random() * empties.length)];
-    letter = Math.random() < 0.5 ? 'S' : 'O';
+
+/* check if board full */
+function isBoardFull(){
+  return sosBoard.every(c=>c!==null);
+}
+
+/* count SOS that include index on a provided board */
+function countNewSOS(idx, board){
+  if(board[idx]===null) return 0;
+  const lines = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  let c = 0;
+  for(const L of lines){
+    if(L.includes(idx)){
+      const [a,b,d] = L;
+      if(board[a]==='S' && board[b]==='O' && board[d]==='S') c++;
+    }
   }
+  return c;
+}
+
+/* returns list of empty indices */
+function emptyIndices(board){
+  return board.map((v,i)=>v===null?i:null).filter(x=>x!==null);
+}
+
+/* ===========================
+   MINIMAX AI Implementation
+   - The state space is small; we will explore deeply.
+   - We'll implement alpha-beta and memoization.
+   - Evaluate final score difference (ai - human).
+   =========================== */
+
+/* helper to create memo key */
+function boardKey(board, turn){
+  return board.map(x=>x||'.').join('') + '|' + turn;
+}
+
+/* minimax: returns {score, move: idx, letter: 'S'|'O'} for maximizing player (AI)
+   We model the recursive game to completion: for each empty pos, try 'S' and 'O'
+   Score at each place = immediate points for the player (move) + subsequent recursion (with players swapped).
+   We compute (aiScore - humanScore) at leaves.
+*/
+function minimaxSolve(board, turn, alpha=-Infinity, beta=Infinity, memo=new Map()){
+  const key = boardKey(board, turn);
+  if(memo.has(key)) return memo.get(key);
+
+  const empties = emptyIndices(board);
+  if(empties.length===0){
+    // game over: no more moves
+    return { score: 0, move: null, letter: null };
+  }
+  const maximizing = (turn==='ai');
+  let best = maximizing ? {score:-Infinity, move:null, letter:null} : {score:Infinity, move:null, letter:null};
+
+  // For each move position and letter choice
+  for(const pos of empties){
+    for(const letter of ['S','O']){
+      // simulate
+      const nb = board.slice();
+      nb[pos] = letter;
+      const pts = countNewSOS(pos, nb); // points for player who played
+      // recurse: next turn is the other player
+      const res = minimaxSolve(nb, (turn==='ai'?'human':'ai'), alpha, beta, memo);
+      // combine: pts belongs to current player; res.score is the (ai - human) from the rest of game
+      let combined;
+      if(turn==='ai') {
+        // ai gets pts => combined score = pts + res.score
+        combined = pts + res.score;
+      } else {
+        // human gets pts => combined score = res.score - pts (because score is ai - human)
+        combined = res.score - pts;
+      }
+
+      if(maximizing){
+        if(combined > best.score){
+          best = {score: combined, move: pos, letter: letter};
+        }
+        alpha = Math.max(alpha, best.score);
+      } else {
+        if(combined < best.score){
+          best = {score: combined, move: pos, letter: letter};
+        }
+        beta = Math.min(beta, best.score);
+      }
+      if(beta <= alpha) break; // prune
+    }
+    if(beta <= alpha) break;
+  }
+
+  memo.set(key, best);
+  return best;
+}
+
+/* AI decision wrapper: uses CONFIG.AI_LEVEL and CONFIG.MISTAKE_CHANCE */
+function pickAIMove(board){
+  const empties = emptyIndices(board);
+  // easy: random
+  if(CONFIG.AI_LEVEL === 'easy'){
+    const pos = empties[Math.floor(Math.random()*empties.length)];
+    const letter = Math.random()<0.6 ? 'S' : 'O';
+    return {pos, letter, reason:'easy-random'};
+  }
+  // hard or medium: use minimax but medium may allow mistakes
+  // compute minimax best
+  const memo = new Map();
+  const best = minimaxSolve(board, 'ai', -Infinity, Infinity, memo);
+  // best.move and best.letter
+  if(best.move===null){
+    // fallback random
+    const pos = empties[Math.floor(Math.random()*empties.length)];
+    const letter = Math.random()<0.6 ? 'S' : 'O';
+    return {pos, letter, reason:'fallback'};
+  }
+
+  // Mistake chance handling: medium or specified mistake percentage
+  const mistake = CONFIG.MISTAKE_CHANCE;
+  if(CONFIG.AI_LEVEL === 'hard'){
+    // if hard -> no mistakes
+    return {pos: best.move, letter: best.letter, reason:'minimax-optimal'};
+  } else {
+    if(Math.random() < mistake){
+      // make a suboptimal move: random empty with random letter
+      const pos = empties[Math.floor(Math.random()*empties.length)];
+      const letter = Math.random()<0.6 ? 'S' : 'O';
+      return {pos, letter, reason:'mistake'};
+    }
+    return {pos: best.move, letter: best.letter, reason:'minimax'};
+  }
+}
+
+/* ===========================
+   AI play function
+   =========================== */
+function aiPlay(){
+  if(unlocked) return;
+  const pick = pickAIMove(sosBoard.slice());
+  // execute move
+  const pos = pick.pos;
+  const letter = pick.letter;
   sosBoard[pos] = letter;
-  const newSOS = countNewSOS(pos, sosBoard);
-  sosScores.ai += newSOS;
+  const newPts = countNewSOS(pos, sosBoard);
+  scores.ai += newPts;
   renderSOS();
-  updateScore();
-  if (newSOS > 0) {
-    sosMessage.textContent = `AI ne ${newSOS} SOS banaya. AI ka extra turn...`;
-    if (isBoardFull()) finishGame();
-    else setTimeout(aiTurn, 700);
+  // update message
+  if(newPts>0){
+    sosMessage.textContent = `AI formed ${newPts} SOS. AI goes again.`;
+    if(isBoardFull()) finishRound();
+    else setTimeout(aiPlay, 420); // AI extra turn if scored
     return;
   }
-  if (isBoardFull()) { finishGame(); return; }
-  sosTurn = 'human';
-  sosMessage.textContent = `Aapki turn!`;
+  if(isBoardFull()){ finishRound(); return; }
+  // give back to human
+  humanTurn = true;
+  sosMessage.textContent = `Your turn!`;
 }
-function getAIMove() {
-  const empties = getEmptyIndices();
-  // 1) Try to score: pick a pos and letter that yields new SOS
-  for (let pos of empties) {
-    if (countNewSOSForPos(pos, 'S') > 0) return { pos, letter:'S' };
-    if (countNewSOSForPos(pos, 'O') > 0) return { pos, letter:'O' };
-  }
-  // 2) Block human potential: if human would score by placing their selectedLetter, pick that pos and place opposite letter to block
-  for (let pos of empties) {
-    if (countNewSOSForPos(pos, selectedLetter) > 0) {
-      const blockLetter = (selectedLetter === 'S') ? 'O' : 'S';
-      return { pos, letter: blockLetter };
-    }
-  }
-  // 3) Strategic center then corners then edges
-  const strategic = [4, 0, 2, 6, 8, 1, 3, 5, 7];
-  for (let p of strategic) if (sosBoard[p] === null) return { pos: p, letter: Math.random() < 0.6 ? 'S' : 'O' };
-  // fallback
-  return { pos: empties[0], letter: Math.random() < 0.6 ? 'S' : 'O' };
-}
-/* Count SOS newly formed due to placing at idx using the provided board (pure) */
-function countNewSOS(idx, board) {
-  if (!board || board[idx] === null) return 0;
-  const lines = [
-    [0,1,2], [3,4,5], [6,7,8],
-    [0,3,6], [1,4,7], [2,5,8],
-    [0,4,8], [2,4,6]
-  ];
-  let count = 0;
-  for (let line of lines) {
-    if (line.includes(idx)) {
-      const [a,b,c] = line;
-      if (board[a] === 'S' && board[b] === 'O' && board[c] === 'S') count++;
-    }
-  }
-  return count;
-}
-/* Simulate placing letter at pos and count new SOSes (pure) */
-function countNewSOSForPos(pos, letter) {
-  const temp = sosBoard.slice();
-  temp[pos] = letter;
-  return countNewSOS(pos, temp);
-}
-function getEmptyIndices() {
-  return sosBoard.map((cell, idx) => cell === null ? idx : null).filter(i => i !== null);
-}
-function isBoardFull() {
-  return sosBoard.every(cell => cell !== null);
-}
-function finishGame() {
-  sosGameOver = true;
-  renderSOS();
-  let message = '';
-  if (sosScores.human > sosScores.ai) {
-    winsInARow++;
-    message = `Aap jeete! (${sosScores.human} - ${sosScores.ai}) Streak: ${winsInARow}/3`;
-  } else if (sosScores.ai > sosScores.human) {
-    winsInARow = 0;
-    message = `AI jeeti. (${sosScores.ai} - ${sosScores.human}) Streak reset.`;
+
+/* ===========================
+   Round & unlock logic
+   =========================== */
+function finishRound(){
+  // compare scores
+  if(scores.human > scores.ai){
+    streak++;
+    sosMessage.textContent = `You win this round! (${scores.human} - ${scores.ai}) Streak increased.`;
+  } else if(scores.ai > scores.human){
+    streak = 0;
+    sosMessage.textContent = `AI wins this round. (${scores.ai} - ${scores.human}) Streak reset.`;
   } else {
-    winsInARow = 0;
-    message = `Tie hai. (${sosScores.human} - ${sosScores.ai}) Streak reset.`;
+    streak = 0;
+    sosMessage.textContent = `Tie (${scores.human} - ${scores.ai}). Streak reset.`;
   }
-  sosMessage.textContent = message;
-  updateStreakDisplay();
-  updateWinDisplay();
-  if (winsInARow >= 3) {
-    setTimeout(() => {
-      alert('🎉 Congratulations! All pages are now unlocked. Enjoy our story! ❤️');
+  scores = {human:0, ai:0};
+  updateScoreDisplay();
+  updateProgress();
+
+  if(streak >= 3){
+    setTimeout(()=> {
       unlockAll();
     }, 700);
     return;
   }
-  // Reset board for next round (short delay for UX)
-  setTimeout(initSOS, 1200);
+  // reset board after a short pause
+  setTimeout(()=>{ resetRound(); }, 900);
 }
-function updateScore() {
-  scoreDisplay.textContent = `${sosScores.human} - ${sosScores.ai}`;
+function resetRound(){
+  sosBoard = Array(9).fill(null);
+  humanTurn = true;
+  selectedLetter = 'S';
+  scores = {human:0, ai:0};
+  renderSOS();
+  updateScoreDisplay();
+  sosMessage.textContent = 'Choose S or O then tap an empty cell.';
 }
-function updateProgress() {
-  progBar.style.width = `${Math.min(100, (winsInARow / 3) * 100)}%`;
+function unlockAll(){
+  unlocked = true;
+  sosMessage.textContent = '🎉 Congratulations! All pages unlocked. Enjoy our story ❤️';
+  // hide unlock card and show pages
+  unlockCard.style.display = 'none';
+  pagesSection.style.display = 'block';
+  bottomNav.style.display = 'flex';
+  // set progress full
+  progBar.style.width = '100%';
 }
-function updateStreakDisplay() {
-  streakDisplay.textContent = `Streak: ${winsInARow}/3`;
-}
-function updateWinDisplay() {
-  winDisplay.textContent = `Wins: ${winsInARow} / 3`;
+
+/* ===========================
+   Initialize SOS UI & optionally skip
+   =========================== */
+function initSOS(){
+  // Map config UI to live config
+  CONFIG.AI_LEVEL = aiLevelEl.value;
+  CONFIG.MISTAKE_CHANCE = Number(mistakeEl.value)/100;
+  CONFIG.SKIP_SOS = skipCheckbox.checked;
+
+  if(CONFIG.SKIP_SOS){
+    streak = 3;
+    updateProgress();
+    unlockAll();
+    return;
+  }
+  // ensure clear
+  resetRound();
+  renderSOS();
   updateProgress();
 }
+initSOS();
 
-/* Guide modal (Hinglish) */
-howToPlayBtn.onclick = () => {
-  modalContent.innerHTML = `
-    <h3 style="margin:0 0 12px; color:#ff6b6b;">SOS Game — Kaise Khelen? ❤️</h3>
-    <p style="margin:6px 0;"><strong>Step 1:</strong> Upar <strong>S</strong> ya <strong>O</strong> select karo.</p>
-    <p style="margin:6px 0;"><strong>Step 2:</strong> Grid mein kisi empty cell pe tap karo — tumhara letter wahaan jayega.</p>
-    <p style="margin:6px 0;"><strong>Rule:</strong> Agar horizontal / vertical / diagonal mein <strong>S-O-S</strong> ban gaya to aapko 1 point milta hai aur aapko extra turn milta hai.</p>
-    <p style="margin:6px 0;"><strong>Goal:</strong> AI se zyada points banao. 3 continuous jeet se sari pages unlock ho jaati hain.</p>
-    <p style="margin:8px 0; font-style:italic; color:#666;">Simple — jaise pyaar: dhyaan se khelna, patience rakhna, aur kabhi kabhi surprise moves marna. Good luck, jaan! 😘</p>
-  `;
-  modal.classList.add('active');
-  modal.setAttribute('aria-hidden', 'false');
-};
-
-/* ========== Games Setup ========== */
-function setupGames() {
-  setupJigsaw();
-  setupMaze();
-  setupDots();
-  document.querySelectorAll('[data-tab]').forEach(btn => {
-    btn.onclick = (e) => {
-      const tab = e.target.dataset.tab;
-      document.getElementById('tab-jig').style.display = tab === 'jig' ? 'block' : 'none';
-      document.getElementById('tab-maze').style.display = tab === 'maze' ? 'block' : 'none';
-      document.getElementById('tab-dots').style.display = tab === 'dots' ? 'block' : 'none';
-      document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-    };
-  });
+/* ===========================
+   Render helper functions
+   =========================== */
+function renderSOS(){
+  renderSOSBoard();
+  updateScoreDisplay();
 }
-
-/* Jigsaw */
-function setupJigsaw() {
-  const area = document.getElementById('jigArea');
-  area.innerHTML = '';
-  // draw slots
-  jigSlots.forEach(slot => {
-    const s = document.createElement('div');
-    s.className = 'jig-slot';
-    s.style.left = slot.x + '%';
-    s.style.top = slot.y + '%';
-    s.style.width = '44px';
-    s.style.height = '44px';
-    area.appendChild(s);
-  });
-  jigPieces = [];
-  for (let i = 0; i < 9; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'jig-piece';
-    piece.dataset.idx = i;
-    piece.style.left = (10 + Math.random() * 70) + '%';
-    piece.style.top = (10 + Math.random() * 70) + '%';
-    piece.innerHTML = i + 1;
-    piece.draggable = true;
-    piece.ondragstart = dragStart;
-    piece.ontouchstart = (ev) => { ev.target.dataset.touching = '1'; }; // small mobile friendly touch hint
-    area.appendChild(piece);
-    jigPieces.push(piece);
-  }
-  area.ondragover = (e) => e.preventDefault();
-  area.ondrop = dropPiece;
-}
-function dragStart(e) {
-  e.dataTransfer.setData('text/plain', e.target.dataset.idx);
-  e.target.classList.add('dragging');
-}
-function dropPiece(e) {
-  e.preventDefault();
-  const idx = parseInt(e.dataTransfer.getData('text/plain'));
-  const piece = jigPieces[idx];
-  piece.classList.remove('dragging');
-  // Find nearest slot
-  let nearestSlot = null;
-  let minDist = Infinity;
-  const rect = e.currentTarget.getBoundingClientRect();
-  jigSlots.forEach((slot, sIdx) => {
-    const slotX = (slot.x / 100) * rect.width + rect.left;
-    const slotY = (slot.y / 100) * rect.height + rect.top;
-    const dist = Math.hypot(e.clientX - slotX, e.clientY - slotY);
-    if (dist < minDist) {
-      minDist = dist;
-      nearestSlot = {slot, sIdx};
-    }
-  });
-  if (minDist < 70) { // snap threshold improved for mobile
-    const slot = nearestSlot.slot;
-    piece.style.left = slot.x + '%';
-    piece.style.top = slot.y + '%';
-    piece.classList.add('placed');
-    piece.dataset.placed = nearestSlot.sIdx;
-    // check completion
-    if (jigPieces.every(p => p.classList.contains('placed'))) {
-      setTimeout(() => alert('Puzzle Complete! 🎉'), 360);
-    }
-  } else {
-    // slightly move piece to drop point
-    const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
-    const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
-    piece.style.left = Math.max(4, Math.min(96, mouseX)) + '%';
-    piece.style.top = Math.max(4, Math.min(96, mouseY)) + '%';
+function renderSOSBoard(){
+  sosBoardEl.innerHTML = '';
+  for(let i=0;i<9;i++){
+    const b = document.createElement('button');
+    b.className = 'sos-cell';
+    b.textContent = sosBoard[i] || '';
+    b.disabled = !!sosBoard[i] || !humanTurn || unlocked;
+    (function(idx){
+      b.addEventListener('click', ()=>{
+        if(unlocked) return;
+        if(!humanTurn) return;
+        if(sosBoard[idx]) return;
+        sosBoard[idx] = selectedLetter;
+        const got = countNewSOS(idx, sosBoard);
+        scores.human += got;
+        renderSOSBoard();
+        updateScoreDisplay();
+        if(got > 0){
+          sosMessage.textContent = `Great! You formed ${got} SOS. Extra turn.`;
+          if(isBoardFull()) finishRound();
+          return;
+        }
+        if(isBoardFull()){ finishRound(); return; }
+        humanTurn = false;
+        sosMessage.textContent = 'AI is thinking...';
+        setTimeout(aiPlay, 420);
+      });
+    })(i);
+    sosBoardEl.appendChild(b);
   }
 }
-document.getElementById('resetJig').onclick = setupJigsaw;
 
-/* Maze */
-function setupMaze() {
-  const area = document.getElementById('mazeArea');
-  area.innerHTML = ''; // clear (we will create heart + goal + walls)
-  // Create heart (player)
-  let heart = document.createElement('div');
-  heart.id = 'mazeHeart';
-  heart.className = 'heart';
-  heart.innerHTML = '❤️';
-  area.appendChild(heart);
-  // Create goal
-  const goal = document.createElement('div');
-  goal.className = 'goal';
-  goal.innerHTML = '⭐';
-  area.appendChild(goal);
-  // Add walls (simple shapes for now)
-  const walls = [
-    {left: 40, top:0, width: 20, height: 30},
-    {left: 0, top:40, width: 30, height: 20},
-    {left: 60, top:50, width: 35, height: 12},
-    {left: 20, top:70, width: 50, height: 8}
-  ];
-  walls.forEach(w => {
-    const wall = document.createElement('div');
-    wall.className = 'maze-wall';
-    wall.style.left = w.left + '%';
-    wall.style.top = w.top + '%';
-    wall.style.width = w.width + '%';
-    wall.style.height = w.height + '%';
-    area.appendChild(wall);
-  });
-  // initial position
-  mazePos = { x:12, y:12 };
-  renderMaze();
+/* ===========================
+   Videos & messages UI
+   =========================== */
+function renderVideoIndex(){
+  const v = VIDEOS[videoIndex];
+  vEmoji.textContent = v.emoji;
+  vTitle.textContent = v.title;
+  vMsg.textContent = v.msg;
+  videoCounter.textContent = `${videoIndex+1} / ${VIDEOS.length}`;
 }
-function renderMaze() {
-  const heart = document.getElementById('mazeHeart');
-  if (!heart) return; // defensive
-  heart.style.left = mazePos.x + '%';
-  heart.style.top = mazePos.y + '%';
-  // Check near goal
-  if (mazePos.x > 78 && mazePos.y > 78) {
-    heart.classList.add('heart-beat');
-    setTimeout(() => {
-      alert('Maze Master! You reached the goal! ⭐❤️');
-      heart.classList.remove('heart-beat');
-      // reset position a bit
-      mazePos = { x:12, y:12 };
-      renderMaze();
-    }, 700);
-  }
-}
-function moveMaze(dir) {
-  const step = 10;
-  let newX = mazePos.x;
-  let newY = mazePos.y;
-  if (dir === 'up') newY = Math.max(6, mazePos.y - step);
-  if (dir === 'down') newY = Math.min(94, mazePos.y + step);
-  if (dir === 'left') newX = Math.max(6, mazePos.x - step);
-  if (dir === 'right') newX = Math.min(94, mazePos.x + step);
-  mazePos = { x: newX, y: newY };
-  renderMaze();
-}
-// Touch support
-(function attachMazeTouch() {
-  const area = document.getElementById('mazeArea');
-  let touchStartX, touchStartY;
-  area.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, {passive: true});
-  area.addEventListener('touchend', (e) => {
-    if (!touchStartX || !touchStartY) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartX;
-    const deltaY = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
-      moveMaze(deltaX > 0 ? 'right' : 'left');
-    } else if (Math.abs(deltaY) > 30) {
-      moveMaze(deltaY > 0 ? 'down' : 'up');
-    }
-    touchStartX = null; touchStartY = null;
-  }, {passive: true});
-})();
+document.getElementById('prevVideo').addEventListener('click', ()=>{
+  videoIndex = (videoIndex - 1 + VIDEOS.length) % VIDEOS.length;
+  renderVideoIndex();
+});
+document.getElementById('nextVideo').addEventListener('click', ()=>{
+  videoIndex = (videoIndex + 1) % VIDEOS.length;
+  renderVideoIndex();
+});
+renderVideoIndex();
 
-/* Dots Connect */
-function setupDots() {
-  connectedDots = [];
-  const svg = document.getElementById('connectSvg');
-  svg.innerHTML = '';
-  document.querySelectorAll('.dot').forEach((dot, idx) => {
-    dot.classList.remove('active');
-    dot.onclick = () => connectDot(idx);
-    dot.innerHTML = idx + 1;
+/* ===========================
+   Timeline & Polaroids
+   =========================== */
+function renderTimeline(){
+  timelineList.innerHTML = '';
+  MILESTONES.forEach((m,i)=>{
+    const el = document.createElement('div');
+    el.className = 'milestone';
+    el.innerHTML = `<div class="dot">${m.emoji}</div><div><div style="font-weight:800">${m.title}</div><div class="small">${m.desc}</div></div>`;
+    timelineList.appendChild(el);
   });
 }
-function connectDot(idx) {
-  if (connectedDots.includes(idx)) return;
-  connectedDots.push(idx);
-  const dot = document.getElementById(`dot${idx}`);
-  dot.classList.add('active');
-  if (connectedDots.length > 1) {
-    const prev = connectedDots[connectedDots.length - 2];
-    drawLine(dotPositions[prev][0], dotPositions[prev][1], dotPositions[idx][0], dotPositions[idx][1]);
-  }
-  if (connectedDots.length === 9) {
-    const svg = document.getElementById('connectSvg');
-    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
-    text.setAttribute('x','50%'); text.setAttribute('y','50%'); text.setAttribute('font-size','48');
-    text.setAttribute('fill','#ff6b6b'); text.setAttribute('text-anchor','middle'); text.setAttribute('dominant-baseline','middle');
-    text.textContent = '💖';
-    svg.appendChild(text);
-    setTimeout(() => alert('Hearts Connected Perfectly! 💖'), 500);
-  }
-}
-function drawLine(x1, y1, x2, y2) {
-  const svg = document.getElementById('connectSvg');
-  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1', x1 + '%');
-  line.setAttribute('y1', y1 + '%');
-  line.setAttribute('x2', x2 + '%');
-  line.setAttribute('y2', y2 + '%');
-  line.setAttribute('stroke', '#ff6b6b');
-  line.setAttribute('stroke-width', 4);
-  line.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(line);
-}
-document.getElementById('resetDots').onclick = setupDots;
+renderTimeline();
 
-/* Timeline */
-function renderTimeline() {
-  timelineList.innerHTML = milestones.map((m, i) => `
-    <div class="milestone" style="animation-delay:${i*0.14}s;">
-      <div class="milestone-emoji">${m.emoji}</div>
-      <div style="flex:1;">
-        <div style="font-weight:800; margin-bottom:6px;">${m.title}</div>
-        <div class="muted" style="margin-bottom:6px;">${m.desc}</div>
-        <div class="small">${m.date}</div>
-      </div>
-    </div>
-  `).join('');
-  setTimeout(() => document.querySelectorAll('.milestone').forEach(el => el.classList.add('show')), 120);
+function renderPolaroids(){
+  polaroidGrid.innerHTML = '';
+  POLAROIDS.forEach(p=>{
+    const el = document.createElement('div');
+    el.className = 'polaroid';
+    el.innerHTML = `<img src="${p.img}" alt="${p.title}"><div style="font-weight:800;margin-top:8px">${p.title}</div><div class="small">${p.desc}</div>`;
+    el.addEventListener('click', ()=> openModal(`<img src="${p.img}" style="width:100%;aspect-ratio:9/16;border-radius:8px"><h3 style="margin:10px 0 6px">${p.title}</h3><p>${p.desc}</p>`));
+    polaroidGrid.appendChild(el);
+  });
 }
+renderPolaroids();
 
-/* Polaroids */
-function renderPolaroids() {
-  polaroidGrid.innerHTML = polaroids.map((p,i) => `
-    <div class="polaroid" style="transform: rotate(${(i%4-2)*2.5}deg);" onclick="openModal('${escapeJs(p.title)}','${p.img}','${escapeJs(p.desc)}')">
-      <img src="${p.img}" alt="${p.title}" />
-      <div class="polaroid-meta">
-        <div style="font-weight:700; margin-bottom:4px;">${p.title}</div>
-        <div style="font-size:11px;">${p.desc}</div>
-      </div>
-    </div>
-  `).join('');
-}
-function escapeJs(s){
-  return (s||'').replace(/'/g,"\\'").replace(/"/g,"&quot;");
-}
-function openModal(title, img, desc) {
-  modalContent.innerHTML = `
-    <img src="${img}" style="width:100%; max-height:50vh; object-fit:cover; aspect-ratio:9/16; border-radius:10px;" alt="${title}" />
-    <h3 style="margin:12px 0 6px; color:#333;">${title}</h3>
-    <p style="color:#666; margin:0;">${desc}</p>
-  `;
-  modal.classList.add('active');
-  modal.setAttribute('aria-hidden','false');
-}
-function closeModal() {
-  modal.classList.remove('active');
-  modal.setAttribute('aria-hidden','true');
-}
-
-/* Notes */
-document.getElementById('downloadNotes').onclick = () => {
-  const content = notes.value || 'A blank page holds the promise of words yet to be written...';
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+/* ===========================
+   Notes download
+   =========================== */
+downloadNotesBtn.addEventListener('click', ()=>{
+  const text = notesArea.value || '';
+  const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `saraaa-love-notes-${new Date().toISOString().split('T')[0]}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  a.download = `saraaa-love-${new Date().toISOString().slice(0,10)}.txt`;
+  document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-};
-document.getElementById('clearNotes').onclick = () => { notes.value = ''; };
+});
+clearNotesBtn.addEventListener('click', ()=>{ notesArea.value = ''; });
 
-/* Menu Toggle and nav */
-document.getElementById('menuToggle').onclick = () => {
-  // If pages are unlocked, toggle between videos and games; otherwise, open guide
-  if (unlocked) goTo(currentPage === 0 ? 1 : 0);
-  else modalContent.innerHTML = `<h3 style="color:#ff6b6b;">Unlock Pehle ❤️</h3><p class="muted">Pehle SOS game khel ke 3 baar jeeto — phir pages khulenge.</p>`;
-  modal.classList.add('active');
-};
-navButtons.forEach(b => b.onclick = (e) => goTo(parseInt(e.target.dataset.page)));
+/* ===========================
+   Games: Jigsaw (simple, touch friendly),
+   Maze (swipe), Dots (connect)
+   These are functional and mobile-optimized
+   =========================== */
 
-/* UI bindings */
-function bindUI() {
-  selectS.onclick = () => { selectedLetter = 'S'; selectS.classList.add('active'); selectO.classList.remove('active'); };
-  selectO.onclick = () => { selectedLetter = 'O'; selectO.classList.add('active'); selectS.classList.remove('active'); };
-  resetSos.onclick = initSOS;
-  document.body.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
+/* Jigsaw: simple fiddly 9 piece drag+snap */
+function startJigsaw(){
+  gamesArea.innerHTML = '';
+  const area = document.createElement('div');
+  area.style.width = '100%';
+  area.style.aspectRatio = '9/16';
+  area.style.background = 'linear-gradient(135deg,#ffc1cc,#ffdede)';
+  area.style.borderRadius = '12px';
+  area.style.position = 'relative';
+  area.style.overflow = 'hidden';
+  gamesArea.appendChild(area);
+
+  const slots = [
+    {x:20,y:18},{x:50,y:18},{x:80,y:18},
+    {x:20,y:50},{x:50,y:50},{x:80,y:50},
+    {x:20,y:82},{x:50,y:82},{x:80,y:82}
+  ];
+  // create slots
+  slots.forEach(s=>{
+    const el = document.createElement('div');
+    el.style.position='absolute';
+    el.style.left = s.x + '%';
+    el.style.top = s.y + '%';
+    el.style.width='64px';
+    el.style.height='64px';
+    el.style.transform='translate(-50%,-50%)';
+    el.style.border='2px dashed rgba(255,255,255,0.5)';
+    el.style.borderRadius='8px';
+    area.appendChild(el);
+  });
+
+  // create movable pieces
+  const pieces = [];
+  for(let i=0;i<9;i++){
+    const p = document.createElement('div');
+    p.className = 'jig-piece';
+    p.style.position = 'absolute';
+    p.style.left = (10 + Math.random()*70) + '%';
+    p.style.top = (10 + Math.random()*70) + '%';
+    p.style.width = '58px';
+    p.style.height = '58px';
+    p.style.background = '#fff';
+    p.style.color = '#333';
+    p.style.borderRadius = '8px';
+    p.style.display='flex';
+    p.style.alignItems='center';
+    p.style.justifyContent='center';
+    p.style.fontWeight='900';
+    p.style.boxShadow='0 8px 26px rgba(0,0,0,0.15)';
+    p.draggable = true;
+    p.textContent = (i+1);
+    area.appendChild(p);
+    pieces.push(p);
+    p.addEventListener('dragstart', (ev)=>{ ev.dataTransfer.setData('text/plain', i); setTimeout(()=>p.style.opacity='0.6',0);});
+    p.addEventListener('dragend', ()=>{ p.style.opacity='1';});
+  }
+  area.addEventListener('dragover', (e)=>e.preventDefault());
+  area.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    const idx = Number(e.dataTransfer.getData('text/plain'));
+    const rect = area.getBoundingClientRect();
+    const mouseX = ((e.clientX - rect.left)/rect.width)*100;
+    const mouseY = ((e.clientY - rect.top)/rect.height)*100;
+    // find nearest slot
+    let minD=Infinity, nearest=null;
+    slots.forEach((s,j)=>{
+      const dx = s.x - mouseX, dy = s.y - mouseY;
+      const d = Math.hypot(dx,dy);
+      if(d<minD){ minD=d; nearest={s,j}; }
+    });
+    const piece = pieces[idx];
+    if(minD < 15){
+      piece.style.left = nearest.s.x + '%'; piece.style.top = nearest.s.y + '%';
+      piece.style.background = 'linear-gradient(90deg,#ff6b6b,#ff9aa2)';
+      piece.style.color='#fff';
+      piece.setAttribute('data-placed', nearest.j);
+    } else {
+      piece.style.left = Math.max(4, Math.min(96, mouseX)) + '%';
+      piece.style.top = Math.max(4, Math.min(96, mouseY)) + '%';
+    }
+    // check complete
+    if(pieces.every(p=>p.hasAttribute('data-placed'))){
+      setTimeout(()=>alert('Puzzle Complete! 🎉'), 420);
+    }
   });
 }
 
-/* Expose a few utilities for debugging in console */
-window.moveMaze = moveMaze;
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.setupJigsaw = setupJigsaw;
-window.setupMaze = setupMaze;
-window.setupDots = setupDots;
+/* Maze: simple swipe/tap movement */
+function startMaze(){
+  gamesArea.innerHTML='';
+  const area = document.createElement('div');
+  area.style.width='100%'; area.style.aspectRatio='9/16'; area.style.background='linear-gradient(135deg,#ffdede,#ffe6f0)'; area.style.borderRadius='12px'; area.style.position='relative'; area.style.overflow='hidden';
+  gamesArea.appendChild(area);
+  // heart
+  const heart = document.createElement('div');
+  heart.id='mazeHeart';
+  heart.style.position='absolute';
+  heart.style.left='12%'; heart.style.top='12%';
+  heart.style.transform='translate(-50%,-50%)';
+  heart.style.width='44px'; heart.style.height='44px'; heart.style.borderRadius='50%';
+  heart.style.display='flex'; heart.style.alignItems='center'; heart.style.justifyContent='center';
+  heart.style.background='linear-gradient(90deg,#ff6b6b,#ff9aa2)';
+  heart.style.fontSize='20px'; heart.textContent='❤️';
+  area.appendChild(heart);
+  // goal
+  const goal = document.createElement('div');
+  goal.style.position='absolute'; goal.style.right='8%'; goal.style.bottom='8%'; goal.style.width='44px'; goal.style.height='44px'; goal.style.borderRadius='50%'; goal.style.background='#ffd166'; goal.style.display='flex'; goal.style.alignItems='center'; goal.style.justifyContent='center'; goal.textContent='⭐';
+  area.appendChild(goal);
+  // walls (simple)
+  const walls = [
+    {l:36,t:0,w:8,h:46},{l:0,t:40,w:30,h:8},{l:65,t:52,w:35,h:8}
+  ];
+  walls.forEach(w=>{
+    const el = document.createElement('div');
+    el.style.position='absolute'; el.style.left = w.l+'%'; el.style.top = w.t+'%'; el.style.width = w.w+'%'; el.style.height = w.h+'%';
+    el.style.background='rgba(0,0,0,0.12)'; el.style.borderRadius='6px';
+    area.appendChild(el);
+  });
+  // movement via touch swipe
+  let tx, ty;
+  area.addEventListener('touchstart', (e)=>{ tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+  area.addEventListener('touchend', (e)=>{
+    if(!tx) return;
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    const absX = Math.abs(dx), absY = Math.abs(dy);
+    if(Math.max(absX,absY) < 30) { tx=null; return; }
+    if(absX>absY){
+      if(dx>0) moveMaze('right', heart, area, goal);
+      else moveMaze('left', heart, area, goal);
+    } else {
+      if(dy>0) moveMaze('down', heart, area, goal);
+      else moveMaze('up', heart, area, goal);
+    }
+    tx=null;
+  }, {passive:true});
+  // arrow buttons fallback
+  const controls = document.createElement('div');
+  controls.style.display='flex'; controls.style.gap='8px'; controls.style.marginTop='10px'; controls.style.justifyContent='center';
+  ['⬆️','⬅️','⬇️','➡️'].forEach((label,idx)=>{
+    const btn = document.createElement('button'); btn.className='pill'; btn.textContent=label;
+    btn.addEventListener('click', ()=> {
+      if(label==='⬆️') moveMaze('up',heart,area,goal);
+      if(label==='⬇️') moveMaze('down',heart,area,goal);
+      if(label==='⬅️') moveMaze('left',heart,area,goal);
+      if(label==='➡️') moveMaze('right',heart,area,goal);
+    });
+    controls.appendChild(btn);
+  });
+  gamesArea.appendChild(controls);
+}
+function moveMaze(dir, heart, area, goal){
+  const step = 12; // percent
+  const rect = area.getBoundingClientRect();
+  const curX = parseFloat(heart.style.left);
+  const curY = parseFloat(heart.style.top);
+  let nx = curX, ny = curY;
+  if(dir==='up') ny = Math.max(6, curY - step);
+  if(dir==='down') ny = Math.min(94, curY + step);
+  if(dir==='left') nx = Math.max(6, curX - step);
+  if(dir==='right') nx = Math.min(94, curX + step);
+  heart.style.left = nx+'%'; heart.style.top = ny+'%';
+  // check goal proximity (goal is bottom-right)
+  if(nx>78 && ny>78){
+    heart.classList.add('pulse');
+    setTimeout(()=>{ alert('Maze Master! You reached the goal! ⭐❤️'); heart.classList.remove('pulse'); heart.style.left='12%'; heart.style.top='12%'; }, 600);
+  }
+}
+
+/* Dots Connect */
+function startDots(){
+  gamesArea.innerHTML = '';
+  const area = document.createElement('div');
+  area.style.width='100%'; area.style.height='240px'; area.style.position='relative';
+  gamesArea.appendChild(area);
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 100 100'); svg.style.position='absolute'; svg.style.inset='0'; svg.style.width='100%'; svg.style.height='100%';
+  area.appendChild(svg);
+  const grid = document.createElement('div');
+  grid.style.position='absolute'; grid.style.inset='6px'; grid.style.display='grid'; grid.style.gridTemplateColumns='repeat(3,1fr)'; grid.style.gap='12px';
+  area.appendChild(grid);
+
+  const positions = [
+    [15,15],[50,15],[85,15],
+    [15,50],[50,50],[85,50],
+    [15,85],[50,85],[85,85]
+  ];
+  let connected = [];
+  for(let i=0;i<9;i++){
+    const d = document.createElement('div');
+    d.className='pill'; d.style.width='52px'; d.style.height='52px'; d.style.borderRadius='50%'; d.style.display='flex'; d.style.alignItems='center'; d.style.justifyContent='center';
+    d.textContent = i+1; d.style.fontWeight='900';
+    d.addEventListener('click', ()=> {
+      if(connected.includes(i)) return;
+      connected.push(i);
+      d.style.background = 'linear-gradient(90deg,#ff6b6b,#ff9aa2)'; d.style.color='#fff';
+      if(connected.length>1){
+        const a = positions[connected[connected.length-2]];
+        const b = positions[connected[connected.length-1]];
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', a[0]); line.setAttribute('y1', a[1]); line.setAttribute('x2', b[0]); line.setAttribute('y2', b[1]);
+        line.setAttribute('stroke','#ff6b6b'); line.setAttribute('stroke-width','2'); line.setAttribute('stroke-linecap','round');
+        svg.appendChild(line);
+      }
+      if(connected.length===9){
+        const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+        t.setAttribute('x','50'); t.setAttribute('y','50'); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle');
+        t.setAttribute('font-size','8'); t.textContent='💖';
+        svg.appendChild(t);
+        setTimeout(()=>alert('Hearts Connected! 💖'),400);
+      }
+    });
+    grid.appendChild(d);
+  }
+}
+
+/* hook up game buttons */
+document.getElementById('startJig').addEventListener('click', ()=>{ startJigsaw(); });
+document.getElementById('startMaze').addEventListener('click', ()=>{ startMaze(); });
+document.getElementById('startDots').addEventListener('click', ()=>{ startDots(); });
+
+/* ===========================
+   Modal helpers (guide + generic)
+   =========================== */
+function openModal(html){
+  modalContent.innerHTML = html;
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden','false');
+}
+closeModalBtn.addEventListener('click', ()=>{ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
+
+function openGuideModal(){
+  openModal(`<h2 style="margin-top:0;color:#333">SOS Guide — Hinglish</h2>
+  <div class="small" style="color:#333">
+    <p><strong>Step 1:</strong> Upar S ya O select karo.</p>
+    <p><strong>Step 2:</strong> Grid mein kisi empty cell pe tap karo — tumhara letter wahaan jayega.</p>
+    <p><strong>Rule:</strong> Agar kisi horizontal, vertical ya diagonal line mein S-O-S ban jaata hai to usko ek point milega aur jo player ne woh move kiya usko extra turn milta hai.</p>
+    <p><strong>Goal:</strong> AI se zyada points banao. 3 continuous wins se sari pages unlock hongi.</p>
+    <p style="font-style:italic">Simple — jaise pyaar: patience, surprises, aur thoda strategy. Good luck! 😘</p>
+    <hr>
+    <div><strong>Developer shortcuts</strong><br>Use the settings on the SOS card to change AI level, mistake chance, or skip SOS for testing.</div>
+  </div>`);
+}
+
+/* Open dev menu */
+document.getElementById('devMenu').addEventListener('click', ()=>{
+  openModal(`<h3>Developer Controls</h3>
+  <div class="small">
+  <p><button id="devSkip" class="pill">Skip SOS (unlock)</button> <button id="devReset" class="pill">Reset site</button></p>
+  <p>AI Level: <select id="devAi"><option>easy</option><option selected>medium</option><option>hard</option></select></p>
+  </div>`);
+  document.getElementById('devSkip').addEventListener('click', ()=>{
+    streak = 3; updateProgress(); unlockAll(); modal.style.display='none';
+  });
+  document.getElementById('devReset').addEventListener('click', ()=>{
+    location.reload();
+  });
+  document.getElementById('devAi').addEventListener('change', (e)=>{ aiLevelEl.value = e.target.value; CONFIG.AI_LEVEL = e.target.value; });
+});
+
+/* ===========================
+   Initialize pages / UI
+   =========================== */
+function initPages(){
+  // hide pages until unlocked
+  pagesSection.style.display = 'none';
+  bottomNav.style.display = 'none';
+  // fill videos, timeline, polaroids
+  renderVideoIndex();
+  renderTimeline();
+  renderPolaroids();
+}
+initPages();
+
+/* render video index */
+function renderVideoIndex(){
+  const v = VIDEOS[videoIndex];
+  vEmoji.textContent = v.emoji;
+  vTitle.textContent = v.title;
+  vMsg.textContent = v.msg;
+  videoCounter.textContent = `${videoIndex+1} / ${VIDEOS.length}`;
+}
+prevVideo.addEventListener('click', ()=>{ videoIndex = (videoIndex-1 + VIDEOS.length) % VIDEOS.length; renderVideoIndex(); });
+nextVideo.addEventListener('click', ()=>{ videoIndex = (videoIndex+1) % VIDEOS.length; renderVideoIndex(); });
+
+/* render timeline and polaroids (done above) */
+function renderTimeline(){
+  timelineList.innerHTML = '';
+  MILESTONES.forEach((m,i)=>{
+    const el = document.createElement('div'); el.className='milestone';
+    el.innerHTML = `<div class="dot">${m.emoji}</div><div><div style="font-weight:800">${m.title}</div><div class="small">${m.desc}</div></div>`;
+    timelineList.appendChild(el);
+  });
+}
+function renderPolaroids(){
+  polaroidGrid.innerHTML = '';
+  POLAROIDS.forEach(p=>{
+    const el = document.createElement('div'); el.className='polaroid';
+    el.innerHTML = `<img src="${p.img}" alt="${p.title}"><div style="font-weight:800;margin-top:8px">${p.title}</div><div class="small">${p.desc}</div>`;
+    el.addEventListener('click', ()=>openModal(`<img src="${p.img}" style="width:100%;aspect-ratio:9/16;border-radius:8px"><h3 style="margin:12px 0 6px">${p.title}</h3><p>${p.desc}</p>`));
+    polaroidGrid.appendChild(el);
+  });
+}
+renderTimeline();
+renderPolaroids();
+
+/* ===========================
+   Final small helpers / start
+   =========================== */
+updateScoreDisplay();
+updateProgress();
+
+/* expose some functions to window for debugging (optional) */
+window._debug = {
+  sos: ()=>sosBoard,
+  resetRound,
+  pickAIMove
+};
 </script>
 </body>
 </html>
