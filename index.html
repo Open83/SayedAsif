@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-  <title>Saraaa ❤️</title>
+  <title>Saraaa ❤️ — Mobile FIRST</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,20 +13,20 @@
     }
 
     :root {
-      --primary: #FF1493;
-      --secondary: #FF69B4;
-      --accent: #FFB6C1;
-      --dark: #1a1a2e;
-      --darker: #0f0f1e;
-      --light: #ffeef8;
-      --glow: rgba(255, 20, 147, 0.4);
+      --primary: #6A1E32;
+      --secondary: #E8D4A8;
+      --accent: #E8D4A8;
+      --dark: #0A1A2F;
+      --darker: #061220;
+      --light: #F9F9F9;
+      --glow: rgba(106, 30, 50, 0.4);
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background: linear-gradient(135deg, #0A1A2F 0%, #1a2f4f 50%, #6A1E32 100%);
       background-attachment: fixed;
-      color: white;
+      color: #F9F9F9;
       overflow-x: hidden;
       min-height: 100vh;
       padding-bottom: 90px;
@@ -34,7 +34,7 @@
 
     /* Header */
     .header {
-      background: rgba(26, 26, 46, 0.95);
+      background: rgba(10, 26, 47, 0.95);
       backdrop-filter: blur(20px);
       padding: 16px 20px;
       text-align: center;
@@ -47,7 +47,7 @@
     .header h1 {
       font-size: 28px;
       font-weight: 800;
-      background: linear-gradient(135deg, #FF1493, #FF69B4, #FFB6C1);
+      background: linear-gradient(135deg, #E8D4A8, #F9F9F9, #E8D4A8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -57,7 +57,8 @@
 
     .header p {
       font-size: 12px;
-      opacity: 0.8;
+      color: #E8D4A8;
+      opacity: 0.9;
       letter-spacing: 1px;
     }
 
@@ -85,13 +86,13 @@
 
     /* Cards */
     .card {
-      background: rgba(26, 26, 46, 0.85);
+      background: rgba(10, 26, 47, 0.85);
       backdrop-filter: blur(20px);
       border-radius: 24px;
       padding: 24px;
       margin-bottom: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(232, 212, 168, 0.2);
     }
 
     .card-title {
@@ -99,7 +100,7 @@
       font-weight: 700;
       margin-bottom: 16px;
       text-align: center;
-      color: var(--accent);
+      color: #E8D4A8;
     }
 
     /* Media Container */
@@ -110,7 +111,7 @@
       margin: 0 auto 20px;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 12px 40px rgba(255, 20, 147, 0.3);
+      box-shadow: 0 12px 40px rgba(106, 30, 50, 0.4);
     }
 
     .media-container video,
@@ -126,9 +127,10 @@
       font-size: 15px;
       line-height: 1.6;
       padding: 16px;
-      background: rgba(255, 20, 147, 0.1);
+      background: rgba(106, 30, 50, 0.15);
       border-radius: 16px;
       margin-top: 16px;
+      color: #F9F9F9;
     }
 
     /* Canvas */
@@ -138,7 +140,7 @@
       max-width: 400px;
       margin: 0 auto;
       border-radius: 16px;
-      background: white;
+      background: #F9F9F9;
       touch-action: none;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
@@ -156,8 +158,8 @@
       padding: 12px 24px;
       border: none;
       border-radius: 50px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
+      background: linear-gradient(135deg, #6A1E32, #8A2E42);
+      color: #F9F9F9;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
@@ -172,8 +174,9 @@
 
     .btn-ghost {
       background: transparent;
-      border: 2px solid var(--accent);
+      border: 2px solid #E8D4A8;
       box-shadow: none;
+      color: #E8D4A8;
     }
 
     .btn-small {
@@ -196,15 +199,16 @@
       height: 56px;
       border: none;
       border-radius: 12px;
-      background: rgba(255, 20, 147, 0.2);
-      color: white;
+      background: rgba(106, 30, 50, 0.3);
+      color: #F9F9F9;
       font-size: 24px;
       cursor: pointer;
       transition: all 0.2s;
+      border: 2px solid rgba(232, 212, 168, 0.3);
     }
 
     .arrow-btn:active {
-      background: var(--primary);
+      background: #6A1E32;
       transform: scale(0.9);
     }
 
@@ -265,7 +269,7 @@
       top: 0;
       width: 32px;
       height: 32px;
-      background: var(--primary);
+      background: #6A1E32;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -280,7 +284,7 @@
       top: 32px;
       bottom: -24px;
       width: 2px;
-      background: rgba(255, 20, 147, 0.3);
+      background: rgba(232, 212, 168, 0.3);
     }
 
     .timeline-item:last-child::after {
@@ -289,7 +293,7 @@
 
     .timeline-date {
       font-weight: 700;
-      color: var(--accent);
+      color: #E8D4A8;
       margin-bottom: 6px;
     }
 
@@ -297,6 +301,7 @@
       font-size: 14px;
       line-height: 1.6;
       opacity: 0.9;
+      color: #F9F9F9;
     }
 
     /* Notepad */
@@ -304,17 +309,17 @@
       width: 100%;
       min-height: 200px;
       padding: 16px;
-      border: 2px solid rgba(255, 20, 147, 0.3);
+      border: 2px solid rgba(232, 212, 168, 0.3);
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
+      background: rgba(10, 26, 47, 0.5);
+      color: #F9F9F9;
       font-size: 15px;
       font-family: inherit;
       resize: vertical;
     }
 
     textarea::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(232, 212, 168, 0.5);
     }
 
     /* Bottom Nav */
@@ -323,19 +328,20 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(26, 26, 46, 0.95);
+      background: rgba(10, 26, 47, 0.95);
       backdrop-filter: blur(20px);
       padding: 12px;
       display: flex;
       justify-content: space-around;
       box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
       z-index: 100;
+      border-top: 1px solid rgba(232, 212, 168, 0.1);
     }
 
     .nav-btn {
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(232, 212, 168, 0.5);
       font-size: 28px;
       padding: 8px 16px;
       cursor: pointer;
@@ -344,8 +350,8 @@
     }
 
     .nav-btn.active {
-      color: var(--primary);
-      background: rgba(255, 20, 147, 0.2);
+      color: #E8D4A8;
+      background: rgba(106, 30, 50, 0.3);
       transform: scale(1.1);
     }
 
@@ -384,9 +390,9 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: var(--primary);
+      background: #6A1E32;
       border: none;
-      color: white;
+      color: #F9F9F9;
       font-size: 24px;
       cursor: pointer;
       box-shadow: 0 4px 15px var(--glow);
@@ -409,23 +415,26 @@
     }
 
     .win-content {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: linear-gradient(135deg, #6A1E32, #8A2E42);
       padding: 32px;
       border-radius: 24px;
       text-align: center;
       max-width: 400px;
-      box-shadow: 0 20px 60px rgba(255, 20, 147, 0.5);
+      box-shadow: 0 20px 60px rgba(106, 30, 50, 0.5);
+      border: 2px solid rgba(232, 212, 168, 0.3);
     }
 
     .win-content h2 {
       font-size: 32px;
       margin-bottom: 16px;
+      color: #F9F9F9;
     }
 
     .win-content p {
       font-size: 16px;
       margin-bottom: 24px;
       opacity: 0.9;
+      color: #F9F9F9;
     }
 
     @media (min-width: 768px) {
@@ -438,7 +447,7 @@
 <body>
   <div class="header">
     <h1>Saraaa ❤️</h1>
-    <p>Made with love ❤️</p>
+    <p>Made with love • Mobile Optimized</p>
   </div>
 
   <div class="container">
@@ -461,9 +470,6 @@
           <video controls playsinline preload="metadata">
             <source src="assets/video2.mp4" type="video/mp4">
           </video>
-          <div class="message">
-          Har pal tumhare saath ek khubsurat yaad ban jaata hai. Tum ho toh sab kuch perfect lagta hai ❤️
-        </div>
         </div>
       </div>
     </div>
@@ -762,17 +768,17 @@
       
       for (let y = 0; y < MAZE_SIZE; y++) {
         for (let x = 0; x < MAZE_SIZE; x++) {
-          mazeCtx.fillStyle = mazeGrid[y][x] ? '#333' : '#fff';
+          mazeCtx.fillStyle = mazeGrid[y][x] ? '#0A1A2F' : '#F9F9F9';
           mazeCtx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
       }
       
-      mazeCtx.fillStyle = '#FF1493';
+      mazeCtx.fillStyle = '#6A1E32';
       mazeCtx.beginPath();
       mazeCtx.arc((mazePlayer.x + 0.5) * cellSize, (mazePlayer.y + 0.5) * cellSize, cellSize * 0.4, 0, Math.PI * 2);
       mazeCtx.fill();
       
-      mazeCtx.fillStyle = '#FFD700';
+      mazeCtx.fillStyle = '#E8D4A8';
       mazeCtx.font = `${cellSize * 0.8}px serif`;
       mazeCtx.textAlign = 'center';
       mazeCtx.textBaseline = 'middle';
@@ -859,7 +865,7 @@
       dotCtx.fillRect(0, 0, dotCanvas.width, dotCanvas.height);
       
       if (connectedDots.length > 1) {
-        dotCtx.strokeStyle = '#FF1493';
+        dotCtx.strokeStyle = '#6A1E32';
         dotCtx.lineWidth = 4;
         dotCtx.beginPath();
         dotCtx.moveTo(dots[connectedDots[0]].x, dots[connectedDots[0]].y);
@@ -871,12 +877,12 @@
       
       dots.forEach((d, i) => {
         const connected = connectedDots.includes(i);
-        dotCtx.fillStyle = connected ? '#FF1493' : '#FFB6C1';
+        dotCtx.fillStyle = connected ? '#6A1E32' : '#E8D4A8';
         dotCtx.beginPath();
         dotCtx.arc(d.x, d.y, 12, 0, Math.PI * 2);
         dotCtx.fill();
         
-        dotCtx.fillStyle = '#fff';
+        dotCtx.fillStyle = connected ? '#F9F9F9' : '#0A1A2F';
         dotCtx.font = '12px sans-serif';
         dotCtx.textAlign = 'center';
         dotCtx.textBaseline = 'middle';
