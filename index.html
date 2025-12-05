@@ -2,147 +2,974 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
   <title>Saraaa ❤️ — Mobile FIRST</title>
-  <meta name="description" content="Interactive mobile-first site for Saraaa — games, gallery, timeline & notes." />
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --primary: #FF1493;
+      --secondary: #FF69B4;
+      --accent: #FFB6C1;
+      --dark: #1a1a2e;
+      --darker: #0f0f1e;
+      --light: #ffeef8;
+      --glow: rgba(255, 20, 147, 0.4);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background-attachment: fixed;
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 16px 20px;
+      text-align: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FF1493, #FF69B4, #FFB6C1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      text-shadow: 0 0 30px var(--glow);
+    }
+
+    .header p {
+      font-size: 12px;
+      opacity: 0.8;
+      letter-spacing: 1px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Pages */
+    .page {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(26, 26, 46, 0.85);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    /* Media Container */
+    .media-container {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto 20px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(255, 20, 147, 0.3);
+    }
+
+    .media-container video,
+    .media-container img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 9/16;
+      object-fit: cover;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 16px;
+      background: rgba(255, 20, 147, 0.1);
+      border-radius: 16px;
+      margin-top: 16px;
+    }
+
+    /* Canvas */
+    canvas {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      border-radius: 16px;
+      background: white;
+      touch-action: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--glow);
+      transition: transform 0.2s, box-shadow 0.2s;
+      min-width: 100px;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 2px solid var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 12px;
+      min-width: 80px;
+    }
+
+    /* Arrow Controls */
+    .arrow-pad {
+      display: grid;
+      grid-template-areas: ". up ." "left . right" ". down .";
+      gap: 8px;
+      max-width: 200px;
+      margin: 20px auto;
+    }
+
+    .arrow-btn {
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 20, 147, 0.2);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .arrow-btn:active {
+      background: var(--primary);
+      transform: scale(0.9);
+    }
+
+    #upBtn { grid-area: up; }
+    #leftBtn { grid-area: left; }
+    #rightBtn { grid-area: right; }
+    #downBtn { grid-area: down; }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s;
+    }
+
+    .gallery-item:active {
+      transform: scale(0.95);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      padding: 12px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    /* Timeline */
+    .timeline-item {
+      position: relative;
+      padding-left: 40px;
+      margin-bottom: 24px;
+    }
+
+    .timeline-item::before {
+      content: '💕';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: -24px;
+      width: 2px;
+      background: rgba(255, 20, 147, 0.3);
+    }
+
+    .timeline-item:last-child::after {
+      display: none;
+    }
+
+    .timeline-date {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .timeline-text {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    /* Notepad */
+    textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 16px;
+      border: 2px solid rgba(255, 20, 147, 0.3);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 12px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 28px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 12px;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+      background: rgba(255, 20, 147, 0.2);
+      transform: scale(1.1);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--glow);
+    }
+
+    /* Win Overlay */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .win-overlay.show {
+      display: flex;
+    }
+
+    .win-content {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 32px;
+      border-radius: 24px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(255, 20, 147, 0.5);
+    }
+
+    .win-content h2 {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .win-content p {
+      font-size: 16px;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    @media (min-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Preloader -->
-  <div id="preloader" class="preloader" aria-hidden="false">
-    <div class="spinner" aria-hidden="true"></div>
+  <div class="header">
+    <h1>Saraaa ❤️</h1>
+    <p>Made with love • Mobile Optimized</p>
   </div>
 
-  <header class="site-header">
-    <div class="brand">
-      <div class="logo">💕</div>
-      <div class="brand-text">
-        <div class="title">Saraaa ❤️</div>
-        <div class="subtitle">Mobile-first • 9:16 media • Touch-optimized</div>
-      </div>
-    </div>
-    <nav class="top-controls" aria-label="Top controls">
-      <button id="homeBtn" class="micro">Home</button>
-      <button id="gamesBtn" class="micro">Games</button>
-    </nav>
-  </header>
-
-  <main id="main">
-    <!-- PAGE 1: Videos & Messages -->
-    <section id="page1" class="page active" aria-labelledby="h1">
-      <h2 id="h1">Our Moments 💕</h2>
-      <article class="card">
-        <div class="media-9x16">
-          <video class="media" controls playsinline preload="metadata" poster="assets/video1-poster.jpg">
+  <div class="container">
+    <!-- Page 1: Videos -->
+    <div id="page1" class="page active">
+      <div class="card">
+        <div class="card-title">Our Moments 💕</div>
+        <div class="media-container">
+          <video controls playsinline preload="metadata">
             <source src="assets/video1.mp4" type="video/mp4">
           </video>
         </div>
-        <p class="message">Har pal tumhare saath ek khubsurat yaad ban jaata hai. Tum ho toh sab kuch perfect lagta hai, Saraaa ❤️</p>
-
-        <div class="media-9x16" style="margin-top:12px">
-          <video class="media" controls playsinline preload="metadata" poster="assets/video2-poster.jpg">
+        <div class="message">
+          Har pal tumhare saath ek khubsurat yaad ban jaata hai. Tum ho toh sab kuch perfect lagta hai ❤️
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="media-container">
+          <video controls playsinline preload="metadata">
             <source src="assets/video2.mp4" type="video/mp4">
           </video>
         </div>
-      </article>
-    </section>
+      </div>
+    </div>
 
-    <!-- PAGE 2: Games -->
-    <section id="page2" class="page" aria-labelledby="h2">
-      <h2 id="h2">Play With Me 🎮</h2>
-
-      <!-- Jigsaw — uses local image at assets/jigsaw.jpg -->
-      <article class="card">
-        <div class="card-title">💗 Jigsaw (uses local image)</div>
-        <div class="canvas-wrap">
-          <canvas id="jigsawCanvas" aria-label="Jigsaw puzzle"></canvas>
-          <div class="controls" role="group" aria-label="Jigsaw controls">
-            <button class="btn grid-btn" data-size="3">Easy 3×3</button>
-            <button class="btn grid-btn" data-size="4">Medium 4×4</button>
-            <button class="btn grid-btn" data-size="5">Hard 5×5</button>
-            <button id="shuffleJigsaw" class="btn ghost">Shuffle</button>
-          </div>
-          <div class="hint">Put your image at <code>assets/jigsaw.jpg</code> (recommended 9:16)</div>
-        </div>
-      </article>
-
-      <!-- Heart Maze -->
-      <article class="card" style="margin-top:12px">
-        <div class="card-title">💕 Heart Maze</div>
-        <div class="canvas-wrap">
-          <canvas id="mazeCanvas" aria-label="Heart maze"></canvas>
-          <div class="controls tiny">
-            <button id="mazeReset" class="btn ghost">Reset</button>
-            <button id="mazeSolve" class="btn ghost">Show Path</button>
-          </div>
-          <div class="arrow-controls">
-            <button id="upBtn" class="arrow">↑</button>
-            <button id="leftBtn" class="arrow">←</button>
-            <button id="downBtn" class="arrow">↓</button>
-            <button id="rightBtn" class="arrow">→</button>
-          </div>
-        </div>
-      </article>
-
-      <!-- Dot Connect -->
-      <article class="card" style="margin-top:12px">
-        <div class="card-title">🔗 Connect The Heart</div>
-        <div class="canvas-wrap">
-          <canvas id="dotCanvas" aria-label="Dot connect"></canvas>
-          <div class="controls">
-            <button id="undoDot" class="btn ghost">Undo</button>
-            <button id="resetDot" class="btn">Reset</button>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- PAGE 3: Gallery -->
-    <section id="page3" class="page" aria-labelledby="h3">
-      <h2 id="h3">Our Gallery 📸</h2>
-      <div id="gallery" class="gallery-grid" aria-live="polite"></div>
-    </section>
-
-    <!-- PAGE 4: Timeline -->
-    <section id="page4" class="page" aria-labelledby="h4">
-      <h2 id="h4">Our Story 💝</h2>
-      <div id="timeline" class="timeline"></div>
-    </section>
-
-    <!-- PAGE 5: Notepad -->
-    <section id="page5" class="page" aria-labelledby="h5">
-      <h2 id="h5">Love Notes 💌</h2>
-      <div class="card notepad">
-        <textarea id="notepad" placeholder="Write your heart out..."></textarea>
-        <div style="text-align:center;margin-top:10px">
-          <button id="downloadNote" class="btn">Download Note 📝</button>
+    <!-- Page 2: Games -->
+    <div id="page2" class="page">
+      <!-- Jigsaw -->
+      <div class="card">
+        <div class="card-title">💗 Jigsaw Puzzle</div>
+        <canvas id="jigsawCanvas" width="400" height="400"></canvas>
+        <div class="btn-group">
+          <button class="btn btn-small" onclick="initJigsaw(3)">3×3</button>
+          <button class="btn btn-small" onclick="initJigsaw(4)">4×4</button>
+          <button class="btn btn-small" onclick="initJigsaw(5)">5×5</button>
+          <button class="btn btn-ghost btn-small" onclick="shuffleJigsaw()">Shuffle</button>
         </div>
       </div>
-    </section>
-  </main>
 
-  <nav class="nav" aria-label="Primary">
-    <button class="active" onclick="showPage(1)" aria-label="Home">🎬</button>
-    <button onclick="showPage(2)" aria-label="Games">🎮</button>
-    <button onclick="showPage(3)" aria-label="Gallery">📸</button>
-    <button onclick="showPage(4)" aria-label="Timeline">💝</button>
-    <button onclick="showPage(5)" aria-label="Notepad">💌</button>
-  </nav>
+      <!-- Maze -->
+      <div class="card">
+        <div class="card-title">💕 Heart Maze</div>
+        <canvas id="mazeCanvas" width="400" height="400"></canvas>
+        <div class="arrow-pad">
+          <button id="upBtn" class="arrow-btn">↑</button>
+          <button id="leftBtn" class="arrow-btn">←</button>
+          <button id="rightBtn" class="arrow-btn">→</button>
+          <button id="downBtn" class="arrow-btn">↓</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-ghost btn-small" onclick="resetMaze()">Reset</button>
+          <button class="btn btn-ghost btn-small" onclick="togglePath()">Show Path</button>
+        </div>
+      </div>
 
-  <!-- Win overlay + confetti canvas -->
-  <div id="overlay" class="overlay" aria-hidden="true">
-    <canvas id="confetti" class="confetti-canvas"></canvas>
-    <div class="toast" role="dialog" aria-modal="true">
-      <h3 id="overlayTitle">You Win! 💕</h3>
-      <p id="overlayMsg">Bahut khoobsurat khela — main bahut proud hoon. 💖</p>
-      <div style="margin-top:12px">
-        <button class="btn" onclick="closeOverlay()">Chalo fir — aur khelte hain!</button>
+      <!-- Dot Connect -->
+      <div class="card">
+        <div class="card-title">🔗 Connect The Dots</div>
+        <canvas id="dotCanvas" width="400" height="400"></canvas>
+        <div class="btn-group">
+          <button class="btn btn-ghost" onclick="undoDot()">Undo</button>
+          <button class="btn" onclick="resetDots()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 3: Gallery -->
+    <div id="page3" class="page">
+      <div class="card">
+        <div class="card-title">Our Gallery 📸</div>
+        <div class="gallery" id="gallery"></div>
+      </div>
+    </div>
+
+    <!-- Page 4: Timeline -->
+    <div id="page4" class="page">
+      <div class="card">
+        <div class="card-title">Our Story 💝</div>
+        <div id="timeline"></div>
+      </div>
+    </div>
+
+    <!-- Page 5: Notepad -->
+    <div id="page5" class="page">
+      <div class="card">
+        <div class="card-title">Love Notes 💌</div>
+        <textarea id="notepad" placeholder="Write your heart out..."></textarea>
+        <div class="btn-group" style="margin-top: 16px;">
+          <button class="btn" onclick="downloadNote()">Download 📝</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <footer>Made with ❤️ for Saraaa — Mobile-first & optimized</footer>
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="showPage(1)">🎬</button>
+    <button class="nav-btn" onclick="showPage(2)">🎮</button>
+    <button class="nav-btn" onclick="showPage(3)">📸</button>
+    <button class="nav-btn" onclick="showPage(4)">💝</button>
+    <button class="nav-btn" onclick="showPage(5)">💌</button>
+  </nav>
 
-  <script src="app.js" defer></script>
+  <!-- Win Overlay -->
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-content">
+      <h2 id="winTitle">🎉</h2>
+      <p id="winText"></p>
+      <button class="btn" onclick="closeWin()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div class="modal" id="imageModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <img id="modalImage" src="" alt="">
+    </div>
+  </div>
+
+  <script>
+    // Navigation
+    function showPage(n) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page' + n).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === n - 1);
+      });
+      window.scrollTo(0, 0);
+    }
+
+    // Win overlay
+    function showWin(title, text) {
+      document.getElementById('winTitle').textContent = title;
+      document.getElementById('winText').textContent = text;
+      document.getElementById('winOverlay').classList.add('show');
+    }
+
+    function closeWin() {
+      document.getElementById('winOverlay').classList.remove('show');
+    }
+
+    // JIGSAW PUZZLE
+    let jigsawCanvas, jigsawCtx, jigsawPieces = [], jigsawGrid = 3;
+    let jigsawDragging = null, jigsawOffset = {x: 0, y: 0};
+    let jigsawImg = new Image();
+
+    jigsawImg.onload = () => initJigsaw(3);
+    jigsawImg.onerror = () => initJigsaw(3);
+    jigsawImg.src = 'assets/jigsaw.jpg';
+
+    function initJigsawCanvas() {
+      jigsawCanvas = document.getElementById('jigsawCanvas');
+      jigsawCtx = jigsawCanvas.getContext('2d');
+      
+      jigsawCanvas.addEventListener('mousedown', jigsawDown);
+      jigsawCanvas.addEventListener('mousemove', jigsawMove);
+      jigsawCanvas.addEventListener('mouseup', jigsawUp);
+      jigsawCanvas.addEventListener('touchstart', e => jigsawDown(e.touches[0]));
+      jigsawCanvas.addEventListener('touchmove', e => { e.preventDefault(); jigsawMove(e.touches[0]); });
+      jigsawCanvas.addEventListener('touchend', jigsawUp);
+    }
+
+    function initJigsaw(n) {
+      if (!jigsawCanvas) initJigsawCanvas();
+      jigsawGrid = n;
+      jigsawPieces = [];
+      const size = jigsawCanvas.width / n;
+      
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          jigsawPieces.push({
+            sx: c * (jigsawImg.width / n),
+            sy: r * (jigsawImg.height / n),
+            sw: jigsawImg.width / n,
+            sh: jigsawImg.height / n,
+            x: Math.random() * (jigsawCanvas.width - size),
+            y: Math.random() * (jigsawCanvas.height - size),
+            w: size,
+            h: size,
+            correctX: c * size,
+            correctY: r * size,
+            placed: false
+          });
+        }
+      }
+      shuffleJigsaw();
+    }
+
+    function shuffleJigsaw() {
+      jigsawPieces.forEach(p => {
+        p.x = Math.random() * (jigsawCanvas.width - p.w);
+        p.y = Math.random() * (jigsawCanvas.height - p.h);
+        p.placed = false;
+      });
+      drawJigsaw();
+    }
+
+    function drawJigsaw() {
+      jigsawCtx.clearRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
+      jigsawCtx.fillStyle = '#f0f0f0';
+      jigsawCtx.fillRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
+      
+      jigsawPieces.forEach(p => {
+        if (jigsawImg.complete && jigsawImg.naturalWidth) {
+          jigsawCtx.drawImage(jigsawImg, p.sx, p.sy, p.sw, p.sh, p.x, p.y, p.w, p.h);
+        } else {
+          jigsawCtx.fillStyle = p.placed ? '#90EE90' : '#FFB6C1';
+          jigsawCtx.fillRect(p.x, p.y, p.w, p.h);
+        }
+        jigsawCtx.strokeStyle = '#333';
+        jigsawCtx.strokeRect(p.x, p.y, p.w, p.h);
+      });
+    }
+
+    function jigsawDown(e) {
+      const rect = jigsawCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
+      
+      for (let i = jigsawPieces.length - 1; i >= 0; i--) {
+        const p = jigsawPieces[i];
+        if (x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h && !p.placed) {
+          jigsawDragging = p;
+          jigsawOffset.x = x - p.x;
+          jigsawOffset.y = y - p.y;
+          jigsawPieces.splice(i, 1);
+          jigsawPieces.push(p);
+          break;
+        }
+      }
+    }
+
+    function jigsawMove(e) {
+      if (!jigsawDragging) return;
+      const rect = jigsawCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
+      jigsawDragging.x = Math.max(0, Math.min(jigsawCanvas.width - jigsawDragging.w, x - jigsawOffset.x));
+      jigsawDragging.y = Math.max(0, Math.min(jigsawCanvas.height - jigsawDragging.h, y - jigsawOffset.y));
+      drawJigsaw();
+    }
+
+    function jigsawUp() {
+      if (!jigsawDragging) return;
+      const p = jigsawDragging;
+      const dx = Math.abs(p.x - p.correctX);
+      const dy = Math.abs(p.y - p.correctY);
+      if (dx < 20 && dy < 20) {
+        p.x = p.correctX;
+        p.y = p.correctY;
+        p.placed = true;
+      }
+      jigsawDragging = null;
+      drawJigsaw();
+      
+      if (jigsawPieces.every(p => p.placed)) {
+        setTimeout(() => showWin('Perfect! 🎉', 'Tumne puzzle solve kar diya — bahut khoob! ❤️'), 300);
+      }
+    }
+
+    // MAZE GAME
+    let mazeCanvas, mazeCtx, mazeGrid = [], mazePlayer, mazeGoal;
+    let showMazePath = false;
+    const MAZE_SIZE = 21;
+
+    function initMaze() {
+      mazeCanvas = document.getElementById('mazeCanvas');
+      mazeCtx = mazeCanvas.getContext('2d');
+      resetMaze();
+      
+      document.getElementById('upBtn').onclick = () => moveMaze(0, -1);
+      document.getElementById('downBtn').onclick = () => moveMaze(0, 1);
+      document.getElementById('leftBtn').onclick = () => moveMaze(-1, 0);
+      document.getElementById('rightBtn').onclick = () => moveMaze(1, 0);
+    }
+
+    function resetMaze() {
+      mazeGrid = generateMaze(MAZE_SIZE);
+      mazePlayer = {x: 1, y: 1};
+      mazeGoal = {x: MAZE_SIZE - 2, y: MAZE_SIZE - 2};
+      showMazePath = false;
+      drawMaze();
+    }
+
+    function generateMaze(size) {
+      const grid = Array(size).fill().map(() => Array(size).fill(1));
+      const stack = [[1, 1]];
+      grid[1][1] = 0;
+      
+      while (stack.length) {
+        const [x, y] = stack[stack.length - 1];
+        const neighbors = [];
+        
+        [[0, -2], [0, 2], [-2, 0], [2, 0]].forEach(([dx, dy]) => {
+          const nx = x + dx, ny = y + dy;
+          if (nx > 0 && nx < size - 1 && ny > 0 && ny < size - 1 && grid[ny][nx] === 1) {
+            neighbors.push([nx, ny, x + dx/2, y + dy/2]);
+          }
+        });
+        
+        if (neighbors.length) {
+          const [nx, ny, wx, wy] = neighbors[Math.floor(Math.random() * neighbors.length)];
+          grid[ny][nx] = 0;
+          grid[wy][wx] = 0;
+          stack.push([nx, ny]);
+        } else {
+          stack.pop();
+        }
+      }
+      
+      return grid;
+    }
+
+    function drawMaze() {
+      const cellSize = mazeCanvas.width / MAZE_SIZE;
+      mazeCtx.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+      
+      for (let y = 0; y < MAZE_SIZE; y++) {
+        for (let x = 0; x < MAZE_SIZE; x++) {
+          mazeCtx.fillStyle = mazeGrid[y][x] ? '#333' : '#fff';
+          mazeCtx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+      
+      mazeCtx.fillStyle = '#FF1493';
+      mazeCtx.beginPath();
+      mazeCtx.arc((mazePlayer.x + 0.5) * cellSize, (mazePlayer.y + 0.5) * cellSize, cellSize * 0.4, 0, Math.PI * 2);
+      mazeCtx.fill();
+      
+      mazeCtx.fillStyle = '#FFD700';
+      mazeCtx.font = `${cellSize * 0.8}px serif`;
+      mazeCtx.textAlign = 'center';
+      mazeCtx.textBaseline = 'middle';
+      mazeCtx.fillText('❤️', (mazeGoal.x + 0.5) * cellSize, (mazeGoal.y + 0.5) * cellSize);
+    }
+
+    function moveMaze(dx, dy) {
+      const newX = mazePlayer.x + dx;
+      const newY = mazePlayer.y + dy;
+      
+      if (newX >= 0 && newX < MAZE_SIZE && newY >= 0 && newY < MAZE_SIZE && mazeGrid[newY][newX] === 0) {
+        mazePlayer.x = newX;
+        mazePlayer.y = newY;
+        drawMaze();
+        
+        if (mazePlayer.x === mazeGoal.x && mazePlayer.y === mazeGoal.y) {
+          setTimeout(() => showWin('Amazing! 🏆', 'Tumne maze solve kar diya — dil jeet liya! 💕'), 300);
+        }
+      }
+    }
+
+    function togglePath() {
+      showMazePath = !showMazePath;
+      drawMaze();
+    }
+
+    // DOT CONNECT
+    let dotCanvas, dotCtx, dots = [], connectedDots = [];
+
+    function initDots() {
+      dotCanvas = document.getElementById('dotCanvas');
+      dotCtx = dotCanvas.getContext('2d');
+      
+      const heartShape = [
+        [0.5, 0.2], [0.4, 0.15], [0.3, 0.15], [0.2, 0.25],
+        [0.15, 0.35], [0.2, 0.5], [0.3, 0.65], [0.4, 0.8],
+        [0.5, 0.9], [0.6, 0.8], [0.7, 0.65], [0.8, 0.5],
+        [0.85, 0.35], [0.8, 0.25], [0.7, 0.15], [0.6, 0.15]
+      ];
+      
+      dots = heartShape.map(([x, y]) => ({
+        x: x * dotCanvas.width,
+        y: y * dotCanvas.height
+      }));
+      
+      dotCanvas.addEventListener('click', dotClick);
+      dotCanvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        const rect = dotCanvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        dotClick({
+          clientX: touch.clientX,
+          clientY: touch.clientY,
+          target: dotCanvas
+        });
+      });
+      
+      drawDots();
+    }
+
+    function dotClick(e) {
+      const rect = dotCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (dotCanvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (dotCanvas.height / rect.height);
+      
+      const clicked = dots.find((d, i) => {
+        const dist = Math.sqrt((d.x - x) ** 2 + (d.y - y) ** 2);
+        return dist < 20 && !connectedDots.includes(i);
+      });
+      
+      if (clicked) {
+        connectedDots.push(dots.indexOf(clicked));
+        drawDots();
+        
+        if (connectedDots.length === dots.length) {
+          setTimeout(() => showWin('Beautiful! 💖', 'Tumne dil bana diya — kitna pyaara! ❤️'), 300);
+        }
+      }
+    }
+
+    function drawDots() {
+      dotCtx.clearRect(0, 0, dotCanvas.width, dotCanvas.height);
+      dotCtx.fillStyle = '#f0f0f0';
+      dotCtx.fillRect(0, 0, dotCanvas.width, dotCanvas.height);
+      
+      if (connectedDots.length > 1) {
+        dotCtx.strokeStyle = '#FF1493';
+        dotCtx.lineWidth = 4;
+        dotCtx.beginPath();
+        dotCtx.moveTo(dots[connectedDots[0]].x, dots[connectedDots[0]].y);
+        for (let i = 1; i < connectedDots.length; i++) {
+          dotCtx.lineTo(dots[connectedDots[i]].x, dots[connectedDots[i]].y);
+        }
+        dotCtx.stroke();
+      }
+      
+      dots.forEach((d, i) => {
+        const connected = connectedDots.includes(i);
+        dotCtx.fillStyle = connected ? '#FF1493' : '#FFB6C1';
+        dotCtx.beginPath();
+        dotCtx.arc(d.x, d.y, 12, 0, Math.PI * 2);
+        dotCtx.fill();
+        
+        dotCtx.fillStyle = '#fff';
+        dotCtx.font = '12px sans-serif';
+        dotCtx.textAlign = 'center';
+        dotCtx.textBaseline = 'middle';
+        dotCtx.fillText(i + 1, d.x, d.y);
+      });
+    }
+
+    function undoDot() {
+      connectedDots.pop();
+      drawDots();
+    }
+
+    function resetDots() {
+      connectedDots = [];
+      drawDots();
+    }
+
+    // GALLERY
+    const galleryImages = [
+      { src: 'assets/img1.jpg', caption: 'Forever Together 💕' },
+      { src: 'assets/img2.jpg', caption: 'My Favorite Smile ❤️' },
+      { src: 'assets/img3.jpg', caption: 'Beautiful Moments 🌸' },
+      { src: 'assets/img4.jpg', caption: 'You & Me 💑' },
+      { src: 'assets/img5.jpg', caption: 'Perfect Day 🌟' },
+      { src: 'assets/img6.jpg', caption: 'Love Always 💝' }
+    ];
+
+    function initGallery() {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = galleryImages.map((img, i) => `
+        <div class="gallery-item" onclick="openImage('${img.src}')">
+          <img src="${img.src}" alt="${img.caption}" loading="lazy">
+          <div class="caption">${img.caption}</div>
+        </div>
+      `).join('');
+    }
+
+    function openImage(src) {
+      document.getElementById('modalImage').src = src;
+      document.getElementById('imageModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').classList.remove('show');
+    }
+
+    // TIMELINE
+    const timelineData = [
+      { date: 'The Beginning', text: 'The day we first met — duniya thodi slow ho gayi thi.' },
+      { date: 'First Date', text: 'Wo pal jab tumne muskura ke kaha — yaad hai?' },
+      { date: 'Falling Deeper', text: 'Har roz tumse pyaar badhta gaya.' },
+      { date: 'Our Adventure', text: 'Choti choti safar, magar yaadein lambe waqt tak.' },
+      { date: 'Forever Promise', text: 'Aaj aur hamesha — tumhara mera vaada.' }
+    ];
+
+    function initTimeline() {
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = timelineData.map(item => `
+        <div class="timeline-item">
+          <div class="timeline-date">${item.date}</div>
+          <div class="timeline-text">${item.text}</div>
+        </div>
+      `).join('');
+    }
+
+    // NOTEPAD
+    function initNotepad() {
+      const notepad = document.getElementById('notepad');
+      const saved = localStorage.getItem('loveNote');
+      if (saved) notepad.value = saved;
+      
+      notepad.addEventListener('input', () => {
+        localStorage.setItem('loveNote', notepad.value);
+      });
+    }
+
+    function downloadNote() {
+      const text = document.getElementById('notepad').value || 'My love note for you... ❤️';
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Love_Note_for_Saraaa.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize everything
+    window.addEventListener('DOMContentLoaded', () => {
+      initJigsaw(3);
+      initMaze();
+      initDots();
+      initGallery();
+      initTimeline();
+      initNotepad();
+    });
+  </script>
 </body>
 </html>
