@@ -4,450 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
   <title>Saraaa ❤️</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    :root {
-      --primary: #6A1E32;
-      --secondary: #E8D4A8;
-      --accent: #E8D4A8;
-      --dark: #0A1A2F;
-      --darker: #061220;
-      --light: #F9F9F9;
-      --glow: rgba(106, 30, 50, 0.4);
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0A1A2F 0%, #1a2f4f 50%, #6A1E32 100%);
-      background-attachment: fixed;
-      color: #F9F9F9;
-      overflow-x: hidden;
-      min-height: 100vh;
-      padding-bottom: 90px;
-    }
-
-    /* Header */
-    .header {
-      background: rgba(10, 26, 47, 0.95);
-      backdrop-filter: blur(20px);
-      padding: 16px 20px;
-      text-align: center;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header h1 {
-      font-size: 28px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #E8D4A8, #F9F9F9, #E8D4A8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 4px;
-      text-shadow: 0 0 30px var(--glow);
-    }
-
-    .header p {
-      font-size: 12px;
-      color: #E8D4A8;
-      opacity: 0.9;
-      letter-spacing: 1px;
-    }
-
-    /* Container */
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Pages */
-    .page {
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Cards */
-    .card {
-      background: rgba(10, 26, 47, 0.85);
-      backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(232, 212, 168, 0.2);
-    }
-
-    .card-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      text-align: center;
-      color: #E8D4A8;
-    }
-
-    /* Media Container */
-    .media-container {
-      position: relative;
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto 20px;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 12px 40px rgba(106, 30, 50, 0.4);
-    }
-
-    .media-container video,
-    .media-container img {
-      width: 100%;
-      display: block;
-      aspect-ratio: 9/16;
-      object-fit: cover;
-    }
-
-    .message {
-      text-align: center;
-      font-size: 15px;
-      line-height: 1.6;
-      padding: 16px;
-      background: rgba(106, 30, 50, 0.15);
-      border-radius: 16px;
-      margin-top: 16px;
-      color: #F9F9F9;
-    }
-
-    /* Canvas */
-    canvas {
-      display: block;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      border-radius: 16px;
-      background: #F9F9F9;
-      touch-action: none;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Buttons */
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(135deg, #6A1E32, #8A2E42);
-      color: #F9F9F9;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px var(--glow);
-      transition: transform 0.2s, box-shadow 0.2s;
-      min-width: 100px;
-    }
-
-    .btn:active {
-      transform: scale(0.95);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: 2px solid #E8D4A8;
-      box-shadow: none;
-      color: #E8D4A8;
-    }
-
-    .btn-small {
-      padding: 8px 16px;
-      font-size: 12px;
-      min-width: 80px;
-    }
-
-    /* Arrow Controls */
-    .arrow-pad {
-      display: grid;
-      grid-template-areas: ". up ." "left . right" ". down .";
-      gap: 8px;
-      max-width: 200px;
-      margin: 20px auto;
-    }
-
-    .arrow-btn {
-      width: 56px;
-      height: 56px;
-      border: none;
-      border-radius: 12px;
-      background: rgba(106, 30, 50, 0.3);
-      color: #F9F9F9;
-      font-size: 24px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 2px solid rgba(232, 212, 168, 0.3);
-    }
-
-    .arrow-btn:active {
-      background: #6A1E32;
-      transform: scale(0.9);
-    }
-
-    #upBtn { grid-area: up; }
-    #leftBtn { grid-area: left; }
-    #rightBtn { grid-area: right; }
-    #downBtn { grid-area: down; }
-
-    /* Gallery */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .gallery-item {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      aspect-ratio: 1;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s;
-    }
-
-    .gallery-item:active {
-      transform: scale(0.95);
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .gallery-item .caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-      padding: 12px;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    /* Timeline */
-    .timeline-item {
-      position: relative;
-      padding-left: 40px;
-      margin-bottom: 24px;
-    }
-
-    .timeline-item::before {
-      content: '💕';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 32px;
-      height: 32px;
-      background: #6A1E32;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-
-    .timeline-item::after {
-      content: '';
-      position: absolute;
-      left: 15px;
-      top: 32px;
-      bottom: -24px;
-      width: 2px;
-      background: rgba(232, 212, 168, 0.3);
-    }
-
-    .timeline-item:last-child::after {
-      display: none;
-    }
-
-    .timeline-date {
-      font-weight: 700;
-      color: #E8D4A8;
-      margin-bottom: 6px;
-    }
-
-    .timeline-text {
-      font-size: 14px;
-      line-height: 1.6;
-      opacity: 0.9;
-      color: #F9F9F9;
-    }
-
-    /* Notepad */
-    textarea {
-      width: 100%;
-      min-height: 200px;
-      padding: 16px;
-      border: 2px solid rgba(232, 212, 168, 0.3);
-      border-radius: 16px;
-      background: rgba(10, 26, 47, 0.5);
-      color: #F9F9F9;
-      font-size: 15px;
-      font-family: inherit;
-      resize: vertical;
-    }
-
-    textarea::placeholder {
-      color: rgba(232, 212, 168, 0.5);
-    }
-
-    /* Bottom Nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 26, 47, 0.95);
-      backdrop-filter: blur(20px);
-      padding: 12px;
-      display: flex;
-      justify-content: space-around;
-      box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
-      z-index: 100;
-      border-top: 1px solid rgba(232, 212, 168, 0.1);
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      color: rgba(232, 212, 168, 0.5);
-      font-size: 28px;
-      padding: 8px 16px;
-      cursor: pointer;
-      transition: all 0.3s;
-      border-radius: 12px;
-    }
-
-    .nav-btn.active {
-      color: #E8D4A8;
-      background: rgba(106, 30, 50, 0.3);
-      transform: scale(1.1);
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      padding: 20px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      max-width: 90%;
-      max-height: 90%;
-      position: relative;
-    }
-
-    .modal-content img {
-      width: 100%;
-      height: auto;
-      border-radius: 20px;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: -15px;
-      right: -15px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #6A1E32;
-      border: none;
-      color: #F9F9F9;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px var(--glow);
-    }
-
-    /* Win Overlay */
-    .win-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .win-overlay.show {
-      display: flex;
-    }
-
-    .win-content {
-      background: linear-gradient(135deg, #6A1E32, #8A2E42);
-      padding: 32px;
-      border-radius: 24px;
-      text-align: center;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(106, 30, 50, 0.5);
-      border: 2px solid rgba(232, 212, 168, 0.3);
-    }
-
-    .win-content h2 {
-      font-size: 32px;
-      margin-bottom: 16px;
-      color: #F9F9F9;
-    }
-
-    .win-content p {
-      font-size: 16px;
-      margin-bottom: 24px;
-      opacity: 0.9;
-      color: #F9F9F9;
-    }
-
-    @media (min-width: 768px) {
-      .gallery {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="header">
-    <h1>Saraaa ❤️</h1>
-    <p>Made with love❤️</p>
+    <div class="header-top">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+      <h1>Saraaa ❤️</h1>
+      <button class="theme-toggle" onclick="alert('Weather: Sunny with love! ☀️❤️')">🌤️</button>
+    </div>
+    <p>Made with love ❤️</p>
+    <div class="countdown-badge" id="countdownBadge">💕 Days Together 💕</div>
   </div>
 
   <div class="container">
@@ -458,6 +25,7 @@
         <div class="media-container">
           <video controls playsinline preload="metadata">
             <source src="assets/video1.mp4" type="video/mp4">
+            Your browser doesn't support video.
           </video>
         </div>
         <div class="message">
@@ -469,16 +37,30 @@
         <div class="media-container">
           <video controls playsinline preload="metadata">
             <source src="assets/video2.mp4" type="video/mp4">
+            Your browser doesn't support video.
           </video>
         </div>
         <div class="message">
-          Har pal tumhare saath ek khubsurat yaad ban jaata hai. Tum ho toh sab kuch perfect lagta hai ❤️
+          Every moment with you is a treasure. You make everything beautiful ❤️
         </div>
       </div>
     </div>
 
     <!-- Page 2: Games -->
     <div id="page2" class="page">
+      <!-- Memory Game -->
+      <div class="card">
+        <div class="card-title">💗 Memory Match</div>
+        <div class="memory-stats">
+          <span>Moves: <strong id="memoryMoves">0</strong></span>
+          <span>Matches: <strong id="memoryMatches">0</strong></span>
+        </div>
+        <div class="memory-grid" id="memoryGrid"></div>
+        <div class="btn-group">
+          <button class="btn btn-small" onclick="initMemory()">New Game</button>
+        </div>
+      </div>
+
       <!-- Jigsaw -->
       <div class="card">
         <div class="card-title">💗 Jigsaw Puzzle</div>
@@ -503,7 +85,6 @@
         </div>
         <div class="btn-group">
           <button class="btn btn-ghost btn-small" onclick="resetMaze()">Reset</button>
-          <button class="btn btn-ghost btn-small" onclick="togglePath()">Show Path</button>
         </div>
       </div>
 
@@ -526,32 +107,83 @@
       </div>
     </div>
 
-    <!-- Page 4: Timeline -->
+    <!-- Page 4: Timeline & Music -->
     <div id="page4" class="page">
       <div class="card">
         <div class="card-title">Our Story 💝</div>
         <div id="timeline"></div>
       </div>
+
+      <div class="card">
+        <div class="card-title">Our Playlist 🎵</div>
+        <div class="music-player">
+          <div id="currentSong" style="margin-bottom: 12px; font-size: 16px; font-weight: 600;">♫ Perfect - Ed Sheeran ♫</div>
+          <div class="music-controls">
+            <button class="music-btn" onclick="prevSong()">⏮️</button>
+            <button class="music-btn" id="playBtn" onclick="togglePlay()">▶️</button>
+            <button class="music-btn" onclick="nextSong()">⏭️</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Page 5: Notepad -->
+    <!-- Page 5: Quiz & Mood -->
     <div id="page5" class="page">
+      <div class="card">
+        <div class="card-title">Love Quiz 💖</div>
+        <div id="quizContainer">
+          <div class="quiz-question">What's your ideal date?</div>
+          <div class="quiz-option" onclick="selectQuizOption(this, 0)">🌅 Sunset beach walk</div>
+          <div class="quiz-option" onclick="selectQuizOption(this, 1)">🍿 Movie night at home</div>
+          <div class="quiz-option" onclick="selectQuizOption(this, 2)">🍽️ Fancy dinner date</div>
+          <div class="quiz-option" onclick="selectQuizOption(this, 3)">🏕️ Adventure camping</div>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="nextQuestion()">Next Question</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Today's Mood 😊</div>
+        <div class="mood-grid">
+          <button class="mood-btn" onclick="selectMood('😊')">😊</button>
+          <button class="mood-btn" onclick="selectMood('😍')">😍</button>
+          <button class="mood-btn" onclick="selectMood('🥰')">🥰</button>
+          <button class="mood-btn" onclick="selectMood('😘')">😘</button>
+          <button class="mood-btn" onclick="selectMood('💕')">💕</button>
+          <button class="mood-btn" onclick="selectMood('✨')">✨</button>
+        </div>
+        <div id="moodMessage" class="message" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Page 6: Wishes & Notes -->
+    <div id="page6" class="page">
+      <div class="card">
+        <div class="card-title">Wish Jar 🌟</div>
+        <input type="text" class="wish-input" id="wishInput" placeholder="Make a wish..." maxlength="100">
+        <button class="btn" onclick="addWish()">Add Wish ✨</button>
+        <div id="wishList"></div>
+      </div>
+
       <div class="card">
         <div class="card-title">Love Notes 💌</div>
         <textarea id="notepad" placeholder="Write your heart out..."></textarea>
         <div class="btn-group" style="margin-top: 16px;">
-          <button class="btn" onclick="downloadNote()">Download 📝</button>
+          <button class="btn" onclick="saveNote()">Save 💾</button>
+          <button class="btn btn-ghost" onclick="downloadNote()">Download 📝</button>
         </div>
       </div>
     </div>
   </div>
 
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="showPage(1)">🎬</button>
-    <button class="nav-btn" onclick="showPage(2)">🎮</button>
-    <button class="nav-btn" onclick="showPage(3)">📸</button>
-    <button class="nav-btn" onclick="showPage(4)">💝</button>
-    <button class="nav-btn" onclick="showPage(5)">💌</button>
+    <button class="nav-btn active" onclick="showPage(1)" title="Videos">🎬</button>
+    <button class="nav-btn" onclick="showPage(2)" title="Games">🎮</button>
+    <button class="nav-btn" onclick="showPage(3)" title="Gallery">📸</button>
+    <button class="nav-btn" onclick="showPage(4)" title="Timeline">💝</button>
+    <button class="nav-btn" onclick="showPage(5)" title="Quiz">💖</button>
+    <button class="nav-btn" onclick="showPage(6)" title="Notes">💌</button>
   </nav>
 
   <!-- Win Overlay -->
@@ -564,424 +196,13 @@
   </div>
 
   <!-- Image Modal -->
-  <div class="modal" id="imageModal">
-    <div class="modal-content">
+  <div class="modal" id="imageModal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
       <button class="modal-close" onclick="closeModal()">×</button>
       <img id="modalImage" src="" alt="">
     </div>
   </div>
 
-  <script>
-    // Navigation
-    function showPage(n) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page' + n).classList.add('active');
-      document.querySelectorAll('.nav-btn').forEach((btn, i) => {
-        btn.classList.toggle('active', i === n - 1);
-      });
-      window.scrollTo(0, 0);
-    }
-
-    // Win overlay
-    function showWin(title, text) {
-      document.getElementById('winTitle').textContent = title;
-      document.getElementById('winText').textContent = text;
-      document.getElementById('winOverlay').classList.add('show');
-    }
-
-    function closeWin() {
-      document.getElementById('winOverlay').classList.remove('show');
-    }
-
-    // JIGSAW PUZZLE
-    let jigsawCanvas, jigsawCtx, jigsawPieces = [], jigsawGrid = 3;
-    let jigsawDragging = null, jigsawOffset = {x: 0, y: 0};
-    let jigsawImg = new Image();
-
-    jigsawImg.onload = () => initJigsaw(3);
-    jigsawImg.onerror = () => initJigsaw(3);
-    jigsawImg.src = 'assets/jigsaw.jpg';
-
-    function initJigsawCanvas() {
-      jigsawCanvas = document.getElementById('jigsawCanvas');
-      jigsawCtx = jigsawCanvas.getContext('2d');
-      
-      jigsawCanvas.addEventListener('mousedown', jigsawDown);
-      jigsawCanvas.addEventListener('mousemove', jigsawMove);
-      jigsawCanvas.addEventListener('mouseup', jigsawUp);
-      jigsawCanvas.addEventListener('touchstart', e => jigsawDown(e.touches[0]));
-      jigsawCanvas.addEventListener('touchmove', e => { e.preventDefault(); jigsawMove(e.touches[0]); });
-      jigsawCanvas.addEventListener('touchend', jigsawUp);
-    }
-
-    function initJigsaw(n) {
-      if (!jigsawCanvas) initJigsawCanvas();
-      jigsawGrid = n;
-      jigsawPieces = [];
-      const size = jigsawCanvas.width / n;
-      
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-          jigsawPieces.push({
-            sx: c * (jigsawImg.width / n),
-            sy: r * (jigsawImg.height / n),
-            sw: jigsawImg.width / n,
-            sh: jigsawImg.height / n,
-            x: Math.random() * (jigsawCanvas.width - size),
-            y: Math.random() * (jigsawCanvas.height - size),
-            w: size,
-            h: size,
-            correctX: c * size,
-            correctY: r * size,
-            placed: false
-          });
-        }
-      }
-      shuffleJigsaw();
-    }
-
-    function shuffleJigsaw() {
-      jigsawPieces.forEach(p => {
-        p.x = Math.random() * (jigsawCanvas.width - p.w);
-        p.y = Math.random() * (jigsawCanvas.height - p.h);
-        p.placed = false;
-      });
-      drawJigsaw();
-    }
-
-    function drawJigsaw() {
-      jigsawCtx.clearRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
-      jigsawCtx.fillStyle = '#f0f0f0';
-      jigsawCtx.fillRect(0, 0, jigsawCanvas.width, jigsawCanvas.height);
-      
-      jigsawPieces.forEach(p => {
-        if (jigsawImg.complete && jigsawImg.naturalWidth) {
-          jigsawCtx.drawImage(jigsawImg, p.sx, p.sy, p.sw, p.sh, p.x, p.y, p.w, p.h);
-        } else {
-          jigsawCtx.fillStyle = p.placed ? '#90EE90' : '#FFB6C1';
-          jigsawCtx.fillRect(p.x, p.y, p.w, p.h);
-        }
-        jigsawCtx.strokeStyle = '#333';
-        jigsawCtx.strokeRect(p.x, p.y, p.w, p.h);
-      });
-    }
-
-    function jigsawDown(e) {
-      const rect = jigsawCanvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
-      const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
-      
-      for (let i = jigsawPieces.length - 1; i >= 0; i--) {
-        const p = jigsawPieces[i];
-        if (x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h && !p.placed) {
-          jigsawDragging = p;
-          jigsawOffset.x = x - p.x;
-          jigsawOffset.y = y - p.y;
-          jigsawPieces.splice(i, 1);
-          jigsawPieces.push(p);
-          break;
-        }
-      }
-    }
-
-    function jigsawMove(e) {
-      if (!jigsawDragging) return;
-      const rect = jigsawCanvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) * (jigsawCanvas.width / rect.width);
-      const y = (e.clientY - rect.top) * (jigsawCanvas.height / rect.height);
-      jigsawDragging.x = Math.max(0, Math.min(jigsawCanvas.width - jigsawDragging.w, x - jigsawOffset.x));
-      jigsawDragging.y = Math.max(0, Math.min(jigsawCanvas.height - jigsawDragging.h, y - jigsawOffset.y));
-      drawJigsaw();
-    }
-
-    function jigsawUp() {
-      if (!jigsawDragging) return;
-      const p = jigsawDragging;
-      const dx = Math.abs(p.x - p.correctX);
-      const dy = Math.abs(p.y - p.correctY);
-      if (dx < 20 && dy < 20) {
-        p.x = p.correctX;
-        p.y = p.correctY;
-        p.placed = true;
-      }
-      jigsawDragging = null;
-      drawJigsaw();
-      
-      if (jigsawPieces.every(p => p.placed)) {
-        setTimeout(() => showWin('Perfect! 🎉', 'Tumne puzzle solve kar diya — bahut khoob! ❤️'), 300);
-      }
-    }
-
-    // MAZE GAME
-    let mazeCanvas, mazeCtx, mazeGrid = [], mazePlayer, mazeGoal;
-    let showMazePath = false;
-    const MAZE_SIZE = 21;
-
-    function initMaze() {
-      mazeCanvas = document.getElementById('mazeCanvas');
-      mazeCtx = mazeCanvas.getContext('2d');
-      resetMaze();
-      
-      document.getElementById('upBtn').onclick = () => moveMaze(0, -1);
-      document.getElementById('downBtn').onclick = () => moveMaze(0, 1);
-      document.getElementById('leftBtn').onclick = () => moveMaze(-1, 0);
-      document.getElementById('rightBtn').onclick = () => moveMaze(1, 0);
-    }
-
-    function resetMaze() {
-      mazeGrid = generateMaze(MAZE_SIZE);
-      mazePlayer = {x: 1, y: 1};
-      mazeGoal = {x: MAZE_SIZE - 2, y: MAZE_SIZE - 2};
-      showMazePath = false;
-      drawMaze();
-    }
-
-    function generateMaze(size) {
-      const grid = Array(size).fill().map(() => Array(size).fill(1));
-      const stack = [[1, 1]];
-      grid[1][1] = 0;
-      
-      while (stack.length) {
-        const [x, y] = stack[stack.length - 1];
-        const neighbors = [];
-        
-        [[0, -2], [0, 2], [-2, 0], [2, 0]].forEach(([dx, dy]) => {
-          const nx = x + dx, ny = y + dy;
-          if (nx > 0 && nx < size - 1 && ny > 0 && ny < size - 1 && grid[ny][nx] === 1) {
-            neighbors.push([nx, ny, x + dx/2, y + dy/2]);
-          }
-        });
-        
-        if (neighbors.length) {
-          const [nx, ny, wx, wy] = neighbors[Math.floor(Math.random() * neighbors.length)];
-          grid[ny][nx] = 0;
-          grid[wy][wx] = 0;
-          stack.push([nx, ny]);
-        } else {
-          stack.pop();
-        }
-      }
-      
-      return grid;
-    }
-
-    function drawMaze() {
-      const cellSize = mazeCanvas.width / MAZE_SIZE;
-      mazeCtx.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
-      
-      for (let y = 0; y < MAZE_SIZE; y++) {
-        for (let x = 0; x < MAZE_SIZE; x++) {
-          mazeCtx.fillStyle = mazeGrid[y][x] ? '#0A1A2F' : '#F9F9F9';
-          mazeCtx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        }
-      }
-      
-      mazeCtx.fillStyle = '#6A1E32';
-      mazeCtx.beginPath();
-      mazeCtx.arc((mazePlayer.x + 0.5) * cellSize, (mazePlayer.y + 0.5) * cellSize, cellSize * 0.4, 0, Math.PI * 2);
-      mazeCtx.fill();
-      
-      mazeCtx.fillStyle = '#E8D4A8';
-      mazeCtx.font = `${cellSize * 0.8}px serif`;
-      mazeCtx.textAlign = 'center';
-      mazeCtx.textBaseline = 'middle';
-      mazeCtx.fillText('❤️', (mazeGoal.x + 0.5) * cellSize, (mazeGoal.y + 0.5) * cellSize);
-    }
-
-    function moveMaze(dx, dy) {
-      const newX = mazePlayer.x + dx;
-      const newY = mazePlayer.y + dy;
-      
-      if (newX >= 0 && newX < MAZE_SIZE && newY >= 0 && newY < MAZE_SIZE && mazeGrid[newY][newX] === 0) {
-        mazePlayer.x = newX;
-        mazePlayer.y = newY;
-        drawMaze();
-        
-        if (mazePlayer.x === mazeGoal.x && mazePlayer.y === mazeGoal.y) {
-          setTimeout(() => showWin('Amazing! 🏆', 'Tumne maze solve kar diya — dil jeet liya! 💕'), 300);
-        }
-      }
-    }
-
-    function togglePath() {
-      showMazePath = !showMazePath;
-      drawMaze();
-    }
-
-    // DOT CONNECT
-    let dotCanvas, dotCtx, dots = [], connectedDots = [];
-
-    function initDots() {
-      dotCanvas = document.getElementById('dotCanvas');
-      dotCtx = dotCanvas.getContext('2d');
-      
-      const heartShape = [
-        [0.5, 0.2], [0.4, 0.15], [0.3, 0.15], [0.2, 0.25],
-        [0.15, 0.35], [0.2, 0.5], [0.3, 0.65], [0.4, 0.8],
-        [0.5, 0.9], [0.6, 0.8], [0.7, 0.65], [0.8, 0.5],
-        [0.85, 0.35], [0.8, 0.25], [0.7, 0.15], [0.6, 0.15]
-      ];
-      
-      dots = heartShape.map(([x, y]) => ({
-        x: x * dotCanvas.width,
-        y: y * dotCanvas.height
-      }));
-      
-      dotCanvas.addEventListener('click', dotClick);
-      dotCanvas.addEventListener('touchstart', e => {
-        e.preventDefault();
-        const rect = dotCanvas.getBoundingClientRect();
-        const touch = e.touches[0];
-        dotClick({
-          clientX: touch.clientX,
-          clientY: touch.clientY,
-          target: dotCanvas
-        });
-      });
-      
-      drawDots();
-    }
-
-    function dotClick(e) {
-      const rect = dotCanvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) * (dotCanvas.width / rect.width);
-      const y = (e.clientY - rect.top) * (dotCanvas.height / rect.height);
-      
-      const clicked = dots.find((d, i) => {
-        const dist = Math.sqrt((d.x - x) ** 2 + (d.y - y) ** 2);
-        return dist < 20 && !connectedDots.includes(i);
-      });
-      
-      if (clicked) {
-        connectedDots.push(dots.indexOf(clicked));
-        drawDots();
-        
-        if (connectedDots.length === dots.length) {
-          setTimeout(() => showWin('Beautiful! 💖', 'Tumne dil bana diya — kitna pyaara! ❤️'), 300);
-        }
-      }
-    }
-
-    function drawDots() {
-      dotCtx.clearRect(0, 0, dotCanvas.width, dotCanvas.height);
-      dotCtx.fillStyle = '#f0f0f0';
-      dotCtx.fillRect(0, 0, dotCanvas.width, dotCanvas.height);
-      
-      if (connectedDots.length > 1) {
-        dotCtx.strokeStyle = '#6A1E32';
-        dotCtx.lineWidth = 4;
-        dotCtx.beginPath();
-        dotCtx.moveTo(dots[connectedDots[0]].x, dots[connectedDots[0]].y);
-        for (let i = 1; i < connectedDots.length; i++) {
-          dotCtx.lineTo(dots[connectedDots[i]].x, dots[connectedDots[i]].y);
-        }
-        dotCtx.stroke();
-      }
-      
-      dots.forEach((d, i) => {
-        const connected = connectedDots.includes(i);
-        dotCtx.fillStyle = connected ? '#6A1E32' : '#E8D4A8';
-        dotCtx.beginPath();
-        dotCtx.arc(d.x, d.y, 12, 0, Math.PI * 2);
-        dotCtx.fill();
-        
-        dotCtx.fillStyle = connected ? '#F9F9F9' : '#0A1A2F';
-        dotCtx.font = '12px sans-serif';
-        dotCtx.textAlign = 'center';
-        dotCtx.textBaseline = 'middle';
-        dotCtx.fillText(i + 1, d.x, d.y);
-      });
-    }
-
-    function undoDot() {
-      connectedDots.pop();
-      drawDots();
-    }
-
-    function resetDots() {
-      connectedDots = [];
-      drawDots();
-    }
-
-    // GALLERY
-    const galleryImages = [
-      { src: 'assets/img1.jpg', caption: 'Forever Together 💕' },
-      { src: 'assets/img2.jpg', caption: 'My Favorite Smile ❤️' },
-      { src: 'assets/img3.jpg', caption: 'Beautiful Moments 🌸' },
-      { src: 'assets/img4.jpg', caption: 'You & Me 💑' },
-      { src: 'assets/img5.jpg', caption: 'Perfect Day 🌟' },
-      { src: 'assets/img6.jpg', caption: 'Love Always 💝' }
-    ];
-
-    function initGallery() {
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = galleryImages.map((img, i) => `
-        <div class="gallery-item" onclick="openImage('${img.src}')">
-          <img src="${img.src}" alt="${img.caption}" loading="lazy">
-          <div class="caption">${img.caption}</div>
-        </div>
-      `).join('');
-    }
-
-    function openImage(src) {
-      document.getElementById('modalImage').src = src;
-      document.getElementById('imageModal').classList.add('show');
-    }
-
-    function closeModal() {
-      document.getElementById('imageModal').classList.remove('show');
-    }
-
-    // TIMELINE
-    const timelineData = [
-      { date: 'The Beginning', text: 'The day we first met — duniya thodi slow ho gayi thi.' },
-      { date: 'First Date', text: 'Wo pal jab tumne muskura ke kaha — yaad hai?' },
-      { date: 'Falling Deeper', text: 'Har roz tumse pyaar badhta gaya.' },
-      { date: 'Our Adventure', text: 'Choti choti safar, magar yaadein lambe waqt tak.' },
-      { date: 'Forever Promise', text: 'Aaj aur hamesha — tumhara mera vaada.' }
-    ];
-
-    function initTimeline() {
-      const timeline = document.getElementById('timeline');
-      timeline.innerHTML = timelineData.map(item => `
-        <div class="timeline-item">
-          <div class="timeline-date">${item.date}</div>
-          <div class="timeline-text">${item.text}</div>
-        </div>
-      `).join('');
-    }
-
-    // NOTEPAD
-    function initNotepad() {
-      const notepad = document.getElementById('notepad');
-      const saved = localStorage.getItem('loveNote');
-      if (saved) notepad.value = saved;
-      
-      notepad.addEventListener('input', () => {
-        localStorage.setItem('loveNote', notepad.value);
-      });
-    }
-
-    function downloadNote() {
-      const text = document.getElementById('notepad').value || 'My love note for you... ❤️';
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Love_Note_for_Saraaa.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Initialize everything
-    window.addEventListener('DOMContentLoaded', () => {
-      initJigsaw(3);
-      initMaze();
-      initDots();
-      initGallery();
-      initTimeline();
-      initNotepad();
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
