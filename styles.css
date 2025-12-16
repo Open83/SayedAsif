@@ -1,196 +1,360 @@
-/* ============ RESET & VARIABLES ============ */
+/* ============ SETUP & VARS ============ */
 :root {
-    --bg-dark: #050511;
-    --primary: #ff2e63;
-    --accent: #08d9d6;
-    --glass: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.15);
+    --primary: #ff4b6e;
+    --accent: #ffd700;
+    --bg-dark: #0f0c29;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
     --text: #ffffff;
-    --font-title: 'Great Vibes', cursive;
-    --font-heading: 'Cinzel', serif;
-    --font-body: 'Montserrat', sans-serif;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Lato', sans-serif;
+    --nav-height: 80px;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
 body {
-    background-color: var(--bg-dark);
-    background: radial-gradient(circle at 50% 10%, #1a1a2e 0%, #050511 100%);
+    background: var(--bg-dark);
     color: var(--text);
     font-family: var(--font-body);
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
+    position: relative;
 }
 
-/* ============ BACKGROUND ANIMATION ============ */
-.stars-bg {
+/* ============ BACKGROUNDS ============ */
+#bgCanvas {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");
-    z-index: -1;
-    opacity: 0.6;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
 }
 
-/* ============ MUSIC WIDGET ============ */
-.music-floater {
+.overlay-gradient {
     position: fixed;
-    top: 20px; right: 20px;
-    width: 50px; height: 50px;
-    background: var(--glass);
-    border-radius: 50%;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(10px);
-    z-index: 100;
+    inset: 0;
+    background: radial-gradient(circle at 50% 30%, rgba(255, 75, 110, 0.1) 0%, transparent 60%),
+                linear-gradient(to top, #0f0c29 0%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ============ LAYOUT MANAGER ============ */
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+.view {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    padding: 20px 20px 110px 20px; /* Extra padding for bottom nav */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s ease;
+    transform: translateY(20px);
+    overflow-y: auto;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Hide scrollbar for cleaner look */
+    scrollbar-width: none; 
+}
+.view::-webkit-scrollbar { display: none; }
+
+.view.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+/* ============ HEADERS & HERO ============ */
+.header-glass {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 2;
+}
+.header-glass h2 { font-family: var(--font-heading); font-size: 2rem; color: var(--text); }
+.header-glass p { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(255, 46, 99, 0.4);
+    min-height: 80%;
+    text-align: center;
+    width: 100%;
 }
 
-.vinyl {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: black;
-    border: 2px solid #333;
-    position: absolute;
+.profile-container {
+    width: 180px;
+    aspect-ratio: 9/16; /* 9:16 Ratio Enforced */
+    border-radius: 100px; /* Pill shape for portrait */
+    overflow: hidden;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 30px rgba(255, 75, 110, 0.3);
+    margin-bottom: 20px;
 }
 
-.playing .vinyl { animation: spin 3s linear infinite; }
-.music-notes { font-size: 1.2rem; z-index: 2; }
-
-@keyframes spin { 100% { transform: rotate(360deg); } }
-
-/* ============ NAVIGATION ============ */
-.dock-nav {
-    position: fixed;
-    bottom: 20px; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(20, 20, 20, 0.7);
-    backdrop-filter: blur(20px);
-    padding: 10px 20px;
-    border-radius: 50px;
-    display: flex;
-    gap: 20px;
-    border: 1px solid var(--glass-border);
-    z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+.profile-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.dock-btn {
-    background: none; border: none;
-    font-size: 1.5rem;
-    transition: transform 0.2s;
-    cursor: pointer;
-    opacity: 0.6;
+.elegant-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    background: linear-gradient(to right, #ff4b6e, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
 }
 
-.dock-btn.active { opacity: 1; transform: scale(1.2) translateY(-5px); }
-
-/* ============ PAGE LAYOUT ============ */
-.app-container {
-    height: 100vh;
-    overflow-y: auto;
-    padding-bottom: 100px;
-}
-
-.page {
-    display: none;
-    padding: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    animation: fadeIn 0.8s ease;
-}
-
-.page.active { display: block; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ============ COMPONENTS ============ */
-.hero { text-align: center; margin-top: 50px; }
-.title-font { font-family: var(--font-title); font-size: 4.5rem; color: var(--primary); text-shadow: 0 0 20px var(--primary); }
-.subtitle { letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 30px; }
-
-.glass-card {
+.glass-stat {
     background: var(--glass);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 10px 25px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    margin: 20px 0;
 }
+.glass-stat span { font-size: 2rem; font-weight: 700; display: block; line-height: 1; color: var(--primary); }
+.glass-stat label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
 
-/* ============ CINEMA ============ */
-.media-card video { width: 100%; border-radius: 12px; }
-.caption { text-align: center; margin-top: 10px; font-style: italic; color: #ddd; }
-
-/* ============ ARCADE ============ */
-.game-container { text-align: center; }
-.btn-reset { margin-top: 15px; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid white; color: white; border-radius: 20px; }
-
-/* Scratch Card */
-.scratch-wrapper {
+/* ============ DYNAMIC SCRATCH CARD (9:16) ============ */
+.scratch-container {
     position: relative;
-    width: 250px; height: 250px;
-    margin: 10px auto;
-    border-radius: 10px;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 9/16; /* 9:16 Ratio Enforced */
+    border-radius: 20px;
     overflow: hidden;
-}
-.hidden-content {
-    width: 100%; height: 100%;
-    background: white;
-    position: absolute; top: 0; left: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    color: #333;
-}
-#secretImg { width: 100%; height: 100%; object-fit: cover; }
-#scratchCanvas {
-    position: absolute; top: 0; left: 0;
-    z-index: 2; cursor: crosshair;
+    margin: 10px auto;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    border: 1px solid var(--glass-border);
 }
 
-/* Puzzle */
-#puzzle-board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    width: 240px;
-    margin: 0 auto;
-    background: #222;
-    padding: 2px;
+.scratch-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    z-index: 1;
 }
-.puzzle-tile {
-    width: 78px; height: 78px;
-    background-size: 240px 240px;
-    cursor: pointer;
+
+#secretImage { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* Ensures image fills 9:16 perfectly */
+    position: absolute; 
+}
+
+.secret-overlay-text { 
+    z-index: 2; 
+    color: white; 
+    font-weight: bold; 
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8); 
+    font-size: 1.8rem;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    width: 100%;
+}
+
+#scratchCanvas { position: absolute; inset: 0; z-index: 5; cursor: crosshair; }
+
+.btn-primary {
+    background: var(--primary);
+    color: white; border: none; padding: 12px 30px;
+    border-radius: 50px; font-weight: bold; font-size: 1rem;
+    margin-top: 20px; cursor: pointer;
+    box-shadow: 0 5px 20px rgba(255, 75, 110, 0.4);
     transition: transform 0.2s;
 }
+.btn-primary:active { transform: scale(0.95); }
 
-/* ============ QUIZ ============ */
-.progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 20px; }
-.fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
-.options-grid { display: grid; gap: 10px; margin-top: 20px; }
-.quiz-opt { padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; border-radius: 10px; cursor: pointer; text-align: left; }
-.quiz-opt:active { background: var(--primary); }
-
-/* ============ VAULT (Wish Jar) ============ */
-.jar-section { text-align: center; }
-#starJarCanvas {
-    width: 100%; height: 200px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 12px;
-    margin: 10px 0;
-    border: 1px solid rgba(255,255,255,0.1);
+/* ============ GALAXY JAR (Physics) ============ */
+.jar-wrapper {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 9/16; /* Matching ratio for consistency */
+    position: relative;
+    margin: 0 auto;
 }
-.input-row { display: flex; gap: 10px; }
-input { flex: 1; padding: 10px; border-radius: 20px; border: none; background: rgba(255,255,255,0.1); color: white; outline: none; }
-.btn-icon { background: var(--primary); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; font-size: 1.2rem; }
 
-/* Notes */
-textarea { width: 100%; height: 150px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: white; padding: 15px; border-radius: 10px; resize: none; }
-.btn-row { display: flex; gap: 10px; margin-top: 10px; }
-.btn-main, .btn-outline { flex: 1; padding: 12px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; }
-.btn-main { background: var(--primary); color: white; }
-.btn-outline { background: transparent; border: 1px solid white; color: white; }
+.jar-container {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    overflow: hidden;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+}
+
+#jarCanvas { width: 100%; height: 100%; }
+
+.input-floating {
+    position: absolute;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    width: 90%;
+}
+
+.input-floating input {
+    flex: 1;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--glass-border);
+    padding: 12px 20px;
+    border-radius: 30px;
+    color: white;
+    outline: none;
+    backdrop-filter: blur(10px);
+}
+.btn-circle {
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    border: none; background: var(--primary);
+    color: white; font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--primary);
+}
+
+/* ============ JOURNAL ============ */
+.journal-paper {
+    background: rgba(255,255,255,0.95);
+    width: 100%; max-width: 340px;
+    aspect-ratio: 9/16; /* 9:16 Journal Page */
+    padding: 30px;
+    border-radius: 10px;
+    color: #333;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.date-header {
+    font-family: var(--font-heading);
+    font-size: 1.1rem; border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px; margin-bottom: 15px; font-weight: bold;
+    color: var(--primary);
+}
+
+#journalEntry {
+    flex: 1;
+    border: none; background: transparent;
+    font-family: 'Dancing Script', cursive; /* Handwriting font */
+    font-size: 1.4rem;
+    line-height: 1.8; outline: none; resize: none;
+    background-image: linear-gradient(transparent 95%, #eee 95%);
+    background-size: 100% 2rem;
+}
+
+.save-indicator {
+    text-align: right;
+    font-size: 0.7rem; color: #888; font-style: italic; margin-top: 10px;
+}
+
+.btn-ghost {
+    background: transparent; border: 1px solid var(--glass-border);
+    color: var(--text); padding: 10px 20px; border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+/* ============ CINEMA (9:16) ============ */
+.reel-snap-container {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.snap-card {
+    width: 100%;
+    aspect-ratio: 9/16; /* 9:16 Video Card */
+    background: #000;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid var(--glass-border);
+}
+
+.snap-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Fills the 9:16 container */
+}
+
+.snap-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    color: white;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* ============ MUSIC & NAV ============ */
+.music-capsule {
+    position: fixed; top: 20px; right: 20px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    padding: 8px 15px;
+    border-radius: 30px;
+    display: flex; align-items: center; gap: 10px;
+    z-index: 100; cursor: pointer;
+    border: 1px solid var(--glass-border);
+}
+
+.equalizer { display: flex; gap: 3px; height: 15px; align-items: flex-end; }
+.equalizer span { width: 3px; background: var(--primary); animation: bounce 1s infinite; }
+@keyframes bounce { 0%, 100% { height: 2px; } 50% { height: 100%; } }
+
+.glass-dock {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 12, 41, 0.85);
+    backdrop-filter: blur(20px);
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: flex; gap: 25px;
+    border: 1px solid var(--glass-border);
+    z-index: 200;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+.dock-item {
+    background: none; border: none; font-size: 1.6rem;
+    opacity: 0.5; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer; position: relative;
+}
+.dock-item.active { opacity: 1; transform: translateY(-10px) scale(1.1); }
+.dock-item.active::after {
+    content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+    width: 5px; height: 5px; background: var(--primary); border-radius: 50%;
+}
