@@ -1,252 +1,259 @@
-/* ============ CONFIGURATION ============ */
+/* ================== CONFIGURATION ================== */
 const CONFIG = {
-    startDate: new Date('2023-01-01'), // DATE: YYYY-MM-DD
-    secretImage: 'assets/secret.jpg',  // For scratch card
-    puzzleImage: 'assets/puzzle.jpg'   // For jigsaw
+    startDate: new Date('2023-01-01'), // YOUR DATE HERE
+    // DYNAMIC SECRETS: These will be used in the 9:16 scratch card
+    // Use vertical images (9:16 ratio) for best results
+    secrets: [
+        { img: 'assets/secret1.jpg', text: "My Happy Place 🏠" },
+        { img: 'assets/secret2.jpg', text: "Best Day Ever ❤️" },
+        { img: 'assets/secret3.jpg', text: "Your Beautiful Smile ✨" }
+    ],
+    affirmations: [
+        "You are the poem I never knew how to write.",
+        "In a sea of people, my eyes will always search for you.",
+        "Loving you is my favorite thing to do.",
+        "You are my today and all of my tomorrows."
+    ]
 };
 
-/* ============ INIT ============ */
+/* ================== INIT ================== */
 window.onload = () => {
-    updateCountdown();
-    initScratchCard();
-    initPuzzle();
-    loadNotes();
-    initStarJar();
+    startBackgroundAnimation();
+    updateDays();
+    typeAffirmation();
+    initScratchGame();
+    initGalaxyJar();
+    initJournal();
 };
 
-/* ============ NAVIGATION ============ */
-function navTo(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+/* ================== NAVIGATION ================== */
+function navigate(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
     
-    document.querySelectorAll('.dock-btn').forEach(b => {
-        b.classList.remove('active');
-        if(b.onclick.toString().includes(pageId)) b.classList.add('active');
+    document.querySelectorAll('.dock-item').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.onclick.toString().includes(viewId)) btn.classList.add('active');
     });
 
-    if(pageId === 'quiz') startQuiz();
+    // Re-init scratch canvas if navigating to arcade to fix sizing
+    if(viewId === 'arcade') {
+        setTimeout(resetScratchCanvasSize, 100);
+    }
 }
 
-/* ============ HOME: Countdown ============ */
-function updateCountdown() {
+/* ================== HOME LOGIC ================== */
+function updateDays() {
     const diff = new Date() - CONFIG.startDate;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    document.getElementById('daysCount').innerText = days;
+    document.getElementById('daysCount').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
-/* ============ MUSIC ============ */
-let isPlaying = false;
+function typeAffirmation() {
+    const text = CONFIG.affirmations[Math.floor(Math.random() * CONFIG.affirmations.length)];
+    const el = document.getElementById('typingText');
+    el.innerText = "";
+    let i = 0;
+    function type() {
+        if(i < text.length) {
+            el.innerText += text.charAt(i);
+            i++;
+            setTimeout(type, 80);
+        }
+    }
+    type();
+}
+
+/* ================== MUSIC ================== */
+let isMusicPlaying = false;
 function toggleMusic() {
     const audio = document.getElementById('bgMusic');
-    const floater = document.querySelector('.music-floater');
+    const status = document.getElementById('musicStatus');
     
-    if(isPlaying) {
+    if(isMusicPlaying) {
         audio.pause();
-        floater.classList.remove('playing');
+        status.innerText = "Play Music";
+        document.querySelector('.equalizer').style.opacity = '0.5';
     } else {
-        audio.play().catch(e => alert("Please add 'music.mp3' to assets folder!"));
-        floater.classList.add('playing');
+        audio.play().catch(e => alert("Interact with page first!"));
+        status.innerText = "Playing...";
+        document.querySelector('.equalizer').style.opacity = '1';
     }
-    isPlaying = !isPlaying;
+    isMusicPlaying = !isMusicPlaying;
 }
 
-/* ============ GAME 1: SCRATCH CARD ============ */
-function initScratchCard() {
-    const canvas = document.getElementById('scratchCanvas');
-    const ctx = canvas.getContext('2d');
-    const wrapper = document.querySelector('.scratch-wrapper');
-    
-    // Set size
-    canvas.width = wrapper.offsetWidth;
-    canvas.height = wrapper.offsetHeight;
-    
-    // Fill with gray overlay
-    ctx.fillStyle = '#C0C0C0';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Add text "Scratch Me"
-    ctx.fillStyle = '#333';
-    ctx.font = '20px Montserrat';
-    ctx.fillText("Scratch Me ❤️", canvas.width/2 - 60, canvas.height/2);
+/* ================== SCRATCH GAME (Dynamic) ================== */
+let scratchCtx, scratchCanvas;
+let isScratching = false;
 
-    let isDrawing = false;
-
-    function scratch(e) {
-        if(!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.touches[0].clientX) - rect.left;
-        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+function initScratchGame() {
+    scratchCanvas = document.getElementById('scratchCanvas');
+    scratchCtx = scratchCanvas.getContext('2d');
+    
+    // Pick Random Secret
+    const secret = CONFIG.secrets[Math.floor(Math.random() * CONFIG.secrets.length)];
+    document.getElementById('secretImage').src = secret.img;
+    document.querySelector('.secret-overlay-text').innerText = secret.text;
+    
+    resetScratchCanvasSize();
+    
+    // Events
+    const start = () => isScratching = true;
+    const end = () => isScratching = false;
+    const move = (e) => {
+        if(!isScratching) return;
+        e.preventDefault();
+        const rect = scratchCanvas.getBoundingClientRect();
+        const x = (e.pageX || e.touches[0].pageX) - rect.left - window.scrollX;
+        const y = (e.pageY || e.touches[0].pageY) - rect.top - window.scrollY;
         
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 20, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    canvas.addEventListener('mousedown', () => isDrawing = true);
-    canvas.addEventListener('touchstart', () => isDrawing = true);
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('touchend', () => isDrawing = false);
-    canvas.addEventListener('mousemove', scratch);
-    canvas.addEventListener('touchmove', scratch);
+        scratchCtx.globalCompositeOperation = 'destination-out';
+        scratchCtx.beginPath();
+        scratchCtx.arc(x, y, 30, 0, Math.PI*2);
+        scratchCtx.fill();
+    };
+    
+    scratchCanvas.addEventListener('mousedown', start);
+    scratchCanvas.addEventListener('touchstart', start);
+    scratchCanvas.addEventListener('mouseup', end);
+    scratchCanvas.addEventListener('touchend', end);
+    scratchCanvas.addEventListener('mousemove', move);
+    scratchCanvas.addEventListener('touchmove', move);
 }
 
-/* ============ GAME 2: SLIDING PUZZLE ============ */
-function initPuzzle() {
-    const board = document.getElementById('puzzle-board');
-    board.innerHTML = '';
-    const tiles = [0,1,2,3,4,5,6,7,8]; // 8 is empty
+function resetScratchCanvasSize() {
+    // Sync canvas resolution with CSS display size (9:16)
+    const rect = scratchCanvas.parentElement.getBoundingClientRect();
+    scratchCanvas.width = rect.width;
+    scratchCanvas.height = rect.height;
     
-    // Simple shuffle (that maintains solvability for demo, or just random swap)
-    tiles.sort(() => Math.random() - 0.5);
+    // Draw Overlay Layer (Silver)
+    scratchCtx.fillStyle = '#C0C0C0';
+    scratchCtx.fillRect(0,0,scratchCanvas.width, scratchCanvas.height);
+    
+    // Draw Text
+    scratchCtx.fillStyle = '#555';
+    scratchCtx.font = 'bold 20px Lato';
+    scratchCtx.textAlign = 'center';
+    scratchCtx.fillText("Rub to Reveal ✨", scratchCanvas.width/2, scratchCanvas.height/2);
+}
 
-    tiles.forEach((num, index) => {
-        const div = document.createElement('div');
-        div.className = 'puzzle-tile';
-        if(num !== 8) {
-            div.style.backgroundImage = `url('${CONFIG.puzzleImage}')`;
-            // Calculate position in 3x3 grid (300px image assumed)
-            const row = Math.floor(num / 3);
-            const col = num % 3;
-            div.style.backgroundPosition = `-${col*80}px -${row*80}px`; // 80px based on css
-            div.innerText = ""; // Remove number for pure image
-        } else {
-            div.style.background = 'transparent';
-            div.style.cursor = 'default';
-        }
-        div.onclick = () => alert("Keep trying! 🧩");
-        board.appendChild(div);
+function resetScratchGame() {
+    initScratchGame();
+}
+
+/* ================== GALAXY JAR ================== */
+let jarCtx, jarW, jarH;
+let wishes = [];
+
+function initGalaxyJar() {
+    const canvas = document.getElementById('jarCanvas');
+    jarCtx = canvas.getContext('2d');
+    
+    // Sync size
+    const rect = canvas.parentElement.getBoundingClientRect();
+    jarW = canvas.width = rect.width;
+    jarH = canvas.height = rect.height;
+    
+    // Load saved wishes
+    const saved = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
+    saved.forEach(txt => spawnWish(txt, true));
+    
+    animateJar();
+}
+
+function spawnWish(text, isInit = false) {
+    wishes.push({
+        x: Math.random() * (jarW - 40) + 20,
+        y: isInit ? Math.random() * jarH : jarH + 20,
+        r: Math.random() * 4 + 2,
+        speed: Math.random() * 0.4 + 0.1,
+        text: text,
+        color: `hsl(${Math.random()*50 + 40}, 100%, 75%)` // Gold colors
     });
 }
 
-/* ============ QUIZ SYSTEM ============ */
-const quizData = [
-    { q: "Where was our first date?", options: ["Cafe", "Park", "Cinema", "Beach"], a: 0 },
-    { q: "What is my favorite food?", options: ["Pizza", "Sushi", "Burgers", "Tacos"], a: 1 },
-    { q: "What's our special date?", options: ["14th", "21st", "1st", "10th"], a: 2 }
-];
-let currentQ = 0;
-let score = 0;
-
-function startQuiz() {
-    currentQ = 0;
-    score = 0;
-    document.getElementById('quizBox').style.display = 'block';
-    document.getElementById('quizResult').style.display = 'none';
-    loadQuestion();
-}
-
-function loadQuestion() {
-    const q = quizData[currentQ];
-    document.getElementById('questionText').innerText = q.q;
-    document.getElementById('quizProgress').style.width = `${((currentQ)/quizData.length)*100}%`;
-    
-    const opts = document.getElementById('optionsBox');
-    opts.innerHTML = '';
-    
-    q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'quiz-opt';
-        btn.innerText = opt;
-        btn.onclick = () => handleAnswer(idx, q.a);
-        opts.appendChild(btn);
-    });
-}
-
-function handleAnswer(selected, correct) {
-    if(selected === correct) score++;
-    currentQ++;
-    if(currentQ < quizData.length) {
-        loadQuestion();
-    } else {
-        showResult();
-    }
-}
-
-function showResult() {
-    document.getElementById('quizBox').style.display = 'none';
-    document.getElementById('quizResult').style.display = 'block';
-    document.getElementById('scoreText').innerText = `You got ${score} / ${quizData.length}`;
-}
-
-function restartQuiz() { startQuiz(); }
-
-/* ============ STAR JAR (Wishes) ============ */
-let stars = [];
-let jarCanvas, jarCtx;
-
-function initStarJar() {
-    jarCanvas = document.getElementById('starJarCanvas');
-    jarCtx = jarCanvas.getContext('2d');
-    jarCanvas.width = jarCanvas.offsetWidth;
-    jarCanvas.height = jarCanvas.offsetHeight;
-    
-    // Load existing stars
-    const saved = JSON.parse(localStorage.getItem('saraa_stars') || '[]');
-    saved.forEach(s => createStarObject(s));
-    
-    animateStars();
-}
-
-function createStarObject(text) {
-    stars.push({
-        x: Math.random() * jarCanvas.width,
-        y: Math.random() * jarCanvas.height,
-        size: Math.random() * 2 + 1,
-        speed: Math.random() * 0.2 + 0.1,
-        text: text
-    });
-}
-
-function addStarWish() {
+function addWishParticle() {
     const input = document.getElementById('wishInput');
-    const txt = input.value.trim();
-    if(txt) {
-        createStarObject(txt);
-        // Save to storage
-        const saved = JSON.parse(localStorage.getItem('saraa_stars') || '[]');
-        saved.push(txt);
-        localStorage.setItem('saraa_stars', JSON.stringify(saved));
-        
+    if(input.value.trim()) {
+        spawnWish(input.value);
+        let saved = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
+        saved.push(input.value);
+        localStorage.setItem('saraa_wishes', JSON.stringify(saved));
         input.value = '';
-        alert("Your wish is now a star! ✨");
     }
 }
 
-function animateStars() {
-    jarCtx.clearRect(0, 0, jarCanvas.width, jarCanvas.height);
-    jarCtx.fillStyle = '#ffe97d'; // Gold star color
-    
-    stars.forEach(star => {
+function animateJar() {
+    jarCtx.clearRect(0,0,jarW, jarH);
+    wishes.forEach(p => {
+        jarCtx.shadowBlur = 10;
+        jarCtx.shadowColor = p.color;
+        jarCtx.fillStyle = p.color;
         jarCtx.beginPath();
-        jarCtx.arc(star.x, star.y, star.size, 0, Math.PI*2);
+        jarCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
         jarCtx.fill();
-        
-        // Float animation
-        star.y -= star.speed;
-        if(star.y < 0) star.y = jarCanvas.height;
+        jarCtx.shadowBlur = 0;
+        p.y -= p.speed;
+        if(p.y < -10) p.y = jarH + 10; // Loop
+    });
+    requestAnimationFrame(animateJar);
+}
+
+/* ================== JOURNAL ================== */
+function initJournal() {
+    const date = new Date();
+    document.getElementById('currentDate').innerText = date.toLocaleDateString('en-US', { 
+        weekday: 'long', month: 'long', day: 'numeric' 
     });
     
-    requestAnimationFrame(animateStars);
+    const saved = localStorage.getItem('saraa_journal');
+    if(saved) document.getElementById('journalEntry').value = saved;
+    
+    document.getElementById('journalEntry').addEventListener('input', (e) => {
+        localStorage.setItem('saraa_journal', e.target.value);
+        const status = document.getElementById('saveStatus');
+        status.innerText = "Saving...";
+        status.style.color = "#ff4b6e";
+        setTimeout(() => {
+            status.innerText = "Synced to Heart ❤️";
+            status.style.color = "#888";
+        }, 1000);
+    });
 }
 
-/* ============ NOTES ============ */
-function saveNote() {
-    const txt = document.getElementById('loveNote').value;
-    localStorage.setItem('saraa_note', txt);
-    alert("Saved forever ❤️");
-}
-
-function loadNotes() {
-    const txt = localStorage.getItem('saraa_note');
-    if(txt) document.getElementById('loveNote').value = txt;
-}
-
-function downloadNote() {
-    const txt = document.getElementById('loveNote').value;
-    const blob = new Blob([txt], { type: 'text/plain' });
-    const a = document.createElement('a');
+function downloadJournal() {
+    const blob = new Blob([document.getElementById('journalEntry').value], {type: "text/plain"});
+    const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = 'OurStory.txt';
+    a.download = "LoveDiary.txt";
     a.click();
+}
+
+/* ================== BACKGROUND ================== */
+function startBackgroundAnimation() {
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const particles = Array(60).fill().map(() => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2,
+        sp: Math.random() * 0.3
+    }));
+    
+    function loop() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+            ctx.fill();
+            p.y -= p.sp;
+            if(p.y < 0) p.y = canvas.height;
+        });
+        requestAnimationFrame(loop);
+    }
+    loop();
 }
