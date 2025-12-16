@@ -1,269 +1,252 @@
-/* ================= CONFIGURATION ================= */
+/* ============ CONFIGURATION ============ */
 const CONFIG = {
-    startDate: new Date('2023-01-01'), // CHANGE THIS DATE
-    puzzleImage: 'assets/puzzle.jpg', // Make sure this image exists in assets
-    gridSize: 3 // 3x3 Puzzle
+    startDate: new Date('2023-01-01'), // DATE: YYYY-MM-DD
+    secretImage: 'assets/secret.jpg',  // For scratch card
+    puzzleImage: 'assets/puzzle.jpg'   // For jigsaw
 };
 
-/* ================= INIT & LOADER ================= */
+/* ============ INIT ============ */
 window.onload = () => {
-    // 1. Loading Simulation
-    setTimeout(() => {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('loader').style.display = 'none';
-        }, 1000);
-    }, 2000);
-
-    // 2. Start Components
-    initStarfield();
-    updateCounter();
-    loadNote();
-    initGallery();
-    
-    // 3. Setup Music
-    const audio = document.getElementById('bgMusic');
-    audio.volume = 0.4;
+    updateCountdown();
+    initScratchCard();
+    initPuzzle();
+    loadNotes();
+    initStarJar();
 };
 
-/* ================= NAVIGATION ================= */
-function switchPage(pageId) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(p => {
-        p.classList.remove('active-page');
-        // Reset animations by re-adding class
-        void p.offsetWidth; 
-    });
+/* ============ NAVIGATION ============ */
+function navTo(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
     
-    // Show target
-    document.getElementById(pageId).classList.add('active-page');
-
-    // Update Nav Icons
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if(btn.onclick.toString().includes(pageId)) btn.classList.add('active');
+    document.querySelectorAll('.dock-btn').forEach(b => {
+        b.classList.remove('active');
+        if(b.onclick.toString().includes(pageId)) b.classList.add('active');
     });
 
-    // Special case: Refresh puzzle if Arcade opened
-    if(pageId === 'arcade' && !puzzleStarted) {
-        document.getElementById('puzzleOverlay').style.display = 'flex';
-    }
+    if(pageId === 'quiz') startQuiz();
 }
 
-/* ================= FEATURES ================= */
-
-// 1. Days Counter
-function updateCounter() {
+/* ============ HOME: Countdown ============ */
+function updateCountdown() {
     const diff = new Date() - CONFIG.startDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     document.getElementById('daysCount').innerText = days;
 }
 
-// 2. Music Player
+/* ============ MUSIC ============ */
 let isPlaying = false;
 function toggleMusic() {
     const audio = document.getElementById('bgMusic');
-    const disk = document.getElementById('disk');
-    const title = document.getElementById('songTitle');
+    const floater = document.querySelector('.music-floater');
     
-    if (isPlaying) {
+    if(isPlaying) {
         audio.pause();
-        disk.classList.remove('playing');
-        title.innerText = "Paused";
+        floater.classList.remove('playing');
     } else {
-        audio.play().catch(e => alert("Interact with the page first!"));
-        disk.classList.add('playing');
-        title.innerText = "Our Song";
+        audio.play().catch(e => alert("Please add 'music.mp3' to assets folder!"));
+        floater.classList.add('playing');
     }
     isPlaying = !isPlaying;
 }
 
-// 3. Interactive Notepad
-function saveNote() {
-    const val = document.getElementById('userNote').value;
-    localStorage.setItem('saraa_love_note', val);
-    alert("Saved to the stars! ✨");
+/* ============ GAME 1: SCRATCH CARD ============ */
+function initScratchCard() {
+    const canvas = document.getElementById('scratchCanvas');
+    const ctx = canvas.getContext('2d');
+    const wrapper = document.querySelector('.scratch-wrapper');
+    
+    // Set size
+    canvas.width = wrapper.offsetWidth;
+    canvas.height = wrapper.offsetHeight;
+    
+    // Fill with gray overlay
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Add text "Scratch Me"
+    ctx.fillStyle = '#333';
+    ctx.font = '20px Montserrat';
+    ctx.fillText("Scratch Me ❤️", canvas.width/2 - 60, canvas.height/2);
+
+    let isDrawing = false;
+
+    function scratch(e) {
+        if(!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+        
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('touchstart', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('mousemove', scratch);
+    canvas.addEventListener('touchmove', scratch);
 }
 
-function loadNote() {
-    const saved = localStorage.getItem('saraa_love_note');
-    if(saved) document.getElementById('userNote').value = saved;
+/* ============ GAME 2: SLIDING PUZZLE ============ */
+function initPuzzle() {
+    const board = document.getElementById('puzzle-board');
+    board.innerHTML = '';
+    const tiles = [0,1,2,3,4,5,6,7,8]; // 8 is empty
+    
+    // Simple shuffle (that maintains solvability for demo, or just random swap)
+    tiles.sort(() => Math.random() - 0.5);
+
+    tiles.forEach((num, index) => {
+        const div = document.createElement('div');
+        div.className = 'puzzle-tile';
+        if(num !== 8) {
+            div.style.backgroundImage = `url('${CONFIG.puzzleImage}')`;
+            // Calculate position in 3x3 grid (300px image assumed)
+            const row = Math.floor(num / 3);
+            const col = num % 3;
+            div.style.backgroundPosition = `-${col*80}px -${row*80}px`; // 80px based on css
+            div.innerText = ""; // Remove number for pure image
+        } else {
+            div.style.background = 'transparent';
+            div.style.cursor = 'default';
+        }
+        div.onclick = () => alert("Keep trying! 🧩");
+        board.appendChild(div);
+    });
+}
+
+/* ============ QUIZ SYSTEM ============ */
+const quizData = [
+    { q: "Where was our first date?", options: ["Cafe", "Park", "Cinema", "Beach"], a: 0 },
+    { q: "What is my favorite food?", options: ["Pizza", "Sushi", "Burgers", "Tacos"], a: 1 },
+    { q: "What's our special date?", options: ["14th", "21st", "1st", "10th"], a: 2 }
+];
+let currentQ = 0;
+let score = 0;
+
+function startQuiz() {
+    currentQ = 0;
+    score = 0;
+    document.getElementById('quizBox').style.display = 'block';
+    document.getElementById('quizResult').style.display = 'none';
+    loadQuestion();
+}
+
+function loadQuestion() {
+    const q = quizData[currentQ];
+    document.getElementById('questionText').innerText = q.q;
+    document.getElementById('quizProgress').style.width = `${((currentQ)/quizData.length)*100}%`;
+    
+    const opts = document.getElementById('optionsBox');
+    opts.innerHTML = '';
+    
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt';
+        btn.innerText = opt;
+        btn.onclick = () => handleAnswer(idx, q.a);
+        opts.appendChild(btn);
+    });
+}
+
+function handleAnswer(selected, correct) {
+    if(selected === correct) score++;
+    currentQ++;
+    if(currentQ < quizData.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById('quizBox').style.display = 'none';
+    document.getElementById('quizResult').style.display = 'block';
+    document.getElementById('scoreText').innerText = `You got ${score} / ${quizData.length}`;
+}
+
+function restartQuiz() { startQuiz(); }
+
+/* ============ STAR JAR (Wishes) ============ */
+let stars = [];
+let jarCanvas, jarCtx;
+
+function initStarJar() {
+    jarCanvas = document.getElementById('starJarCanvas');
+    jarCtx = jarCanvas.getContext('2d');
+    jarCanvas.width = jarCanvas.offsetWidth;
+    jarCanvas.height = jarCanvas.offsetHeight;
+    
+    // Load existing stars
+    const saved = JSON.parse(localStorage.getItem('saraa_stars') || '[]');
+    saved.forEach(s => createStarObject(s));
+    
+    animateStars();
+}
+
+function createStarObject(text) {
+    stars.push({
+        x: Math.random() * jarCanvas.width,
+        y: Math.random() * jarCanvas.height,
+        size: Math.random() * 2 + 1,
+        speed: Math.random() * 0.2 + 0.1,
+        text: text
+    });
+}
+
+function addStarWish() {
+    const input = document.getElementById('wishInput');
+    const txt = input.value.trim();
+    if(txt) {
+        createStarObject(txt);
+        // Save to storage
+        const saved = JSON.parse(localStorage.getItem('saraa_stars') || '[]');
+        saved.push(txt);
+        localStorage.setItem('saraa_stars', JSON.stringify(saved));
+        
+        input.value = '';
+        alert("Your wish is now a star! ✨");
+    }
+}
+
+function animateStars() {
+    jarCtx.clearRect(0, 0, jarCanvas.width, jarCanvas.height);
+    jarCtx.fillStyle = '#ffe97d'; // Gold star color
+    
+    stars.forEach(star => {
+        jarCtx.beginPath();
+        jarCtx.arc(star.x, star.y, star.size, 0, Math.PI*2);
+        jarCtx.fill();
+        
+        // Float animation
+        star.y -= star.speed;
+        if(star.y < 0) star.y = jarCanvas.height;
+    });
+    
+    requestAnimationFrame(animateStars);
+}
+
+/* ============ NOTES ============ */
+function saveNote() {
+    const txt = document.getElementById('loveNote').value;
+    localStorage.setItem('saraa_note', txt);
+    alert("Saved forever ❤️");
+}
+
+function loadNotes() {
+    const txt = localStorage.getItem('saraa_note');
+    if(txt) document.getElementById('loveNote').value = txt;
 }
 
 function downloadNote() {
-    const text = document.getElementById('userNote').value;
-    const blob = new Blob([text], { type: 'text/plain' });
+    const txt = document.getElementById('loveNote').value;
+    const blob = new Blob([txt], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'NoteForYou.txt';
+    a.download = 'OurStory.txt';
     a.click();
-}
-
-// 4. Masonry Gallery Population
-function initGallery() {
-    const grid = document.getElementById('photoGrid');
-    // Using placeholder images - Replace src with assets/img1.jpg etc.
-    const images = [
-        'assets/img1.jpg', 'assets/img2.jpg', 'assets/img3.jpg', 
-        'assets/img4.jpg', 'assets/img5.jpg'
-    ];
-    
-    // If you don't have files yet, this prevents crash
-    // Remove this check once you add images
-    if(images.length > 0) {
-       // Loop through images
-       // For now, I will use placeholder logic so code works immediately for you
-       const placeholderCount = 6;
-       grid.innerHTML = '';
-       for(let i=0; i<placeholderCount; i++) {
-           let img = document.createElement('img');
-           img.src = `https://picsum.photos/400/${300 + Math.floor(Math.random()*200)}?random=${i}`; // Random aesthetic heights
-           img.onclick = function() {
-               document.getElementById('imgModal').classList.add('show');
-               document.getElementById('modalImg').src = this.src;
-           }
-           grid.appendChild(img);
-       }
-    }
-}
-
-/* ================= PUZZLE GAME LOGIC (Sliding Tile) ================= */
-let puzzleStarted = false;
-let emptyTile = { r: 2, c: 2 }; // Bottom right for 3x3
-
-function startPuzzle() {
-    document.getElementById('puzzleOverlay').style.display = 'none';
-    puzzleStarted = true;
-    createPuzzleGrid();
-}
-
-function createPuzzleGrid() {
-    const container = document.getElementById('puzzle-container');
-    container.innerHTML = ''; // Clear
-    
-    const size = 300;
-    const tileCount = CONFIG.gridSize;
-    const tileSize = size / tileCount;
-    
-    // Create tiles
-    for (let r = 0; r < tileCount; r++) {
-        for (let c = 0; c < tileCount; c++) {
-            if (r === tileCount - 1 && c === tileCount - 1) continue; // Skip last one (empty)
-            
-            let tile = document.createElement('div');
-            tile.className = 'puzzle-tile';
-            tile.style.width = tileSize + 'px';
-            tile.style.height = tileSize + 'px';
-            tile.style.backgroundPosition = `-${c * tileSize}px -${r * tileSize}px`;
-            tile.style.top = (r * tileSize) + 'px';
-            tile.style.left = (c * tileSize) + 'px';
-            tile.id = `tile-${r}-${c}`;
-            
-            // Randomize positions slightly for "unsolved" look (simplified shuffle)
-            // In a real app, use solvable shuffle algorithm. 
-            // Here we just swap a few for effect to ensure solvability.
-            
-            tile.onclick = () => moveTile(tile, r, c, tileSize);
-            container.appendChild(tile);
-        }
-    }
-    emptyTile = { r: tileCount - 1, c: tileCount - 1 };
-}
-
-function moveTile(tile, r, c, size) {
-    // Check if adjacent to empty
-    const dr = Math.abs(r - emptyTile.r);
-    const dc = Math.abs(c - emptyTile.c);
-    
-    if ((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
-        // Swap DOM visual
-        tile.style.top = (emptyTile.r * size) + 'px';
-        tile.style.left = (emptyTile.c * size) + 'px';
-        
-        // Update data
-        const oldR = r;
-        const oldC = c;
-        r = emptyTile.r;
-        c = emptyTile.c;
-        emptyTile = { r: oldR, c: oldC };
-        
-        // Reset onclick with new coords
-        tile.onclick = () => moveTile(tile, r, c, size);
-    }
-}
-
-/* ================= HEART POPPER GAME ================= */
-function spawnHearts() {
-    const container = document.getElementById('secret-reveal');
-    container.innerHTML = "Catch a heart! ❤️";
-    
-    for(let i=0; i<15; i++) {
-        let heart = document.createElement('div');
-        heart.innerHTML = '❤️';
-        heart.style.position = 'fixed';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.top = '-10vh';
-        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-        heart.style.cursor = 'pointer';
-        heart.style.transition = `top ${Math.random() * 3 + 2}s linear`;
-        heart.style.zIndex = 1000;
-        
-        heart.onclick = function() {
-            const reasons = ["Your smile", "Your kindness", "Your eyes", "Everything"];
-            this.innerHTML = reasons[Math.floor(Math.random() * reasons.length)];
-            this.style.fontSize = '12px';
-            this.style.background = 'white';
-            this.style.color = 'black';
-            this.style.padding = '5px';
-            this.style.borderRadius = '5px';
-        };
-
-        document.body.appendChild(heart);
-        
-        setTimeout(() => {
-            heart.style.top = '110vh';
-        }, 100);
-
-        setTimeout(() => heart.remove(), 6000);
-    }
-}
-
-/* ================= STARFIELD CANVAS ================= */
-function initStarfield() {
-    const canvas = document.getElementById('starfield');
-    const ctx = canvas.getContext('2d');
-    
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    const stars = [];
-    for(let i=0; i<200; i++) {
-        stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2,
-            speed: Math.random() * 0.5
-        });
-    }
-    
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'white';
-        
-        stars.forEach(star => {
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            ctx.fill();
-            
-            star.y -= star.speed;
-            if(star.y < 0) star.y = canvas.height;
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
-    
-    window.onresize = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
 }
