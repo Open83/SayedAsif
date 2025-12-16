@@ -1,244 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>For Saraaa ❤️</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Saraaa 🌌</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Parisienne&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <div id="particles"></div>
-
-  <header class="header">
-    <div class="header-glass">
-      <div class="header-top">
-        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
-        <h1 class="logo">Saraaa <span class="heart-pulse">❤️</span></h1>
-        <button class="weather-btn" onclick="showWeatherLove()">🌤️</button>
-      </div>
-      <div class="countdown-container">
-        <div class="countdown-badge" id="countdownBadge">Calculating Love...</div>
-      </div>
+    <div id="loader">
+        <div class="heartbeat">❤️</div>
+        <p>Gathering Stardust...</p>
     </div>
-  </header>
 
-  <main class="container">
-    
-    <section id="page1" class="page active">
-      <div class="section-title">
-        <h2>Our Cinema 🎬</h2>
-        <p>Moments frozen in time</p>
-      </div>
-      
-      <div class="glass-card">
-        <div class="media-wrapper">
-          <video controls playsinline poster="assets/poster1.jpg">
-            <source src="assets/video1.mp4" type="video/mp4">
-            Your browser needs an update, my love.
-          </video>
-        </div>
-        <div class="love-caption">
-          "In every universe, I would find you and choose you." ✨
-        </div>
-      </div>
+    <canvas id="starfield"></canvas>
 
-      <div class="glass-card">
-        <div class="media-wrapper">
-          <video controls playsinline poster="assets/poster2.jpg">
-            <source src="assets/video2.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="love-caption">
-          "Your smile is the only sunrise I need." ☀️
-        </div>
-      </div>
-    </section>
-
-    <section id="page2" class="page">
-      <div class="section-title">
-        <h2>Love Arcade 🎮</h2>
-        <p>Fun times just like us</p>
-      </div>
-
-      <div class="glass-card">
-        <div class="card-header">
-          <h3>🧩 Memory Match</h3>
-          <div class="game-stats">
-            <span>Moves: <b id="memoryMoves">0</b></span>
-            <span>Pairs: <b id="memoryMatches">0</b>/8</span>
-          </div>
-        </div>
-        <div class="memory-grid" id="memoryGrid"></div>
-        <button class="btn btn-primary" onclick="initMemory()">Restart Game</button>
-      </div>
-
-      <div class="glass-card">
-        <div class="card-header">
-          <h3>🖼️ Jigsaw Puzzle</h3>
-        </div>
-        <div class="canvas-container">
-          <canvas id="jigsawCanvas"></canvas>
-        </div>
-        <div class="controls-row">
-          <button class="btn btn-sm" onclick="initJigsaw(3)">Easy (3x3)</button>
-          <button class="btn btn-sm" onclick="initJigsaw(4)">Hard (4x4)</button>
-        </div>
-      </div>
-
-      <div class="glass-card">
-        <div class="card-header">
-          <h3>🌀 Path to Your Heart</h3>
-        </div>
-        <div class="canvas-container">
-          <canvas id="mazeCanvas"></canvas>
-        </div>
-        <div class="d-pad">
-          <div></div>
-          <button class="d-btn" id="upBtn">⬆️</button>
-          <div></div>
-          <button class="d-btn" id="leftBtn">⬅️</button>
-          <button class="d-btn" id="downBtn">⬇️</button>
-          <button class="d-btn" id="rightBtn">➡️</button>
-        </div>
-        <button class="btn btn-ghost" onclick="resetMaze()">Reset Maze</button>
-      </div>
-    </section>
-
-    <section id="page3" class="page">
-      <div class="section-title">
-        <h2>Our Gallery 📸</h2>
-        <p>A collection of beautiful days</p>
-      </div>
-      <div class="masonry-gallery" id="gallery">
-        </div>
-    </section>
-
-    <section id="page4" class="page">
-      <div class="section-title">
-        <h2>Our Journey 🚀</h2>
-        <p>Every step brought me closer to you</p>
-      </div>
-
-      <div class="glass-card">
-        <div class="timeline" id="timeline"></div>
-      </div>
-
-      <div class="glass-card music-card">
-        <h3>Our Playlist 🎵</h3>
-        <div class="vinyl-record" id="recordDisk">
-          <div class="vinyl-center"></div>
-        </div>
+    <div class="music-widget">
+        <div class="disk" id="disk"></div>
         <div class="song-info">
-          <span id="currentSong">Select a song...</span>
+            <span id="songTitle">Paused</span>
         </div>
-        <div class="music-controls">
-          <button class="ctrl-btn" onclick="prevSong()">⏮️</button>
-          <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶️</button>
-          <button class="ctrl-btn" onclick="nextSong()">⏭️</button>
-        </div>
-        <audio id="audioPlayer"></audio>
-      </div>
-    </section>
-
-    <section id="page5" class="page">
-      <div class="section-title">
-        <h2>Love Quiz 💖</h2>
-        <p>How well do we know "Us"?</p>
-      </div>
-
-      <div class="glass-card" id="quizCard">
-        <div id="quizContainer"></div>
-        <button class="btn btn-primary" id="nextQuizBtn" onclick="nextQuestion()" style="display:none; margin-top:15px;">Next Question</button>
-      </div>
-
-      <div class="glass-card">
-        <h3>Today's Mood 🌡️</h3>
-        <div class="mood-selector">
-          <button class="mood-btn" onclick="setMood('😊')">😊</button>
-          <button class="mood-btn" onclick="setMood('😍')">😍</button>
-          <button class="mood-btn" onclick="setMood('🥰')">🥰</button>
-          <button class="mood-btn" onclick="setMood('🥺')">🥺</button>
-          <button class="mood-btn" onclick="setMood('😤')">😤</button>
-        </div>
-        <p id="moodText" class="mood-display"></p>
-      </div>
-    </section>
-
-    <section id="page6" class="page">
-      <div class="section-title">
-        <h2>Secret Notes 💌</h2>
-        <p>Wishes and whispers</p>
-      </div>
-
-      <div class="glass-card">
-        <h3>Wish Jar ✨</h3>
-        <div class="input-group">
-          <input type="text" id="wishInput" placeholder="I wish for..." maxlength="50">
-          <button class="btn-icon" onclick="addWish()">➕</button>
-        </div>
-        <ul id="wishList" class="wish-list"></ul>
-      </div>
-
-      <div class="glass-card">
-        <h3>Open Letter 📜</h3>
-        <textarea id="notepad" placeholder="Write something that stays here forever..."></textarea>
-        <div class="controls-row">
-          <button class="btn btn-primary" onclick="saveNote()">Save to Heart 💾</button>
-          <button class="btn btn-ghost" onclick="downloadNote()">Download 📥</button>
-        </div>
-        <p class="tiny-text">*Saved automatically to your device</p>
-      </div>
-    </section>
-
-  </main>
-
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="showPage(1)">
-      <span class="icon">🎬</span>
-      <span class="label">Cinema</span>
-    </button>
-    <button class="nav-item" onclick="showPage(2)">
-      <span class="icon">🎮</span>
-      <span class="label">Games</span>
-    </button>
-    <button class="nav-item" onclick="showPage(3)">
-      <span class="icon">📸</span>
-      <span class="label">Gallery</span>
-    </button>
-    <button class="nav-item" onclick="showPage(4)">
-      <span class="icon">🎼</span>
-      <span class="label">Music</span>
-    </button>
-    <button class="nav-item" onclick="showPage(5)">
-      <span class="icon">💖</span>
-      <span class="label">Quiz</span>
-    </button>
-    <button class="nav-item" onclick="showPage(6)">
-      <span class="icon">💌</span>
-      <span class="label">Notes</span>
-    </button>
-  </nav>
-
-  <div id="overlay" class="overlay" onclick="closeOverlay()">
-    <div class="overlay-content" onclick="event.stopPropagation()">
-      <h2 id="overlayTitle">🎉</h2>
-      <p id="overlayText"></p>
-      <button class="btn btn-primary" onclick="closeOverlay()">Yay! ❤️</button>
+        <button class="music-btn" onclick="toggleMusic()">🎵</button>
+        <audio id="bgMusic" loop>
+            <source src="assets/music.mp3" type="audio/mp3">
+        </audio>
     </div>
-  </div>
 
-  <div id="imageModal" class="modal" onclick="closeModal()">
-    <span class="modal-close">&times;</span>
-    <img class="modal-content" id="modalImg">
-    <div id="modalCaption"></div>
-  </div>
+    <nav class="glass-nav">
+        <button class="nav-btn active" onclick="switchPage('home')">🏠<span>Home</span></button>
+        <button class="nav-btn" onclick="switchPage('cinema')">🎬<span>Cinema</span></button>
+        <button class="nav-btn" onclick="switchPage('arcade')">🎮<span>Arcade</span></button>
+        <button class="nav-btn" onclick="switchPage('gallery')">📸<span>Gallery</span></button>
+        <button class="nav-btn" onclick="switchPage('letter')">💌<span>Letters</span></button>
+    </nav>
 
-  <script src="script.js"></script>
+    <main class="content-wrapper">
+
+        <section id="home" class="page active-page">
+            <div class="hero-content">
+                <h1 class="glow-text">Saraaa</h1>
+                <p class="subtitle">My Favorite Universe</p>
+                <div class="countdown-box">
+                    <span id="daysCount">0</span>
+                    <label>Days of Us</label>
+                </div>
+                <div class="daily-quote">
+                    "Every atom of your flesh is as dear to me as my own."
+                </div>
+            </div>
+        </section>
+
+        <section id="cinema" class="page">
+            <div class="page-header">
+                <h2>Our Cinema</h2>
+                <div class="line"></div>
+            </div>
+            <div class="reel-container">
+                <div class="film-card">
+                    <div class="video-wrapper">
+                        <video controls poster="assets/poster1.jpg">
+                            <source src="assets/video1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="caption">The moment time stood still. ✨</div>
+                </div>
+                <div class="film-card">
+                    <div class="video-wrapper">
+                        <video controls poster="assets/poster2.jpg">
+                            <source src="assets/video2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="caption">Your laugh is my favorite sound. 🎶</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="arcade" class="page">
+            <div class="page-header">
+                <h2>The Arcade</h2>
+                <div class="line"></div>
+            </div>
+
+            <div class="game-card">
+                <h3>🧩 The Picture Puzzle</h3>
+                <p>Put the pieces of us back together.</p>
+                <div id="puzzle-container">
+                    <div class="puzzle-overlay" id="puzzleOverlay" onclick="startPuzzle()">Tap to Start</div>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <h3>🎈 Pop the Heart</h3>
+                <p>Pop hearts to reveal a secret reason.</p>
+                <div id="heart-game-area">
+                    <button class="start-btn" onclick="spawnHearts()">Start Rain</button>
+                </div>
+                <div id="secret-reveal"></div>
+            </div>
+        </section>
+
+        <section id="gallery" class="page">
+            <div class="page-header">
+                <h2>Frozen Moments</h2>
+                <div class="line"></div>
+            </div>
+            <div class="masonry" id="photoGrid">
+                </div>
+        </section>
+
+        <section id="letter" class="page">
+            <div class="page-header">
+                <h2>The Vault</h2>
+                <div class="line"></div>
+            </div>
+
+            <div class="glass-panel">
+                <h3>My Promises 🤞</h3>
+                <ul class="promise-list">
+                    <li>To always listen.</li>
+                    <li>To support your dreams.</li>
+                    <li>To love you, even when you're "hangry".</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel">
+                <h3>Leave a Note ✍️</h3>
+                <textarea id="userNote" placeholder="Write something for the future..."></textarea>
+                <div class="action-row">
+                    <button class="action-btn" onclick="saveNote()">Save to Cloud ☁️</button>
+                    <button class="action-btn outline" onclick="downloadNote()">Download 📥</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="imgModal" class="modal" onclick="this.classList.remove('show')">
+        <img id="modalImg" src="">
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
