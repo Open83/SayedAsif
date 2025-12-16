@@ -3,141 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Saraaa's Universe 🌌</title>
+    <title>For Saraaa ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <div class="stars-bg"></div>
-    <div class="twinkle-overlay"></div>
+    <canvas id="bgCanvas"></canvas>
+    <div class="overlay-gradient"></div>
 
-    <div class="music-floater" onclick="toggleMusic()">
-        <div class="vinyl" id="vinyl"></div>
-        <div class="music-notes" id="musicNotes">🎵</div>
+    <div class="music-capsule" onclick="toggleMusic()">
+        <div class="equalizer">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <span id="musicStatus">Play Music</span>
         <audio id="bgMusic" loop>
             <source src="assets/music.mp3" type="audio/mp3">
         </audio>
     </div>
 
-    <main class="app-container">
+    <main id="app">
 
-        <section id="home" class="page active">
-            <div class="hero">
-                <h1 class="title-font">Saraaa</h1>
-                <p class="subtitle">My Forever & Always</p>
+        <section id="home" class="view active">
+            <div class="hero-content">
+                <div class="profile-container">
+                    <img src="assets/profile.jpg" alt="Saraaa" onerror="this.src='https://ui-avatars.com/api/?name=Saraaa&background=ff4b6e&color=fff&size=512'">
+                </div>
                 
-                <div class="glass-box countdown-box">
-                    <div class="count-number" id="daysCount">0</div>
-                    <div class="count-label">Days of Loving You</div>
+                <h1 class="elegant-title">Saraaa</h1>
+                <p class="subtitle">My Favorite Universe</p>
+                
+                <div class="glass-stat">
+                    <span id="daysCount">0</span>
+                    <label>Days Together</label>
                 </div>
 
-                <div class="quote-card">
-                    "You are the poem I never knew how to write, and this life is the story I have always wanted to tell."
-                </div>
-            </div>
-        </section>
-
-        <section id="cinema" class="page">
-            <div class="section-header">
-                <h2>Our Cinema 🎬</h2>
-            </div>
-            <div class="media-scroller">
-                <div class="glass-card media-card">
-                    <video controls poster="assets/poster1.jpg">
-                        <source src="assets/video1.mp4" type="video/mp4">
-                    </video>
-                    <p class="caption">That perfect day ✨</p>
-                </div>
-                <div class="glass-card media-card">
-                    <video controls poster="assets/poster2.jpg">
-                        <source src="assets/video2.mp4" type="video/mp4">
-                    </video>
-                    <p class="caption">Your beautiful smile ❤️</p>
+                <div class="daily-love" style="margin-top:20px; opacity:0.8; font-style:italic;">
+                    <p id="typingText"></p>
                 </div>
             </div>
         </section>
 
-        <section id="arcade" class="page">
-            <div class="section-header">
-                <h2>Love Arcade 🎮</h2>
-            </div>
-
-            <div class="glass-card game-container">
-                <h3>✨ Secret Scratch Card</h3>
-                <p class="instruction">Rub the screen to reveal a secret!</p>
-                <div class="scratch-wrapper">
-                    <canvas id="scratchCanvas"></canvas>
-                    <div class="hidden-content">
-                        <img src="assets/secret.jpg" alt="Secret" id="secretImg">
-                        <div class="secret-text">I Love You!</div>
-                    </div>
-                </div>
-                <button class="btn-reset" onclick="initScratchCard()">Reset Card</button>
-            </div>
-
-            <div class="glass-card game-container">
-                <h3>🧩 Picture Puzzle</h3>
-                <div id="puzzle-board"></div>
-                <button class="btn-reset" onclick="initPuzzle()">Shuffle</button>
-            </div>
-        </section>
-
-        <section id="quiz" class="page">
-            <div class="section-header">
-                <h2>Our Trivia 💖</h2>
+        <section id="arcade" class="view">
+            <div class="header-glass">
+                <h2>Secret Reveal ✨</h2>
+                <p>Rub to find a new memory</p>
             </div>
             
-            <div class="glass-card quiz-card" id="quizBox">
-                <div class="progress-bar"><div class="fill" id="quizProgress"></div></div>
-                <h3 id="questionText">Loading...</h3>
-                <div class="options-grid" id="optionsBox">
-                    </div>
+            <div class="scratch-container">
+                <div class="scratch-layer">
+                    <img id="secretImage" src="" alt="Secret">
+                    <div class="secret-overlay-text">I Love You ❤️</div>
+                </div>
+                <canvas id="scratchCanvas"></canvas>
+            </div>
+            
+            <button class="btn-primary" onclick="resetScratchGame()">Next Secret 🔄</button>
+        </section>
+
+        <section id="wishes" class="view">
+            <div class="header-glass">
+                <h2>Galaxy Jar 🌌</h2>
+                <p>Make a wish to the stars</p>
             </div>
 
-            <div class="glass-card result-card" id="quizResult" style="display: none;">
-                <h3>Quiz Complete! 🎉</h3>
-                <p id="scoreText"></p>
-                <p class="praise-text">You know me so well!</p>
-                <button class="btn-main" onclick="restartQuiz()">Play Again</button>
+            <div class="jar-wrapper">
+                <div class="jar-container">
+                    <canvas id="jarCanvas"></canvas>
+                </div>
+                <div class="input-floating">
+                    <input type="text" id="wishInput" placeholder="I wish for..." autocomplete="off">
+                    <button class="btn-circle" onclick="addWishParticle()">✨</button>
+                </div>
             </div>
         </section>
 
-        <section id="vault" class="page">
-            <div class="section-header">
-                <h2>The Heart Vault 🔐</h2>
+        <section id="journal" class="view">
+            <div class="header-glass">
+                <h2>Our Diary 📔</h2>
             </div>
+            
+            <div class="journal-paper">
+                <div class="date-header" id="currentDate"></div>
+                <textarea id="journalEntry" placeholder="Dear Diary, today I loved her more because..."></textarea>
+                <div class="save-indicator" id="saveStatus">Synced to Heart ❤️</div>
+            </div>
+            
+            <button class="btn-ghost" onclick="downloadJournal()">Save as File 📥</button>
+        </section>
 
-            <div class="glass-card jar-section">
-                <h3>The Star Jar ✨</h3>
-                <p class="instruction">Make a wish, and watch it turn into a star.</p>
-                <canvas id="starJarCanvas"></canvas>
-                <div class="input-row">
-                    <input type="text" id="wishInput" placeholder="I wish for...">
-                    <button class="btn-icon" onclick="addStarWish()">🌟</button>
+        <section id="cinema" class="view">
+            <div class="header-glass">
+                <h2>Moments 🎬</h2>
+            </div>
+            <div class="reel-snap-container">
+                <div class="snap-card">
+                    <video controls playsinline poster="assets/poster1.jpg">
+                        <source src="assets/video1.mp4" type="video/mp4">
+                    </video>
+                    <div class="snap-caption">Memory One</div>
                 </div>
-            </div>
-
-            <div class="glass-card letter-section">
-                <h3>My Letters to You 📜</h3>
-                <textarea id="loveNote" placeholder="Write our story here..."></textarea>
-                <div class="btn-row">
-                    <button class="btn-main" onclick="saveNote()">Save to Heart</button>
-                    <button class="btn-outline" onclick="downloadNote()">Download</button>
+                <div class="snap-card">
+                    <video controls playsinline poster="assets/poster2.jpg">
+                        <source src="assets/video2.mp4" type="video/mp4">
+                    </video>
+                    <div class="snap-caption">Memory Two</div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <nav class="dock-nav">
-        <button class="dock-btn active" onclick="navTo('home')">🏠</button>
-        <button class="dock-btn" onclick="navTo('cinema')">🎬</button>
-        <button class="dock-btn" onclick="navTo('arcade')">🎮</button>
-        <button class="dock-btn" onclick="navTo('quiz')">❓</button>
-        <button class="dock-btn" onclick="navTo('vault')">💌</button>
+    <nav class="glass-dock">
+        <button class="dock-item active" onclick="navigate('home')">🏠</button>
+        <button class="dock-item" onclick="navigate('arcade')">✨</button>
+        <button class="dock-item" onclick="navigate('wishes')">🌌</button>
+        <button class="dock-item" onclick="navigate('journal')">📔</button>
+        <button class="dock-item" onclick="navigate('cinema')">🎬</button>
     </nav>
 
     <script src="script.js"></script>
