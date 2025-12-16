@@ -1,206 +1,242 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-  <title>Saraaa ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>For Saraaa ❤️</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="header">
-    <div class="header-top">
-      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-      <h1>Saraaa ❤️</h1>
-      <button class="theme-toggle" onclick="alert('Weather: Sunny with love! ☀️❤️')">🌤️</button>
-    </div>
-    <p>Made with love ❤️</p>
-    <div class="countdown-badge" id="countdownBadge">💕 Days Together 💕</div>
-  </div>
 
-  <div class="container">
-    <!-- Page 1: Videos -->
-    <div id="page1" class="page active">
-      <div class="card">
-        <div class="card-title">Our Moments 💕</div>
-        <div class="media-container">
-          <video controls playsinline preload="metadata">
-            <source src="assets/video1.mp4" type="video/mp4">
-            Your browser doesn't support video.
-          </video>
-        </div>
-        <div class="message">
-          Har pal tumhare saath ek khubsurat yaad ban jaata hai. Tum ho toh sab kuch perfect lagta hai ❤️
-        </div>
+  <div id="particles"></div>
+
+  <header class="header">
+    <div class="header-glass">
+      <div class="header-top">
+        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
+        <h1 class="logo">Saraaa <span class="heart-pulse">❤️</span></h1>
+        <button class="weather-btn" onclick="showWeatherLove()">🌤️</button>
+      </div>
+      <div class="countdown-container">
+        <div class="countdown-badge" id="countdownBadge">Calculating Love...</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <section id="page1" class="page active">
+      <div class="section-title">
+        <h2>Our Cinema 🎬</h2>
+        <p>Moments frozen in time</p>
       </div>
       
-      <div class="card">
-        <div class="media-container">
-          <video controls playsinline preload="metadata">
-            <source src="assets/video2.mp4" type="video/mp4">
-            Your browser doesn't support video.
+      <div class="glass-card">
+        <div class="media-wrapper">
+          <video controls playsinline poster="assets/poster1.jpg">
+            <source src="assets/video1.mp4" type="video/mp4">
+            Your browser needs an update, my love.
           </video>
         </div>
-        <div class="message">
-          Every moment with you is a treasure. You make everything beautiful ❤️
-        </div>
-      </div>
-    </div>
-
-    <!-- Page 2: Games -->
-    <div id="page2" class="page">
-      <!-- Memory Game -->
-      <div class="card">
-        <div class="card-title">💗 Memory Match</div>
-        <div class="memory-stats">
-          <span>Moves: <strong id="memoryMoves">0</strong></span>
-          <span>Matches: <strong id="memoryMatches">0</strong></span>
-        </div>
-        <div class="memory-grid" id="memoryGrid"></div>
-        <div class="btn-group">
-          <button class="btn btn-small" onclick="initMemory()">New Game</button>
+        <div class="love-caption">
+          "In every universe, I would find you and choose you." ✨
         </div>
       </div>
 
-      <!-- Jigsaw -->
-      <div class="card">
-        <div class="card-title">💗 Jigsaw Puzzle</div>
-        <canvas id="jigsawCanvas" width="400" height="400"></canvas>
-        <div class="btn-group">
-          <button class="btn btn-small" onclick="initJigsaw(3)">3×3</button>
-          <button class="btn btn-small" onclick="initJigsaw(4)">4×4</button>
-          <button class="btn btn-small" onclick="initJigsaw(5)">5×5</button>
-          <button class="btn btn-ghost btn-small" onclick="shuffleJigsaw()">Shuffle</button>
+      <div class="glass-card">
+        <div class="media-wrapper">
+          <video controls playsinline poster="assets/poster2.jpg">
+            <source src="assets/video2.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="love-caption">
+          "Your smile is the only sunrise I need." ☀️
         </div>
       </div>
+    </section>
 
-      <!-- Maze -->
-      <div class="card">
-        <div class="card-title">💕 Heart Maze</div>
-        <canvas id="mazeCanvas" width="400" height="400"></canvas>
-        <div class="arrow-pad">
-          <button id="upBtn" class="arrow-btn">↑</button>
-          <button id="leftBtn" class="arrow-btn">←</button>
-          <button id="rightBtn" class="arrow-btn">→</button>
-          <button id="downBtn" class="arrow-btn">↓</button>
-        </div>
-        <div class="btn-group">
-          <button class="btn btn-ghost btn-small" onclick="resetMaze()">Reset</button>
-        </div>
+    <section id="page2" class="page">
+      <div class="section-title">
+        <h2>Love Arcade 🎮</h2>
+        <p>Fun times just like us</p>
       </div>
 
-      <!-- Dot Connect -->
-      <div class="card">
-        <div class="card-title">🔗 Connect The Dots</div>
-        <canvas id="dotCanvas" width="400" height="400"></canvas>
-        <div class="btn-group">
-          <button class="btn btn-ghost" onclick="undoDot()">Undo</button>
-          <button class="btn" onclick="resetDots()">Reset</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Page 3: Gallery -->
-    <div id="page3" class="page">
-      <div class="card">
-        <div class="card-title">Our Gallery 📸</div>
-        <div class="gallery" id="gallery"></div>
-      </div>
-    </div>
-
-    <!-- Page 4: Timeline & Music -->
-    <div id="page4" class="page">
-      <div class="card">
-        <div class="card-title">Our Story 💝</div>
-        <div id="timeline"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Our Playlist 🎵</div>
-        <div class="music-player">
-          <div id="currentSong" style="margin-bottom: 12px; font-size: 16px; font-weight: 600;">♫ Perfect - Ed Sheeran ♫</div>
-          <div class="music-controls">
-            <button class="music-btn" onclick="prevSong()">⏮️</button>
-            <button class="music-btn" id="playBtn" onclick="togglePlay()">▶️</button>
-            <button class="music-btn" onclick="nextSong()">⏭️</button>
+      <div class="glass-card">
+        <div class="card-header">
+          <h3>🧩 Memory Match</h3>
+          <div class="game-stats">
+            <span>Moves: <b id="memoryMoves">0</b></span>
+            <span>Pairs: <b id="memoryMatches">0</b>/8</span>
           </div>
         </div>
+        <div class="memory-grid" id="memoryGrid"></div>
+        <button class="btn btn-primary" onclick="initMemory()">Restart Game</button>
       </div>
-    </div>
 
-    <!-- Page 5: Quiz & Mood -->
-    <div id="page5" class="page">
-      <div class="card">
-        <div class="card-title">Love Quiz 💖</div>
-        <div id="quizContainer">
-          <div class="quiz-question">What's your ideal date?</div>
-          <div class="quiz-option" onclick="selectQuizOption(this, 0)">🌅 Sunset beach walk</div>
-          <div class="quiz-option" onclick="selectQuizOption(this, 1)">🍿 Movie night at home</div>
-          <div class="quiz-option" onclick="selectQuizOption(this, 2)">🍽️ Fancy dinner date</div>
-          <div class="quiz-option" onclick="selectQuizOption(this, 3)">🏕️ Adventure camping</div>
+      <div class="glass-card">
+        <div class="card-header">
+          <h3>🖼️ Jigsaw Puzzle</h3>
         </div>
-        <div class="btn-group">
-          <button class="btn" onclick="nextQuestion()">Next Question</button>
+        <div class="canvas-container">
+          <canvas id="jigsawCanvas"></canvas>
+        </div>
+        <div class="controls-row">
+          <button class="btn btn-sm" onclick="initJigsaw(3)">Easy (3x3)</button>
+          <button class="btn btn-sm" onclick="initJigsaw(4)">Hard (4x4)</button>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Today's Mood 😊</div>
-        <div class="mood-grid">
-          <button class="mood-btn" onclick="selectMood('😊')">😊</button>
-          <button class="mood-btn" onclick="selectMood('😍')">😍</button>
-          <button class="mood-btn" onclick="selectMood('🥰')">🥰</button>
-          <button class="mood-btn" onclick="selectMood('😘')">😘</button>
-          <button class="mood-btn" onclick="selectMood('💕')">💕</button>
-          <button class="mood-btn" onclick="selectMood('✨')">✨</button>
+      <div class="glass-card">
+        <div class="card-header">
+          <h3>🌀 Path to Your Heart</h3>
         </div>
-        <div id="moodMessage" class="message" style="display:none;"></div>
-      </div>
-    </div>
-
-    <!-- Page 6: Wishes & Notes -->
-    <div id="page6" class="page">
-      <div class="card">
-        <div class="card-title">Wish Jar 🌟</div>
-        <input type="text" class="wish-input" id="wishInput" placeholder="Make a wish..." maxlength="100">
-        <button class="btn" onclick="addWish()">Add Wish ✨</button>
-        <div id="wishList"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Love Notes 💌</div>
-        <textarea id="notepad" placeholder="Write your heart out..."></textarea>
-        <div class="btn-group" style="margin-top: 16px;">
-          <button class="btn" onclick="saveNote()">Save 💾</button>
-          <button class="btn btn-ghost" onclick="downloadNote()">Download 📝</button>
+        <div class="canvas-container">
+          <canvas id="mazeCanvas"></canvas>
         </div>
+        <div class="d-pad">
+          <div></div>
+          <button class="d-btn" id="upBtn">⬆️</button>
+          <div></div>
+          <button class="d-btn" id="leftBtn">⬅️</button>
+          <button class="d-btn" id="downBtn">⬇️</button>
+          <button class="d-btn" id="rightBtn">➡️</button>
+        </div>
+        <button class="btn btn-ghost" onclick="resetMaze()">Reset Maze</button>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <section id="page3" class="page">
+      <div class="section-title">
+        <h2>Our Gallery 📸</h2>
+        <p>A collection of beautiful days</p>
+      </div>
+      <div class="masonry-gallery" id="gallery">
+        </div>
+    </section>
+
+    <section id="page4" class="page">
+      <div class="section-title">
+        <h2>Our Journey 🚀</h2>
+        <p>Every step brought me closer to you</p>
+      </div>
+
+      <div class="glass-card">
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+      <div class="glass-card music-card">
+        <h3>Our Playlist 🎵</h3>
+        <div class="vinyl-record" id="recordDisk">
+          <div class="vinyl-center"></div>
+        </div>
+        <div class="song-info">
+          <span id="currentSong">Select a song...</span>
+        </div>
+        <div class="music-controls">
+          <button class="ctrl-btn" onclick="prevSong()">⏮️</button>
+          <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶️</button>
+          <button class="ctrl-btn" onclick="nextSong()">⏭️</button>
+        </div>
+        <audio id="audioPlayer"></audio>
+      </div>
+    </section>
+
+    <section id="page5" class="page">
+      <div class="section-title">
+        <h2>Love Quiz 💖</h2>
+        <p>How well do we know "Us"?</p>
+      </div>
+
+      <div class="glass-card" id="quizCard">
+        <div id="quizContainer"></div>
+        <button class="btn btn-primary" id="nextQuizBtn" onclick="nextQuestion()" style="display:none; margin-top:15px;">Next Question</button>
+      </div>
+
+      <div class="glass-card">
+        <h3>Today's Mood 🌡️</h3>
+        <div class="mood-selector">
+          <button class="mood-btn" onclick="setMood('😊')">😊</button>
+          <button class="mood-btn" onclick="setMood('😍')">😍</button>
+          <button class="mood-btn" onclick="setMood('🥰')">🥰</button>
+          <button class="mood-btn" onclick="setMood('🥺')">🥺</button>
+          <button class="mood-btn" onclick="setMood('😤')">😤</button>
+        </div>
+        <p id="moodText" class="mood-display"></p>
+      </div>
+    </section>
+
+    <section id="page6" class="page">
+      <div class="section-title">
+        <h2>Secret Notes 💌</h2>
+        <p>Wishes and whispers</p>
+      </div>
+
+      <div class="glass-card">
+        <h3>Wish Jar ✨</h3>
+        <div class="input-group">
+          <input type="text" id="wishInput" placeholder="I wish for..." maxlength="50">
+          <button class="btn-icon" onclick="addWish()">➕</button>
+        </div>
+        <ul id="wishList" class="wish-list"></ul>
+      </div>
+
+      <div class="glass-card">
+        <h3>Open Letter 📜</h3>
+        <textarea id="notepad" placeholder="Write something that stays here forever..."></textarea>
+        <div class="controls-row">
+          <button class="btn btn-primary" onclick="saveNote()">Save to Heart 💾</button>
+          <button class="btn btn-ghost" onclick="downloadNote()">Download 📥</button>
+        </div>
+        <p class="tiny-text">*Saved automatically to your device</p>
+      </div>
+    </section>
+
+  </main>
 
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="showPage(1)" title="Videos">🎬</button>
-    <button class="nav-btn" onclick="showPage(2)" title="Games">🎮</button>
-    <button class="nav-btn" onclick="showPage(3)" title="Gallery">📸</button>
-    <button class="nav-btn" onclick="showPage(4)" title="Timeline">💝</button>
-    <button class="nav-btn" onclick="showPage(5)" title="Quiz">💖</button>
-    <button class="nav-btn" onclick="showPage(6)" title="Notes">💌</button>
+    <button class="nav-item active" onclick="showPage(1)">
+      <span class="icon">🎬</span>
+      <span class="label">Cinema</span>
+    </button>
+    <button class="nav-item" onclick="showPage(2)">
+      <span class="icon">🎮</span>
+      <span class="label">Games</span>
+    </button>
+    <button class="nav-item" onclick="showPage(3)">
+      <span class="icon">📸</span>
+      <span class="label">Gallery</span>
+    </button>
+    <button class="nav-item" onclick="showPage(4)">
+      <span class="icon">🎼</span>
+      <span class="label">Music</span>
+    </button>
+    <button class="nav-item" onclick="showPage(5)">
+      <span class="icon">💖</span>
+      <span class="label">Quiz</span>
+    </button>
+    <button class="nav-item" onclick="showPage(6)">
+      <span class="icon">💌</span>
+      <span class="label">Notes</span>
+    </button>
   </nav>
 
-  <!-- Win Overlay -->
-  <div class="win-overlay" id="winOverlay">
-    <div class="win-content">
-      <h2 id="winTitle">🎉</h2>
-      <p id="winText"></p>
-      <button class="btn" onclick="closeWin()">Continue</button>
+  <div id="overlay" class="overlay" onclick="closeOverlay()">
+    <div class="overlay-content" onclick="event.stopPropagation()">
+      <h2 id="overlayTitle">🎉</h2>
+      <p id="overlayText"></p>
+      <button class="btn btn-primary" onclick="closeOverlay()">Yay! ❤️</button>
     </div>
   </div>
 
-  <!-- Image Modal -->
-  <div class="modal" id="imageModal" onclick="closeModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <img id="modalImage" src="" alt="">
-    </div>
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content" id="modalImg">
+    <div id="modalCaption"></div>
   </div>
 
   <script src="script.js"></script>
