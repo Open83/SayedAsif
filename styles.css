@@ -1,367 +1,196 @@
-/* ================= VARIABLES & RESET ================= */
+/* ============ RESET & VARIABLES ============ */
 :root {
-    --bg-dark: #0f0c29;
-    --bg-gradient: linear-gradient(to top, #24243e, #302b63, #0f0c29);
-    --primary: #ff0055;
-    --gold: #ffd700;
+    --bg-dark: #050511;
+    --primary: #ff2e63;
+    --accent: #08d9d6;
     --glass: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-main: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --text: #ffffff;
+    --font-title: 'Great Vibes', cursive;
     --font-heading: 'Cinzel', serif;
     --font-body: 'Montserrat', sans-serif;
-    --font-script: 'Parisienne', cursive;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
-    background: var(--bg-dark);
-    background: var(--bg-gradient);
-    color: var(--text-main);
+    background-color: var(--bg-dark);
+    background: radial-gradient(circle at 50% 10%, #1a1a2e 0%, #050511 100%);
+    color: var(--text);
     font-family: var(--font-body);
     height: 100vh;
-    overflow: hidden; /* Main scroll handled in content-wrapper */
+    overflow: hidden;
 }
 
-/* ================= LOADER ================= */
-#loader {
+/* ============ BACKGROUND ANIMATION ============ */
+.stars-bg {
     position: fixed;
-    inset: 0;
-    background: #000;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 1s ease;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");
+    z-index: -1;
+    opacity: 0.6;
 }
 
-.heartbeat {
-    font-size: 4rem;
-    animation: beat 1s infinite;
-}
-
-@keyframes beat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-/* ================= BACKGROUND ================= */
-#starfield {
+/* ============ MUSIC WIDGET ============ */
+.music-floater {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-
-/* ================= NAVIGATION ================= */
-.glass-nav {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 500px;
-    background: rgba(20, 20, 20, 0.6);
-    backdrop-filter: blur(15px);
+    top: 20px; right: 20px;
+    width: 50px; height: 50px;
+    background: var(--glass);
+    border-radius: 50%;
     border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 46, 99, 0.4);
+}
+
+.vinyl {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: black;
+    border: 2px solid #333;
+    position: absolute;
+}
+
+.playing .vinyl { animation: spin 3s linear infinite; }
+.music-notes { font-size: 1.2rem; z-index: 2; }
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* ============ NAVIGATION ============ */
+.dock-nav {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(20px);
+    padding: 10px 20px;
     border-radius: 50px;
     display: flex;
-    justify-content: space-around;
-    padding: 10px 5px;
+    gap: 20px;
+    border: 1px solid var(--glass-border);
     z-index: 100;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.nav-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
+.dock-btn {
+    background: none; border: none;
     font-size: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    transition: all 0.3s ease;
+    transition: transform 0.2s;
     cursor: pointer;
+    opacity: 0.6;
 }
 
-.nav-btn span {
-    font-size: 0.6rem;
-    font-weight: 600;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-}
+.dock-btn.active { opacity: 1; transform: scale(1.2) translateY(-5px); }
 
-.nav-btn.active {
-    color: var(--primary);
-    transform: translateY(-5px);
-}
-
-.nav-btn.active span {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ================= CONTENT LAYOUT ================= */
-.content-wrapper {
-    position: relative;
+/* ============ PAGE LAYOUT ============ */
+.app-container {
     height: 100vh;
-    width: 100%;
-    z-index: 10;
     overflow-y: auto;
-    scroll-behavior: smooth;
+    padding-bottom: 100px;
 }
 
 .page {
     display: none;
-    padding: 80px 20px 120px 20px; /* Top space for header, bottom for nav */
-    max-width: 800px;
+    padding: 20px;
+    max-width: 600px;
     margin: 0 auto;
     animation: fadeIn 0.8s ease;
 }
 
-.page.active-page {
-    display: block;
-}
+.page.active { display: block; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ================= HOME SECTION ================= */
-.hero-content {
-    text-align: center;
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+/* ============ COMPONENTS ============ */
+.hero { text-align: center; margin-top: 50px; }
+.title-font { font-family: var(--font-title); font-size: 4.5rem; color: var(--primary); text-shadow: 0 0 20px var(--primary); }
+.subtitle { letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 30px; }
 
-.glow-text {
-    font-family: var(--font-script);
-    font-size: 5rem;
-    color: transparent;
-    background: linear-gradient(45deg, #ff0055, #ffcc00);
-    -webkit-background-clip: text;
-    text-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-.countdown-box {
-    margin: 30px 0;
-    padding: 20px 40px;
+.glass-card {
     background: var(--glass);
-    border-radius: 20px;
     border: 1px solid var(--glass-border);
-}
-
-.countdown-box span {
-    font-size: 3rem;
-    font-weight: 700;
-    display: block;
-    line-height: 1;
-}
-
-/* ================= CARDS & COMPONENTS ================= */
-.page-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.page-header h2 {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-.line {
-    width: 50px;
-    height: 3px;
-    background: var(--primary);
-    margin: 0 auto;
-    border-radius: 2px;
-}
-
-.film-card, .game-card, .glass-panel {
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
     border-radius: 20px;
     padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.video-wrapper video {
-    width: 100%;
-    border-radius: 12px;
-}
+/* ============ CINEMA ============ */
+.media-card video { width: 100%; border-radius: 12px; }
+.caption { text-align: center; margin-top: 10px; font-style: italic; color: #ddd; }
 
-.caption {
-    font-family: var(--font-script);
-    font-size: 1.2rem;
-    text-align: center;
-    margin-top: 10px;
-    color: var(--gold);
-}
+/* ============ ARCADE ============ */
+.game-container { text-align: center; }
+.btn-reset { margin-top: 15px; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid white; color: white; border-radius: 20px; }
 
-/* ================= PUZZLE GAME ================= */
-#puzzle-container {
-    width: 300px;
-    height: 300px;
-    margin: 20px auto;
+/* Scratch Card */
+.scratch-wrapper {
     position: relative;
-    background: #000;
+    width: 250px; height: 250px;
+    margin: 10px auto;
     border-radius: 10px;
     overflow: hidden;
 }
+.hidden-content {
+    width: 100%; height: 100%;
+    background: white;
+    position: absolute; top: 0; left: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: #333;
+}
+#secretImg { width: 100%; height: 100%; object-fit: cover; }
+#scratchCanvas {
+    position: absolute; top: 0; left: 0;
+    z-index: 2; cursor: crosshair;
+}
 
+/* Puzzle */
+#puzzle-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    width: 240px;
+    margin: 0 auto;
+    background: #222;
+    padding: 2px;
+}
 .puzzle-tile {
-    position: absolute;
-    width: 100px; /* 300 / 3 */
-    height: 100px;
-    background-image: url('assets/puzzle.jpg'); /* Ensure this exists */
-    background-size: 300px 300px;
+    width: 78px; height: 78px;
+    background-size: 240px 240px;
     cursor: pointer;
-    transition: transform 0.2s ease;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-sizing: border-box;
+    transition: transform 0.2s;
 }
 
-.puzzle-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 5;
-}
+/* ============ QUIZ ============ */
+.progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 20px; }
+.fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+.options-grid { display: grid; gap: 10px; margin-top: 20px; }
+.quiz-opt { padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; border-radius: 10px; cursor: pointer; text-align: left; }
+.quiz-opt:active { background: var(--primary); }
 
-/* ================= GALLERY ================= */
-.masonry {
-    column-count: 2;
-    column-gap: 15px;
-}
-
-.masonry img {
-    width: 100%;
-    margin-bottom: 15px;
+/* ============ VAULT (Wish Jar) ============ */
+.jar-section { text-align: center; }
+#starJarCanvas {
+    width: 100%; height: 200px;
+    background: rgba(0,0,0,0.2);
     border-radius: 12px;
-    transition: transform 0.3s;
-    cursor: zoom-in;
+    margin: 10px 0;
+    border: 1px solid rgba(255,255,255,0.1);
 }
+.input-row { display: flex; gap: 10px; }
+input { flex: 1; padding: 10px; border-radius: 20px; border: none; background: rgba(255,255,255,0.1); color: white; outline: none; }
+.btn-icon { background: var(--primary); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; font-size: 1.2rem; }
 
-.masonry img:hover {
-    transform: scale(1.02);
-}
-
-/* ================= INPUTS & BUTTONS ================= */
-textarea {
-    width: 100%;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--glass-border);
-    border-radius: 10px;
-    color: white;
-    padding: 15px;
-    min-height: 100px;
-    font-family: inherit;
-    resize: none;
-    margin-bottom: 15px;
-}
-
-.action-row {
-    display: flex;
-    gap: 10px;
-}
-
-.action-btn, .start-btn {
-    flex: 1;
-    padding: 12px;
-    border-radius: 30px;
-    border: none;
-    background: var(--primary);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(255, 0, 85, 0.4);
-}
-
-.action-btn.outline {
-    background: transparent;
-    border: 1px solid var(--text-main);
-    box-shadow: none;
-}
-
-/* ================= MUSIC WIDGET ================= */
-.music-widget {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(0,0,0,0.5);
-    padding: 8px 15px;
-    border-radius: 30px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(5px);
-    z-index: 200;
-}
-
-.disk {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: conic-gradient(var(--primary), var(--gold), var(--primary));
-    animation: spin 2s linear infinite;
-    animation-play-state: paused;
-}
-
-.disk.playing { animation-play-state: running; }
-
-.music-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-@keyframes spin { 100% { transform: rotate(360deg); } }
-
-/* ================= MODAL ================= */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    z-index: 1000;
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
-.modal.show { display: flex; }
-.modal img { max-width: 90%; max-height: 80vh; border-radius: 10px; box-shadow: 0 0 30px var(--primary); }
+/* Notes */
+textarea { width: 100%; height: 150px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: white; padding: 15px; border-radius: 10px; resize: none; }
+.btn-row { display: flex; gap: 10px; margin-top: 10px; }
+.btn-main, .btn-outline { flex: 1; padding: 12px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; }
+.btn-main { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 1px solid white; color: white; }
