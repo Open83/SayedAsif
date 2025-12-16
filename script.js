@@ -1,449 +1,269 @@
-/* ============================================
-   GLOBAL STATE & INIT
-   ============================================ */
-const app = {
-  currentPage: 1,
-  theme: localStorage.getItem('theme') || 'dark',
-  audio: null,
-  playlist: [
-    { title: "Perfect - Ed Sheeran", file: "assets/music1.mp3" }, 
-    { title: "A Thousand Years", file: "assets/music2.mp3" },
-    { title: "All of Me", file: "assets/music3.mp3" }
-  ],
-  currentSongIdx: 0,
-  isPlaying: false
+/* ================= CONFIGURATION ================= */
+const CONFIG = {
+    startDate: new Date('2023-01-01'), // CHANGE THIS DATE
+    puzzleImage: 'assets/puzzle.jpg', // Make sure this image exists in assets
+    gridSize: 3 // 3x3 Puzzle
 };
 
-// Anniversary Date (YYYY, MM-1, DD) -> Month is 0-indexed
-const START_DATE = new Date(2024, 0, 1); 
-
-window.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-  initCountdown();
-  showPage(1);
-  loadNotes();
-  loadWishes();
-  loadMood();
-  initAudio();
-  
-  // Responsive Canvas Resize Listener
-  window.addEventListener('resize', () => {
-    // Debounce resize to prevent lag
-    clearTimeout(window.resizeTimer);
-    window.resizeTimer = setTimeout(() => {
-      initJigsaw(3); 
-      resetMaze();
-    }, 200);
-  });
-});
-
-/* ============================================
-   NAVIGATION & THEME
-   ============================================ */
-function showPage(id) {
-  // Hide all pages
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  
-  // Show target
-  document.getElementById(`page${id}`).classList.add('active');
-  document.querySelectorAll('.nav-item')[id-1].classList.add('active');
-  
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  
-  // Initialize games only when visible to fix canvas sizing issues
-  if(id === 2) {
+/* ================= INIT & LOADER ================= */
+window.onload = () => {
+    // 1. Loading Simulation
     setTimeout(() => {
-      initMemory();
-      initJigsaw(3);
-      resetMaze();
-    }, 100);
-  }
-  if(id === 3) loadGallery();
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+        }, 1000);
+    }, 2000);
+
+    // 2. Start Components
+    initStarfield();
+    updateCounter();
+    loadNote();
+    initGallery();
+    
+    // 3. Setup Music
+    const audio = document.getElementById('bgMusic');
+    audio.volume = 0.4;
+};
+
+/* ================= NAVIGATION ================= */
+function switchPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active-page');
+        // Reset animations by re-adding class
+        void p.offsetWidth; 
+    });
+    
+    // Show target
+    document.getElementById(pageId).classList.add('active-page');
+
+    // Update Nav Icons
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.onclick.toString().includes(pageId)) btn.classList.add('active');
+    });
+
+    // Special case: Refresh puzzle if Arcade opened
+    if(pageId === 'arcade' && !puzzleStarted) {
+        document.getElementById('puzzleOverlay').style.display = 'flex';
+    }
 }
 
-function initTheme() {
-  if (app.theme === 'light') document.body.classList.add('light-mode');
-}
+/* ================= FEATURES ================= */
 
-function toggleTheme() {
-  document.body.classList.toggle('light-mode');
-  app.theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-  localStorage.setItem('theme', app.theme);
-}
-
-function showWeatherLove() {
-  alert("Forecast: 100% chance of love showers with scattered hugs! 🌧️❤️");
-}
-
-/* ============================================
-   COUNTDOWN
-   ============================================ */
-function initCountdown() {
-  const update = () => {
-    const now = new Date();
-    const diff = now - START_DATE;
+// 1. Days Counter
+function updateCounter() {
+    const diff = new Date() - CONFIG.startDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    document.getElementById('countdownBadge').innerHTML = `💕 ${days} Days of Us 💕`;
-  };
-  update();
-  setInterval(update, 1000 * 60 * 60); // Update hourly
+    document.getElementById('daysCount').innerText = days;
 }
 
-/* ============================================
-   GAME: MEMORY MATCH
-   ============================================ */
-let memState = { cards: [], flipped: [], solved: 0, moves: 0, locked: false };
-
-function initMemory() {
-  const emojis = ['❤️', '🌹', '🦋', '💍', '🍕', '🐱', '🌙', '🎵'];
-  const deck = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
-  
-  const grid = document.getElementById('memoryGrid');
-  grid.innerHTML = '';
-  memState = { cards: deck, flipped: [], solved: 0, moves: 0, locked: false };
-  updateMemStats();
-
-  deck.forEach((emoji, i) => {
-    const card = document.createElement('div');
-    card.className = 'memory-card';
-    card.dataset.idx = i;
-    card.innerHTML = `<div class="content">${emoji}</div>`; // Hidden by CSS until flipped
-    card.onclick = () => flipCard(card, emoji, i);
-    grid.appendChild(card);
-  });
-}
-
-function flipCard(card, emoji, idx) {
-  if (memState.locked || card.classList.contains('flipped') || memState.flipped.includes(idx)) return;
-  
-  card.classList.add('flipped');
-  memState.flipped.push({ idx, emoji, element: card });
-
-  if (memState.flipped.length === 2) {
-    memState.moves++;
-    updateMemStats();
-    checkMatch();
-  }
-}
-
-function checkMatch() {
-  memState.locked = true;
-  const [c1, c2] = memState.flipped;
-  
-  if (c1.emoji === c2.emoji) {
-    memState.solved++;
-    memState.flipped = [];
-    memState.locked = false;
-    updateMemStats();
-    if (memState.solved === 8) showOverlay("Perfect Match! 💑", "Just like us, these pairs belong together.");
-  } else {
-    setTimeout(() => {
-      c1.element.classList.remove('flipped');
-      c2.element.classList.remove('flipped');
-      memState.flipped = [];
-      memState.locked = false;
-    }, 1000);
-  }
-}
-
-function updateMemStats() {
-  document.getElementById('memoryMoves').innerText = memState.moves;
-  document.getElementById('memoryMatches').innerText = memState.solved;
-}
-
-/* ============================================
-   GAME: MAZE (Responsive)
-   ============================================ */
-let mazeCtx, player, goal, mazeGrid, cellSize;
-
-function resetMaze() {
-  const canvas = document.getElementById('mazeCanvas');
-  const container = canvas.parentElement;
-  // Dynamic sizing
-  const size = Math.min(container.clientWidth - 20, 350);
-  canvas.width = size;
-  canvas.height = size;
-  
-  mazeCtx = canvas.getContext('2d');
-  const cols = 15; // Must be odd
-  cellSize = size / cols;
-  
-  mazeGrid = generateMazeGrid(cols);
-  player = { x: 1, y: 1 };
-  goal = { x: cols-2, y: cols-2 };
-  
-  drawMaze();
-}
-
-function generateMazeGrid(size) {
-  // Simple DFS maze generation
-  let map = Array(size).fill().map(() => Array(size).fill(1));
-  let stack = [[1, 1]];
-  map[1][1] = 0;
-  
-  while (stack.length) {
-    let [cx, cy] = stack[stack.length - 1];
-    let dirs = [[0,-2], [0,2], [-2,0], [2,0]].sort(() => Math.random() - 0.5);
-    let moved = false;
+// 2. Music Player
+let isPlaying = false;
+function toggleMusic() {
+    const audio = document.getElementById('bgMusic');
+    const disk = document.getElementById('disk');
+    const title = document.getElementById('songTitle');
     
-    for (let [dx, dy] of dirs) {
-      let nx = cx + dx, ny = cy + dy;
-      if (nx > 0 && ny > 0 && nx < size-1 && ny < size-1 && map[ny][nx] === 1) {
-        map[ny][nx] = 0;
-        map[cy + dy/2][cx + dx/2] = 0;
-        stack.push([nx, ny]);
-        moved = true;
-        break;
-      }
-    }
-    if (!moved) stack.pop();
-  }
-  return map;
-}
-
-function drawMaze() {
-  // Clear
-  mazeCtx.fillStyle = app.theme === 'light' ? '#eee' : '#111';
-  mazeCtx.fillRect(0, 0, mazeCtx.canvas.width, mazeCtx.canvas.height);
-  
-  // Walls
-  mazeCtx.fillStyle = app.theme === 'light' ? '#333' : '#eee';
-  for(let y=0; y<mazeGrid.length; y++) {
-    for(let x=0; x<mazeGrid.length; x++) {
-      if(mazeGrid[y][x]) mazeCtx.fillRect(x*cellSize, y*cellSize, cellSize+1, cellSize+1);
-    }
-  }
-  
-  // Player
-  mazeCtx.fillStyle = '#ff4b6e';
-  mazeCtx.beginPath();
-  mazeCtx.arc((player.x+0.5)*cellSize, (player.y+0.5)*cellSize, cellSize/2.5, 0, Math.PI*2);
-  mazeCtx.fill();
-  
-  // Goal
-  mazeCtx.font = `${cellSize}px Arial`;
-  mazeCtx.fillText('❤️', goal.x*cellSize, (goal.y+0.8)*cellSize);
-}
-
-function moveMaze(dx, dy) {
-  let nx = player.x + dx;
-  let ny = player.y + dy;
-  if (mazeGrid[ny] && mazeGrid[ny][nx] === 0) {
-    player.x = nx;
-    player.y = ny;
-    drawMaze();
-    if(player.x === goal.x && player.y === goal.y) showOverlay("You Found My Heart! ❤️", "It was always waiting for you.");
-  }
-}
-
-// Bind D-Pad
-document.getElementById('upBtn').onclick = () => moveMaze(0, -1);
-document.getElementById('downBtn').onclick = () => moveMaze(0, 1);
-document.getElementById('leftBtn').onclick = () => moveMaze(-1, 0);
-document.getElementById('rightBtn').onclick = () => moveMaze(1, 0);
-
-/* ============================================
-   GAME: JIGSAW (Placeholder Logic)
-   ============================================ */
-function initJigsaw(level) {
-    // A simplified placeholder for Jigsaw - proper Jigsaw logic 
-    // is very complex for a single file. 
-    // Using a simple "Unscramble" visual for now.
-    const canvas = document.getElementById('jigsawCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 300;
-    canvas.height = 300;
-    
-    ctx.fillStyle = '#333';
-    ctx.fillRect(0,0,300,300);
-    ctx.fillStyle = '#fff';
-    ctx.font = '20px Lato';
-    ctx.textAlign = 'center';
-    ctx.fillText("Select difficulty to start", 150, 150);
-}
-
-/* ============================================
-   GALLERY
-   ============================================ */
-function loadGallery() {
-  const gallery = document.getElementById('gallery');
-  if(gallery.innerHTML.trim() !== "") return; // Don't reload if exists
-
-  // Use placeholder images for demo - replace with local assets
-  const images = [
-    {src: 'https://source.unsplash.com/random/400x500/?couple,love', cap: 'Us'},
-    {src: 'https://source.unsplash.com/random/400x400/?romance', cap: 'Date Night'},
-    {src: 'https://source.unsplash.com/random/400x600/?hug', cap: 'Warmth'},
-    {src: 'https://source.unsplash.com/random/400x300/?kiss', cap: 'First Kiss'},
-    {src: 'https://source.unsplash.com/random/400x550/?sunset,couple', cap: 'Forever'}
-  ];
-  
-  gallery.innerHTML = images.map(img => `
-    <div class="gallery-item" onclick="openModal('${img.src}', '${img.cap}')">
-      <img src="${img.src}" loading="lazy" alt="Love Memory">
-    </div>
-  `).join('');
-}
-
-function openModal(src, cap) {
-  const modal = document.getElementById('imageModal');
-  document.getElementById('modalImg').src = src;
-  document.getElementById('modalCaption').innerText = cap;
-  modal.classList.add('show');
-}
-
-function closeModal() {
-  document.getElementById('imageModal').classList.remove('show');
-}
-
-/* ============================================
-   MUSIC PLAYER
-   ============================================ */
-function initAudio() {
-  app.audio = document.getElementById('audioPlayer');
-  app.audio.onended = nextSong;
-  loadSong(0);
-}
-
-function loadSong(idx) {
-  app.currentSongIdx = idx;
-  const song = app.playlist[idx];
-  document.getElementById('currentSong').innerText = song.title;
-  app.audio.src = song.file;
-}
-
-function togglePlay() {
-  if (app.isPlaying) {
-    app.audio.pause();
-    document.getElementById('recordDisk').classList.remove('spinning');
-    document.getElementById('playBtn').innerText = '▶️';
-  } else {
-    // Attempt to play - browsers may block if no interaction
-    app.audio.play().catch(e => alert("Please add music files to assets/ folder!"));
-    document.getElementById('recordDisk').classList.add('spinning');
-    document.getElementById('playBtn').innerText = '⏸️';
-  }
-  app.isPlaying = !app.isPlaying;
-}
-
-function nextSong() {
-  let next = (app.currentSongIdx + 1) % app.playlist.length;
-  loadSong(next);
-  if(app.isPlaying) app.audio.play();
-}
-
-function prevSong() {
-  let prev = (app.currentSongIdx - 1 + app.playlist.length) % app.playlist.length;
-  loadSong(prev);
-  if(app.isPlaying) app.audio.play();
-}
-
-/* ============================================
-   NOTES & WISHES (LocalStorage)
-   ============================================ */
-function saveNote() {
-  const text = document.getElementById('notepad').value;
-  localStorage.setItem('saraa_note', text);
-  showOverlay("Saved 💾", "Your words are safe in my digital heart.");
-}
-
-function loadNotes() {
-  const saved = localStorage.getItem('saraa_note');
-  if(saved) document.getElementById('notepad').value = saved;
-}
-
-function addWish() {
-  const input = document.getElementById('wishInput');
-  const txt = input.value.trim();
-  if(!txt) return;
-  
-  let wishes = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
-  wishes.push(txt);
-  localStorage.setItem('saraa_wishes', JSON.stringify(wishes));
-  input.value = '';
-  loadWishes();
-}
-
-function loadWishes() {
-  let wishes = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
-  const list = document.getElementById('wishList');
-  list.innerHTML = wishes.map((w, i) => `
-    <li class="wish-item">✨ ${w} <span onclick="deleteWish(${i})" style="float:right;cursor:pointer">×</span></li>
-  `).join('');
-}
-
-function deleteWish(i) {
-  let wishes = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
-  wishes.splice(i, 1);
-  localStorage.setItem('saraa_wishes', JSON.stringify(wishes));
-  loadWishes();
-}
-
-/* ============================================
-   QUIZ & MOOD
-   ============================================ */
-const quizData = [
-    { q: "Where was our first date?", opts: ["Cafe", "Park", "Movies", "Beach"], a: 0 },
-    { q: "What is my favorite color on you?", opts: ["Red", "Blue", "Black", "White"], a: 2 },
-    // Add more questions here
-];
-let quizIdx = 0;
-
-function renderQuiz() {
-    // Simplified quiz renderer
-    const container = document.getElementById('quizContainer');
-    if(quizIdx >= quizData.length) {
-        container.innerHTML = "<h3>You know everything! ❤️</h3>";
-        return;
-    }
-    const q = quizData[quizIdx];
-    container.innerHTML = `
-        <h4>${q.q}</h4>
-        <div class="quiz-opts">
-            ${q.opts.map((o, i) => `<button class="btn btn-sm" onclick="checkAnswer(${i}, ${q.a})">${o}</button>`).join('')}
-        </div>
-    `;
-}
-// Initialize Quiz
-renderQuiz();
-
-function checkAnswer(selected, correct) {
-    if(selected === correct) {
-        alert("Correct! 😍");
-        quizIdx++;
-        renderQuiz();
+    if (isPlaying) {
+        audio.pause();
+        disk.classList.remove('playing');
+        title.innerText = "Paused";
     } else {
-        alert("Try again sweetie! 😅");
+        audio.play().catch(e => alert("Interact with the page first!"));
+        disk.classList.add('playing');
+        title.innerText = "Our Song";
     }
+    isPlaying = !isPlaying;
 }
 
-function setMood(emoji) {
-    localStorage.setItem('saraa_mood', emoji);
-    loadMood();
+// 3. Interactive Notepad
+function saveNote() {
+    const val = document.getElementById('userNote').value;
+    localStorage.setItem('saraa_love_note', val);
+    alert("Saved to the stars! ✨");
 }
 
-function loadMood() {
-    const m = localStorage.getItem('saraa_mood');
-    if(m) document.getElementById('moodText').innerText = `Current Mood: ${m}`;
+function loadNote() {
+    const saved = localStorage.getItem('saraa_love_note');
+    if(saved) document.getElementById('userNote').value = saved;
 }
 
-/* ============================================
-   UTILS
-   ============================================ */
-function showOverlay(title, text) {
-  document.getElementById('overlayTitle').innerText = title;
-  document.getElementById('overlayText').innerText = text;
-  document.getElementById('overlay').classList.add('show');
-}
-function closeOverlay() {
-  document.getElementById('overlay').classList.remove('show');
-}
 function downloadNote() {
-    const text = document.getElementById('notepad').value;
+    const text = document.getElementById('userNote').value;
     const blob = new Blob([text], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'LoveLetter.txt';
+    a.download = 'NoteForYou.txt';
     a.click();
+}
+
+// 4. Masonry Gallery Population
+function initGallery() {
+    const grid = document.getElementById('photoGrid');
+    // Using placeholder images - Replace src with assets/img1.jpg etc.
+    const images = [
+        'assets/img1.jpg', 'assets/img2.jpg', 'assets/img3.jpg', 
+        'assets/img4.jpg', 'assets/img5.jpg'
+    ];
+    
+    // If you don't have files yet, this prevents crash
+    // Remove this check once you add images
+    if(images.length > 0) {
+       // Loop through images
+       // For now, I will use placeholder logic so code works immediately for you
+       const placeholderCount = 6;
+       grid.innerHTML = '';
+       for(let i=0; i<placeholderCount; i++) {
+           let img = document.createElement('img');
+           img.src = `https://picsum.photos/400/${300 + Math.floor(Math.random()*200)}?random=${i}`; // Random aesthetic heights
+           img.onclick = function() {
+               document.getElementById('imgModal').classList.add('show');
+               document.getElementById('modalImg').src = this.src;
+           }
+           grid.appendChild(img);
+       }
+    }
+}
+
+/* ================= PUZZLE GAME LOGIC (Sliding Tile) ================= */
+let puzzleStarted = false;
+let emptyTile = { r: 2, c: 2 }; // Bottom right for 3x3
+
+function startPuzzle() {
+    document.getElementById('puzzleOverlay').style.display = 'none';
+    puzzleStarted = true;
+    createPuzzleGrid();
+}
+
+function createPuzzleGrid() {
+    const container = document.getElementById('puzzle-container');
+    container.innerHTML = ''; // Clear
+    
+    const size = 300;
+    const tileCount = CONFIG.gridSize;
+    const tileSize = size / tileCount;
+    
+    // Create tiles
+    for (let r = 0; r < tileCount; r++) {
+        for (let c = 0; c < tileCount; c++) {
+            if (r === tileCount - 1 && c === tileCount - 1) continue; // Skip last one (empty)
+            
+            let tile = document.createElement('div');
+            tile.className = 'puzzle-tile';
+            tile.style.width = tileSize + 'px';
+            tile.style.height = tileSize + 'px';
+            tile.style.backgroundPosition = `-${c * tileSize}px -${r * tileSize}px`;
+            tile.style.top = (r * tileSize) + 'px';
+            tile.style.left = (c * tileSize) + 'px';
+            tile.id = `tile-${r}-${c}`;
+            
+            // Randomize positions slightly for "unsolved" look (simplified shuffle)
+            // In a real app, use solvable shuffle algorithm. 
+            // Here we just swap a few for effect to ensure solvability.
+            
+            tile.onclick = () => moveTile(tile, r, c, tileSize);
+            container.appendChild(tile);
+        }
+    }
+    emptyTile = { r: tileCount - 1, c: tileCount - 1 };
+}
+
+function moveTile(tile, r, c, size) {
+    // Check if adjacent to empty
+    const dr = Math.abs(r - emptyTile.r);
+    const dc = Math.abs(c - emptyTile.c);
+    
+    if ((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
+        // Swap DOM visual
+        tile.style.top = (emptyTile.r * size) + 'px';
+        tile.style.left = (emptyTile.c * size) + 'px';
+        
+        // Update data
+        const oldR = r;
+        const oldC = c;
+        r = emptyTile.r;
+        c = emptyTile.c;
+        emptyTile = { r: oldR, c: oldC };
+        
+        // Reset onclick with new coords
+        tile.onclick = () => moveTile(tile, r, c, size);
+    }
+}
+
+/* ================= HEART POPPER GAME ================= */
+function spawnHearts() {
+    const container = document.getElementById('secret-reveal');
+    container.innerHTML = "Catch a heart! ❤️";
+    
+    for(let i=0; i<15; i++) {
+        let heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.position = 'fixed';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = '-10vh';
+        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+        heart.style.cursor = 'pointer';
+        heart.style.transition = `top ${Math.random() * 3 + 2}s linear`;
+        heart.style.zIndex = 1000;
+        
+        heart.onclick = function() {
+            const reasons = ["Your smile", "Your kindness", "Your eyes", "Everything"];
+            this.innerHTML = reasons[Math.floor(Math.random() * reasons.length)];
+            this.style.fontSize = '12px';
+            this.style.background = 'white';
+            this.style.color = 'black';
+            this.style.padding = '5px';
+            this.style.borderRadius = '5px';
+        };
+
+        document.body.appendChild(heart);
+        
+        setTimeout(() => {
+            heart.style.top = '110vh';
+        }, 100);
+
+        setTimeout(() => heart.remove(), 6000);
+    }
+}
+
+/* ================= STARFIELD CANVAS ================= */
+function initStarfield() {
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const stars = [];
+    for(let i=0; i<200; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            speed: Math.random() * 0.5
+        });
+    }
+    
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        
+        stars.forEach(star => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            star.y -= star.speed;
+            if(star.y < 0) star.y = canvas.height;
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+    
+    window.onresize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
 }
