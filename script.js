@@ -1,218 +1,77 @@
 /* ================== CONFIGURATION ================== */
 const CONFIG = {
-    startDate: new Date('2023-01-01'), // UPDATE WITH YOUR ACTUAL ANNIVERSARY
+    startDate: new Date('2023-01-01'),
     secrets: [
         { img: 'assets/secret1.jpg', text: "My Happy Place 🏠" },
         { img: 'assets/secret2.jpg', text: "Best Day Ever ❤️" },
         { img: 'assets/secret3.jpg', text: "Your Beautiful Smile ✨" }
     ],
-    milestones: [
-        { date: "Jan 1, 2023", text: "When my universe found its center. ❤️" },
-        { date: "Feb 14, 2023", text: "Our first quiet sunset together. 🌅" },
-        { date: "Today", text: "Every second with you is a gift I cherish." }
-    ],
-    memoryIcons: ['🌸', '💖', '💍', '🪐', '🌙', '🦋'],
     affirmations: [
         "You are the poem I never knew how to write.",
-        "In a sea of people, my eyes search for you.",
-        "Loving you is my favorite thing to do."
+        "In a sea of people, my eyes will always search for you.",
+        "Loving you is my favorite thing to do.",
+        "You are my today and all of my tomorrows.",
+        "Every love song reminds me of you.",
+        "You make my heart smile in ways I never knew possible."
+    ],
+    letters: [
+        {
+            title: "Why I Love You 💝",
+            content: "My dearest Sara, where do I even begin? Your laugh lights up my darkest days. Your smile is my favorite view. The way you care about everything and everyone around you shows me what true beauty is. You're not just my love, you're my best friend, my adventure partner, and my home. Every moment with you feels like a dream I never want to wake up from. I love you more than words can express."
+        },
+        {
+            title: "Your Magic 🌟",
+            content: "There's something magical about you that I can't quite explain. Maybe it's the way your eyes sparkle when you talk about things you love. Or how you make ordinary moments feel extraordinary. You have this incredible ability to turn my worst days into beautiful memories. Your presence is like sunshine - warming, bright, and absolutely essential to my happiness."
+        },
+        {
+            title: "Beautiful Soul 🌸",
+            content: "Sara, your beauty goes so much deeper than what the eyes can see. Your kindness, your strength, your gentle heart - these are the things that made me fall in love with you. You see the good in people, you spread joy wherever you go, and you make the world a better place just by being in it. I'm so grateful to know someone as genuinely beautiful as you."
+        },
+        {
+            title: "Our Forever 💫",
+            content: "When I think about the future, I see you in every chapter. I see us laughing together, growing together, building a life full of love and adventure. You're not just my present, you're my forever. Thank you for choosing me, for loving me, for being you. Here's to all our tomorrows, my love. I can't wait to create a lifetime of memories with you."
+        }
+    ],
+    fortunes: [
+        "A surprise date night is in your near future! 💑",
+        "You will receive an unexpected compliment today! 🌟",
+        "A beautiful memory will be made this week! 📸",
+        "Love and laughter surround you always! 😊",
+        "Your smile will brighten someone's day! ✨",
+        "A sweet surprise awaits you soon! 🎁",
+        "Today is perfect for making wishes come true! 🌠",
+        "Your kindness will be rewarded! 💖"
     ]
 };
 
-/* ================== INITIALIZATION ================== */
+/* ================== INIT ================== */
 window.onload = () => {
-    initConstellations();
-    initGarden();
-    initTimeline();
-    initMemoryGame();
+    startBackgroundAnimation();
+    updateDays();
+    typeAffirmation();
     initScratchGame();
     initGalaxyJar();
     initJournal();
-    updateDays();
-    typeAffirmation();
+    initPuzzle();
+    initFortuneWheel();
 };
-
-/* ================== CONSTELLATION ART ================== */
-function initConstellations() {
-    const canvas = document.getElementById('artCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    let stars = Array(100).fill().map(() => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3
-    }));
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
-        stars.forEach(s => {
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, 1, 0, Math.PI * 2);
-            ctx.fill();
-            s.x += s.vx; s.y += s.vy;
-            if (s.x < 0 || s.x > canvas.width) s.vx *= -1;
-            if (s.y < 0 || s.y > canvas.height) s.vy *= -1;
-
-            stars.forEach(s2 => {
-                let d = Math.hypot(s.x - s2.x, s.y - s2.y);
-                if (d < 110) {
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${1 - d / 110})`;
-                    ctx.lineWidth = 0.2;
-                    ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s2.x, s2.y); ctx.stroke();
-                }
-            });
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-/* ================== ZEN GARDEN ================== */
-function initGarden() {
-    const canvas = document.getElementById('gardenCanvas');
-    const ctx = canvas.getContext('2d');
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = 340; canvas.height = 500;
-
-    canvas.addEventListener('click', (e) => {
-        const x = (e.clientX - canvas.getBoundingClientRect().left) * (canvas.width / canvas.getBoundingClientRect().width);
-        const y = (e.clientY - canvas.getBoundingClientRect().top) * (canvas.height / canvas.getBoundingClientRect().height);
-        drawFlower(ctx, x, y);
-    });
-
-    function drawFlower(ctx, x, y) {
-        const petals = 6;
-        for (let i = 0; i < petals; i++) {
-            ctx.fillStyle = `hsla(${Math.random() * 360}, 70%, 75%, 0.6)`;
-            ctx.beginPath();
-            ctx.ellipse(x, y, 8, 20, (i * (360 / petals)) * Math.PI / 180, 0, 2 * Math.PI);
-            ctx.fill();
-        }
-        ctx.fillStyle = "#ffd700";
-        ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
-    }
-}
-
-/* ================== MEMORY GAME ================== */
-function initMemoryGame() {
-    const grid = document.getElementById('memoryGrid');
-    const deck = [...CONFIG.memoryIcons, ...CONFIG.memoryIcons].sort(() => Math.random() - 0.5);
-    grid.innerHTML = '';
-    deck.forEach(icon => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `<div class="card-front">?</div><div class="card-back">${icon}</div>`;
-        card.onclick = () => card.classList.toggle('flipped');
-        grid.appendChild(card);
-    });
-}
 
 /* ================== NAVIGATION ================== */
 function navigate(viewId) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(viewId).classList.add('active');
+    
     document.querySelectorAll('.dock-item').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes(viewId)) btn.classList.add('active');
+        if(btn.onclick.toString().includes(viewId)) btn.classList.add('active');
     });
-    if (viewId === 'arcade') setTimeout(resetScratchCanvasSize, 100);
-}
 
-/* ================== TIMELINE ================== */
-function initTimeline() {
-    const list = document.getElementById('timelineList');
-    list.innerHTML = '';
-    CONFIG.milestones.forEach(m => {
-        list.innerHTML += `
-            <div class="timeline-point">
-                <div class="timeline-date">${m.date}</div>
-                <div class="timeline-text">${m.text}</div>
-            </div>`;
-    });
-}
-
-/* ================== SCRATCH GAME ================== */
-let scratchCtx, scratchCanvas, isScratching = false;
-
-function initScratchGame() {
-    scratchCanvas = document.getElementById('scratchCanvas');
-    scratchCtx = scratchCanvas.getContext('2d');
-    const secret = CONFIG.secrets[Math.floor(Math.random() * CONFIG.secrets.length)];
-    document.getElementById('secretImage').src = secret.img;
-    document.querySelector('.secret-overlay-text').innerText = secret.text;
-    resetScratchCanvasSize();
-    
-    const scratch = (e) => {
-        if (!isScratching) return;
-        const rect = scratchCanvas.getBoundingClientRect();
-        const x = (e.pageX || e.touches[0].pageX) - rect.left;
-        const y = (e.pageY || e.touches[0].pageY) - rect.top;
-        scratchCtx.globalCompositeOperation = 'destination-out';
-        scratchCtx.beginPath(); scratchCtx.arc(x, y, 30, 0, Math.PI * 2); scratchCtx.fill();
-    };
-    scratchCanvas.addEventListener('mousedown', () => isScratching = true);
-    scratchCanvas.addEventListener('touchstart', () => isScratching = true);
-    window.addEventListener('mouseup', () => isScratching = false);
-    window.addEventListener('touchend', () => isScratching = false);
-    scratchCanvas.addEventListener('mousemove', scratch);
-    scratchCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e); });
-}
-
-function resetScratchCanvasSize() {
-    const rect = scratchCanvas.parentElement.getBoundingClientRect();
-    scratchCanvas.width = rect.width; scratchCanvas.height = rect.height;
-    scratchCtx.fillStyle = '#C0C0C0'; scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
-    scratchCtx.fillStyle = '#555'; scratchCtx.font = 'bold 20px Lato'; scratchCtx.textAlign = 'center';
-    scratchCtx.fillText("Rub to Reveal ✨", scratchCanvas.width / 2, scratchCanvas.height / 2);
-}
-
-function resetScratchGame() { initScratchGame(); }
-
-/* ================== GALAXY JAR ================== */
-let jarCtx, jarW, jarH, wishes = [];
-
-function initGalaxyJar() {
-    const canvas = document.getElementById('jarCanvas');
-    jarCtx = canvas.getContext('2d');
-    jarW = canvas.width = canvas.parentElement.clientWidth;
-    jarH = canvas.height = canvas.parentElement.clientHeight;
-    const saved = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
-    saved.forEach(t => spawnWish(t, true));
-    animateJar();
-}
-
-function spawnWish(text, isInit = false) {
-    wishes.push({
-        x: Math.random() * jarW, y: isInit ? Math.random() * jarH : jarH + 20,
-        r: Math.random() * 3 + 2, speed: Math.random() * 0.5 + 0.1,
-        color: `hsl(${Math.random() * 50 + 330}, 100%, 75%)`
-    });
-}
-
-function addWishParticle() {
-    const input = document.getElementById('wishInput');
-    if (input.value.trim()) {
-        spawnWish(input.value);
-        let saved = JSON.parse(localStorage.getItem('saraa_wishes') || '[]');
-        saved.push(input.value); localStorage.setItem('saraa_wishes', JSON.stringify(saved));
-        input.value = '';
+    if(viewId === 'scratch') {
+        setTimeout(resetScratchCanvasSize, 100);
     }
 }
 
-function animateJar() {
-    jarCtx.clearRect(0, 0, jarW, jarH);
-    wishes.forEach(p => {
-        jarCtx.fillStyle = p.color; jarCtx.beginPath(); jarCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2); jarCtx.fill();
-        p.y -= p.speed; if (p.y < -10) p.y = jarH + 10;
-    });
-    requestAnimationFrame(animateJar);
-}
-
-/* ================== UTILITIES ================== */
+/* ================== HOME LOGIC ================== */
 function updateDays() {
     const diff = new Date() - CONFIG.startDate;
     document.getElementById('daysCount').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -221,23 +80,342 @@ function updateDays() {
 function typeAffirmation() {
     const text = CONFIG.affirmations[Math.floor(Math.random() * CONFIG.affirmations.length)];
     const el = document.getElementById('typingText');
-    let i = 0; el.innerText = "";
-    function type() { if (i < text.length) { el.innerText += text.charAt(i++); setTimeout(type, 80); } }
+    el.innerText = "";
+    let i = 0;
+    function type() {
+        if(i < text.length) {
+            el.innerText += text.charAt(i);
+            i++;
+            setTimeout(type, 80);
+        }
+    }
     type();
 }
 
+/* ================== SCRATCH GAME ================== */
+let scratchCtx, scratchCanvas;
+let isScratching = false;
+
+function initScratchGame() {
+    scratchCanvas = document.getElementById('scratchCanvas');
+    scratchCtx = scratchCanvas.getContext('2d');
+    
+    const secret = CONFIG.secrets[Math.floor(Math.random() * CONFIG.secrets.length)];
+    document.getElementById('secretImage').src = secret.img;
+    document.querySelector('.secret-overlay-text').innerText = secret.text;
+    
+    resetScratchCanvasSize();
+    
+    const start = () => isScratching = true;
+    const end = () => isScratching = false;
+    const move = (e) => {
+        if(!isScratching) return;
+        e.preventDefault();
+        const rect = scratchCanvas.getBoundingClientRect();
+        const x = (e.pageX || e.touches[0].pageX) - rect.left - window.scrollX;
+        const y = (e.pageY || e.touches[0].pageY) - rect.top - window.scrollY;
+        
+        scratchCtx.globalCompositeOperation = 'destination-out';
+        scratchCtx.beginPath();
+        scratchCtx.arc(x, y, 30, 0, Math.PI*2);
+        scratchCtx.fill();
+    };
+    
+    scratchCanvas.addEventListener('mousedown', start);
+    scratchCanvas.addEventListener('touchstart', start);
+    scratchCanvas.addEventListener('mouseup', end);
+    scratchCanvas.addEventListener('touchend', end);
+    scratchCanvas.addEventListener('mousemove', move);
+    scratchCanvas.addEventListener('touchmove', move);
+}
+
+function resetScratchCanvasSize() {
+    const rect = scratchCanvas.parentElement.getBoundingClientRect();
+    scratchCanvas.width = rect.width;
+    scratchCanvas.height = rect.height;
+    
+    scratchCtx.fillStyle = '#C0C0C0';
+    scratchCtx.fillRect(0,0,scratchCanvas.width, scratchCanvas.height);
+    
+    scratchCtx.fillStyle = '#555';
+    scratchCtx.font = 'bold 20px Lato';
+    scratchCtx.textAlign = 'center';
+    scratchCtx.fillText("Rub to Reveal ✨", scratchCanvas.width/2, scratchCanvas.height/2);
+}
+
+function resetScratchGame() {
+    initScratchGame();
+}
+
+/* ================== GALAXY JAR ================== */
+let jarCtx, jarW, jarH;
+let wishes = [];
+
+function initGalaxyJar() {
+    const canvas = document.getElementById('jarCanvas');
+    jarCtx = canvas.getContext('2d');
+    
+    const rect = canvas.parentElement.getBoundingClientRect();
+    jarW = canvas.width = rect.width;
+    jarH = canvas.height = rect.height;
+    
+    const wishData = {};
+    try {
+        const saved = wishData['wishes'] || [];
+        saved.forEach(txt => spawnWish(txt, true));
+    } catch(e) {}
+    
+    animateJar();
+}
+
+function spawnWish(text, isInit = false) {
+    wishes.push({
+        x: Math.random() * (jarW - 40) + 20,
+        y: isInit ? Math.random() * jarH : jarH + 20,
+        r: Math.random() * 4 + 2,
+        speed: Math.random() * 0.4 + 0.1,
+        text: text,
+        color: `hsl(${Math.random()*50 + 40}, 100%, 75%)`
+    });
+}
+
+function addWishParticle() {
+    const input = document.getElementById('wishInput');
+    if(input.value.trim()) {
+        spawnWish(input.value);
+        input.value = '';
+    }
+}
+
+function animateJar() {
+    jarCtx.clearRect(0,0,jarW, jarH);
+    wishes.forEach(p => {
+        jarCtx.shadowBlur = 10;
+        jarCtx.shadowColor = p.color;
+        jarCtx.fillStyle = p.color;
+        jarCtx.beginPath();
+        jarCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        jarCtx.fill();
+        jarCtx.shadowBlur = 0;
+        p.y -= p.speed;
+        if(p.y < -10) p.y = jarH + 10;
+    });
+    requestAnimationFrame(animateJar);
+}
+
+/* ================== JOURNAL ================== */
 function initJournal() {
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    const saved = localStorage.getItem('saraa_journal');
-    if (saved) document.getElementById('journalEntry').value = saved;
+    const date = new Date();
+    document.getElementById('currentDate').innerText = date.toLocaleDateString('en-US', { 
+        weekday: 'long', month: 'long', day: 'numeric' 
+    });
+    
     document.getElementById('journalEntry').addEventListener('input', (e) => {
-        localStorage.setItem('saraa_journal', e.target.value);
-        document.getElementById('saveStatus').innerText = "Synced to Heart ❤️";
+        const status = document.getElementById('saveStatus');
+        status.innerText = "Saving...";
+        status.style.color = "#ff4b6e";
+        setTimeout(() => {
+            status.innerText = "Synced to Heart ❤️";
+            status.style.color = "#888";
+        }, 1000);
     });
 }
 
 function downloadJournal() {
+    const blob = new Blob([document.getElementById('journalEntry').value], {type: "text/plain"});
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([document.getElementById('journalEntry').value], { type: "text/plain" }));
-    a.download = "OurDiary.txt"; a.click();
+    a.href = URL.createObjectURL(blob);
+    a.download = "LoveDiary.txt";
+    a.click();
+}
+
+/* ================== LOVE LETTERS ================== */
+function openLetter(index) {
+    const letter = CONFIG.letters[index];
+    document.getElementById('letterTitle').innerText = letter.title;
+    document.getElementById('letterBody').innerHTML = `<p>${letter.content}</p>`;
+    document.getElementById('letterModal').classList.add('active');
+}
+
+function closeLetter(event) {
+    if(!event || event.target.id === 'letterModal') {
+        document.getElementById('letterModal').classList.remove('active');
+    }
+}
+
+/* ================== MEMORY PUZZLE ================== */
+let puzzleCards = [];
+let flippedCards = [];
+let moves = 0;
+let matches = 0;
+
+function initPuzzle() {
+    const symbols = ['❤️', '💕', '💖', '💗', '💝', '💘', '💞', '💓'];
+    puzzleCards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+    renderPuzzle();
+}
+
+function renderPuzzle() {
+    const grid = document.getElementById('puzzleGrid');
+    grid.innerHTML = '';
+    puzzleCards.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'puzzle-card';
+        card.dataset.index = index;
+        card.dataset.symbol = symbol;
+        card.onclick = () => flipCard(index);
+        grid.appendChild(card);
+    });
+    document.getElementById('moves').innerText = moves;
+    document.getElementById('matches').innerText = matches;
+}
+
+function flipCard(index) {
+    const card = document.querySelector(`[data-index="${index}"]`);
+    if(card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) return;
+    
+    card.innerText = card.dataset.symbol;
+    card.classList.add('flipped');
+    flippedCards.push({index, symbol: card.dataset.symbol, element: card});
+    
+    if(flippedCards.length === 2) {
+        moves++;
+        document.getElementById('moves').innerText = moves;
+        setTimeout(checkMatch, 800);
+    }
+}
+
+function checkMatch() {
+    const [card1, card2] = flippedCards;
+    if(card1.symbol === card2.symbol) {
+        card1.element.classList.add('matched');
+        card2.element.classList.add('matched');
+        matches++;
+        document.getElementById('matches').innerText = matches;
+        if(matches === 8) {
+            setTimeout(() => alert(`🎉 You won in ${moves} moves!`), 300);
+        }
+    } else {
+        card1.element.innerText = '';
+        card2.element.innerText = '';
+        card1.element.classList.remove('flipped');
+        card2.element.classList.remove('flipped');
+    }
+    flippedCards = [];
+}
+
+function resetPuzzle() {
+    moves = 0;
+    matches = 0;
+    flippedCards = [];
+    initPuzzle();
+}
+
+/* ================== LOVE CALCULATOR ================== */
+function calculateLove() {
+    const percentEl = document.getElementById('lovePercent');
+    const messageEl = document.getElementById('loveMessage');
+    
+    let current = 0;
+    const target = 100;
+    const interval = setInterval(() => {
+        current += 2;
+        percentEl.innerText = current + '%';
+        if(current >= target) {
+            clearInterval(interval);
+            const messages = [
+                "Perfect match! You two are meant to be! 💕",
+                "100% Pure Love! Nothing can break this bond! ❤️",
+                "Soulmates detected! Your love is infinite! ✨",
+                "True Love Alert! You complete each other! 💖"
+            ];
+            messageEl.innerText = messages[Math.floor(Math.random() * messages.length)];
+        }
+    }, 20);
+}
+
+/* ================== FORTUNE WHEEL ================== */
+let wheelRotation = 0;
+let isSpinning = false;
+
+function initFortuneWheel() {
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const segments = CONFIG.fortunes.length;
+    const anglePerSegment = (2 * Math.PI) / segments;
+    
+    const colors = ['#ff4b6e', '#a855f7', '#ffd700', '#3b82f6', '#ff6b88', '#c084fc', '#ffa500', '#60a5fa'];
+    
+    for(let i = 0; i < segments; i++) {
+        ctx.beginPath();
+        ctx.moveTo(140, 140);
+        ctx.arc(140, 140, 140, i * anglePerSegment, (i + 1) * anglePerSegment);
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.save();
+        ctx.translate(140, 140);
+        ctx.rotate(i * anglePerSegment + anglePerSegment / 2);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 11px Lato';
+        ctx.fillText('🎁', 90, 5);
+        ctx.restore();
+    }
+}
+
+function spinWheel() {
+    if(isSpinning) return;
+    isSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+    document.getElementById('fortuneText').innerText = 'Spinning...';
+    
+    const extraSpins = 5 + Math.random() * 3;
+    const randomAngle = Math.random() * 360;
+    const totalRotation = (360 * extraSpins) + randomAngle;
+    wheelRotation += totalRotation;
+    
+    const wheel = document.getElementById('fortuneWheel');
+    wheel.style.transform = `rotate(${wheelRotation}deg)`;
+    
+    setTimeout(() => {
+        const normalizedAngle = wheelRotation % 360;
+        const segmentAngle = 360 / CONFIG.fortunes.length;
+        const selectedIndex = Math.floor((360 - normalizedAngle) / segmentAngle) % CONFIG.fortunes.length;
+        
+        document.getElementById('fortuneText').innerText = CONFIG.fortunes[selectedIndex];
+        isSpinning = false;
+        document.getElementById('spinBtn').disabled = false;
+    }, 3000);
+}
+
+/* ================== BACKGROUND ================== */
+function startBackgroundAnimation() {
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const particles = Array(80).fill().map(() => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2.5,
+        sp: Math.random() * 0.4 + 0.1,
+        color: `rgba(255, ${Math.random() * 100 + 100}, ${Math.random() * 100 + 150}, 0.3)`
+    }));
+    
+    function loop() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+            ctx.fill();
+            p.y -= p.sp;
+            if(p.y < 0) p.y = canvas.height;
+        });
+        requestAnimationFrame(loop);
+    }
+    loop();
 }
