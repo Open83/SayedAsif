@@ -4,55 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For Saraaa ❤️</title>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <canvas id="bgCanvas"></canvas>
+    <canvas id="artCanvas"></canvas>
     <div class="overlay-gradient"></div>
 
-    <div class="music-capsule" onclick="toggleMusic()">
-        <div class="equalizer">
-            <span></span><span></span><span></span><span></span>
-        </div>
-        <span id="musicStatus">Play Music</span>
-        <audio id="bgMusic" loop>
-            <source src="assets/music.mp3" type="audio/mp3">
-        </audio>
-    </div>
-
     <main id="app">
-
         <section id="home" class="view active">
             <div class="hero-content">
-                <div class="profile-container">
+                <div class="profile-frame">
                     <img src="assets/profile.jpg" alt="Saraaa" onerror="this.src='https://ui-avatars.com/api/?name=Saraaa&background=ff4b6e&color=fff&size=512'">
                 </div>
-                
                 <h1 class="elegant-title">Saraaa</h1>
                 <p class="subtitle">My Favorite Universe</p>
-                
                 <div class="glass-stat">
                     <span id="daysCount">0</span>
-                    <label>Days Together</label>
+                    <label>Days of Us</label>
                 </div>
-
-                <div class="daily-love" style="margin-top:20px; opacity:0.8; font-style:italic;">
-                    <p id="typingText"></p>
-                </div>
+                <div class="typewriter-container"><p id="typingText"></p></div>
             </div>
+        </section>
+
+        <section id="universe" class="view">
+            <div class="header-glass">
+                <h2>Our Constellation ✨</h2>
+                <p>Milestones written in the stars</p>
+            </div>
+            <div class="timeline-scroll" id="timelineList">
+                </div>
+        </section>
+
+        <section id="garden" class="view">
+            <div class="header-glass">
+                <h2>The Zen Garden 🌸</h2>
+                <p>Tap to plant a flower of love</p>
+            </div>
+            <canvas id="gardenCanvas"></canvas>
+        </section>
+
+        <section id="play" class="view">
+            <div class="header-glass">
+                <h2>Celestial Match 🧩</h2>
+                <p>Find the pairs of our moments</p>
+            </div>
+            <div class="memory-grid" id="memoryGrid"></div>
         </section>
 
         <section id="arcade" class="view">
             <div class="header-glass">
                 <h2>Secret Reveal ✨</h2>
-                <p>Rub to find a new memory</p>
+                <p>Rub to find a hidden truth</p>
             </div>
-            
             <div class="scratch-container">
                 <div class="scratch-layer">
                     <img id="secretImage" src="" alt="Secret">
@@ -60,20 +66,16 @@
                 </div>
                 <canvas id="scratchCanvas"></canvas>
             </div>
-            
             <button class="btn-primary" onclick="resetScratchGame()">Next Secret 🔄</button>
         </section>
 
         <section id="wishes" class="view">
             <div class="header-glass">
                 <h2>Galaxy Jar 🌌</h2>
-                <p>Make a wish to the stars</p>
+                <p>Send a wish to the cosmos</p>
             </div>
-
             <div class="jar-wrapper">
-                <div class="jar-container">
-                    <canvas id="jarCanvas"></canvas>
-                </div>
+                <div class="jar-container"><canvas id="jarCanvas"></canvas></div>
                 <div class="input-floating">
                     <input type="text" id="wishInput" placeholder="I wish for..." autocomplete="off">
                     <button class="btn-circle" onclick="addWishParticle()">✨</button>
@@ -82,47 +84,24 @@
         </section>
 
         <section id="journal" class="view">
-            <div class="header-glass">
-                <h2>Our Diary 📔</h2>
-            </div>
-            
+            <div class="header-glass"><h2>Our Diary 📔</h2></div>
             <div class="journal-paper">
                 <div class="date-header" id="currentDate"></div>
-                <textarea id="journalEntry" placeholder="Dear Diary, today I loved her more because..."></textarea>
+                <textarea id="journalEntry" placeholder="Dear Diary, today I loved her because..."></textarea>
                 <div class="save-indicator" id="saveStatus">Synced to Heart ❤️</div>
             </div>
-            
             <button class="btn-ghost" onclick="downloadJournal()">Save as File 📥</button>
         </section>
-
-        <section id="cinema" class="view">
-            <div class="header-glass">
-                <h2>Moments 🎬</h2>
-            </div>
-            <div class="reel-snap-container">
-                <div class="snap-card">
-                    <video controls playsinline poster="assets/poster1.jpg">
-                        <source src="assets/video1.mp4" type="video/mp4">
-                    </video>
-                    <div class="snap-caption">Memory One</div>
-                </div>
-                <div class="snap-card">
-                    <video controls playsinline poster="assets/poster2.jpg">
-                        <source src="assets/video2.mp4" type="video/mp4">
-                    </video>
-                    <div class="snap-caption">Memory Two</div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <nav class="glass-dock">
         <button class="dock-item active" onclick="navigate('home')">🏠</button>
-        <button class="dock-item" onclick="navigate('arcade')">✨</button>
+        <button class="dock-item" onclick="navigate('universe')">✨</button>
+        <button class="dock-item" onclick="navigate('garden')">🌸</button>
+        <button class="dock-item" onclick="navigate('play')">🧩</button>
+        <button class="dock-item" onclick="navigate('arcade')">🖼️</button>
         <button class="dock-item" onclick="navigate('wishes')">🌌</button>
         <button class="dock-item" onclick="navigate('journal')">📔</button>
-        <button class="dock-item" onclick="navigate('cinema')">🎬</button>
     </nav>
 
     <script src="script.js"></script>
