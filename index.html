@@ -3,41 +3,126 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Thread Between Us</title>
+  <title>The Thread Between Us ✨</title>
   
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
+  <!-- Loading Screen -->
+  <div class="loading-screen">
+    <div class="loading-content">
+      <div class="heart-container">
+        <svg class="heart" viewBox="0 0 32 29.6">
+          <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+            c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+        </svg>
+      </div>
+      <p class="loading-text">For someone special...</p>
+    </div>
+  </div>
+
+  <!-- Canvas Backgrounds -->
   <canvas id="threadCanvas"></canvas>
+  <canvas id="particleCanvas"></canvas>
 
+  <!-- Animated Background Elements -->
+  <div class="bg-gradient"></div>
+  <div class="floating-hearts">
+    <span class="heart-float" style="--delay: 0s; --x: 10%;"></span>
+    <span class="heart-float" style="--delay: 2s; --x: 85%;"></span>
+    <span class="heart-float" style="--delay: 4s; --x: 50%;"></span>
+    <span class="heart-float" style="--delay: 1s; --x: 70%;"></span>
+    <span class="heart-float" style="--delay: 3s; --x: 30%;"></span>
+  </div>
+
+  <!-- Main Content -->
   <main class="content">
-    <section class="reveal">
-      <p>Some connections don’t announce themselves.</p>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="main-title">
+        <span class="title-line">The Thread</span>
+        <span class="title-line">Between Us</span>
+      </h1>
+      <div class="scroll-indicator">
+        <span></span>
+        <p>Scroll to explore</p>
+      </div>
     </section>
 
-    <section class="reveal">
-      <p>That day you laughed, you didn't know I was already listening to the music of it.</p>
+    <!-- Story Sections -->
+    <section class="reveal fade-slide">
+      <div class="text-wrapper">
+        <div class="quote-mark">"</div>
+        <p>Some connections don't announce themselves.</p>
+        <div class="text-decoration"></div>
+      </div>
     </section>
 
-    <section class="reveal">
-      <p>Not everything meaningful needs to be captured in a photograph.</p>
+    <section class="reveal fade-slide">
+      <div class="text-wrapper">
+        <div class="quote-mark">"</div>
+        <p>That day you laughed, you didn't know I was already listening to the music of it.</p>
+        <div class="text-decoration"></div>
+      </div>
     </section>
 
-    <section class="reveal">
-      <p>You became familiar to my heart before you ever held my hand.</p>
+    <section class="reveal fade-slide">
+      <div class="text-wrapper">
+        <div class="quote-mark">"</div>
+        <p>Not everything meaningful needs to be captured in a photograph.</p>
+        <div class="text-decoration"></div>
+      </div>
     </section>
 
-    <section class="reveal">
-      <p>Still connected. Still choosing you.</p>
+    <section class="reveal fade-slide">
+      <div class="text-wrapper">
+        <div class="quote-mark">"</div>
+        <p>You became familiar to my heart before you ever held my hand.</p>
+        <div class="text-decoration"></div>
+      </div>
     </section>
+
+    <section class="reveal fade-slide">
+      <div class="text-wrapper special">
+        <div class="quote-mark">"</div>
+        <p class="final-message">Still connected.<br>Still choosing you.</p>
+        <div class="text-decoration"></div>
+      </div>
+    </section>
+
+    <!-- Final Section with Interactive Element -->
+    <section class="finale reveal fade-slide">
+      <div class="interactive-heart" id="interactiveHeart">
+        <svg viewBox="0 0 32 29.6">
+          <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+            c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+        </svg>
+        <p class="heart-instruction">Click the heart</p>
+      </div>
+      <div class="final-reveal" id="finalReveal">
+        <p class="signature">Forever grateful for you ✨</p>
+      </div>
+    </section>
+
   </main>
 
   <div class="scroll-space"></div>
+
+  <!-- Music Toggle (Optional) -->
+  <button class="music-toggle" id="musicToggle" aria-label="Toggle music">
+    <svg class="music-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+  </button>
 
   <script src="script.js"></script>
 </body>
