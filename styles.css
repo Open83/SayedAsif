@@ -1,3 +1,4 @@
+/* RESET & BASE */
 * {
   margin: 0;
   padding: 0;
@@ -5,48 +6,76 @@
 }
 
 body {
-  background: #0f1f1c;
-  font-family: Georgia, serif;
-  color: rgba(242,242,238,0.7);
+  background: #05080a; /* Fallback */
+  background: radial-gradient(circle at 50% 50%, #1a252f 0%, #020202 100%);
+  font-family: 'Cormorant Garamond', serif;
+  color: rgba(255, 255, 255, 0.85);
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* CANVAS */
+/* CANVAS LAYER */
 #threadCanvas {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   pointer-events: none;
 }
 
-/* CONTENT */
+/* CONTENT CONTAINER */
 .content {
   position: relative;
   z-index: 2;
-  padding: 20vh 8vw;
+  padding: 30vh 6vw 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* TEXT */
+/* TYPOGRAPHY */
 p {
-  max-width: 520px;
-  margin: 0 auto 18vh;
-  font-size: 1.1rem;
-  line-height: 1.9;
-  letter-spacing: 0.04em;
+  max-width: 600px;
+  margin: 0 auto 35vh; /* Large spacing for scroll effect */
+  font-size: 2rem;
+  line-height: 1.6;
+  font-weight: 300;
+  text-align: center;
+  font-style: italic;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  opacity: 0.9;
 }
 
-/* REVEAL */
+/* REVEAL ANIMATION */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: 1.6s ease;
+  transform: translateY(60px) scale(0.98);
+  transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(4px);
 }
 
 .reveal.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
-/* SCROLL SPACE */
+/* EXTRA SCROLL SPACE AT BOTTOM */
 .scroll-space {
-  height: 150vh;
+  height: 50vh;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+  p {
+    font-size: 1.6rem;
+    margin-bottom: 30vh;
+    padding: 0 1rem;
+  }
+  
+  .content {
+    padding-top: 25vh;
+  }
 }
