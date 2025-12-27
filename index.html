@@ -1,282 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For Saraaa ❤️</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Thread That Remembers</title>
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <canvas id="bgCanvas"></canvas>
-    <div class="overlay-gradient"></div>
 
-    <main id="app">
-        <section id="home" class="view active">
-            <div class="hero-content">
-                <div class="profile-container">
-                    <img src="https://ui-avatars.com/api/?name=Saraaa&background=ff4b6e&color=fff&size=512" alt="Saraaa">
-                </div>
-                <h1 class="elegant-title">Saraaa</h1>
-                <p class="subtitle">My Favorite Universe ✨</p>
-                <div class="glass-stat">
-                    <span id="daysCount">0</span>
-                    <label>Days Together</label>
-                </div>
-                <div class="daily-love">
-                    <p id="typingText"></p>
-                </div>
-            </div>
-        </section>
+  <!-- CANVAS -->
+  <canvas id="threadCanvas"></canvas>
 
-        <section id="scratch" class="view">
-            <div class="header-glass">
-                <h2>Secret Reveal ✨</h2>
-                <p>Rub to find a new memory</p>
-            </div>
-            <div class="scratch-container">
-                <div class="scratch-layer">
-                    <div class="secret-image" style="background:linear-gradient(135deg,#ff4b6e,#a855f7);display:flex;align-items:center;justify-content:center;font-size:3rem">💖</div>
-                    <div class="secret-overlay-text" id="secretText">I Love You ❤️</div>
-                </div>
-                <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
-            </div>
-            <button class="btn-primary" onclick="resetScratch()">Next Secret 🔄</button>
-        </section>
+  <!-- CONTENT -->
+  <main class="content">
 
-        <section id="wishes" class="view">
-            <div class="header-glass">
-                <h2>Galaxy Jar 🌌</h2>
-                <p>Make a wish to the stars</p>
-            </div>
-            <div class="jar-wrapper">
-                <div class="jar-container">
-                    <canvas class="jar-canvas" id="jarCanvas"></canvas>
-                </div>
-                <div class="input-floating">
-                    <input type="text" id="wishInput" placeholder="I wish for..." autocomplete="off">
-                    <button class="btn-circle" onclick="addWish()">✨</button>
-                </div>
-            </div>
-        </section>
+    <section class="intro reveal">
+      <p>Some connections don’t announce themselves.</p>
+    </section>
 
-        <section id="journal" class="view">
-            <div class="header-glass">
-                <h2>Our Diary 📔</h2>
-            </div>
-            <div class="journal-paper">
-                <div class="date-header" id="currentDate"></div>
-                <textarea class="journal-entry" id="journalEntry" placeholder="Dear Diary, today I loved her more because..."></textarea>
-            </div>
-        </section>
+    <section class="memory reveal">
+      <p>That day you laughed without knowing I was already in love.</p>
+    </section>
 
-        <section id="letters" class="view">
-            <div class="header-glass">
-                <h2>Love Letters 💌</h2>
-                <p>Open your heart</p>
-            </div>
-            <div class="letters-grid">
-                <div class="letter-envelope" onclick="openLetter(0)">
-                    <div class="letter-icon">💝</div>
-                    <div class="letter-title">Why I Love You</div>
-                </div>
-                <div class="letter-envelope" onclick="openLetter(1)">
-                    <div class="letter-icon">🌟</div>
-                    <div class="letter-title">Your Magic</div>
-                </div>
-                <div class="letter-envelope" onclick="openLetter(2)">
-                    <div class="letter-icon">🌸</div>
-                    <div class="letter-title">Beautiful Soul</div>
-                </div>
-                <div class="letter-envelope" onclick="openLetter(3)">
-                    <div class="letter-icon">💫</div>
-                    <div class="letter-title">Our Forever</div>
-                </div>
-            </div>
-        </section>
+    <section class="memory reveal">
+      <p>Not everything meaningful needed to be captured.</p>
+    </section>
 
-        <section id="puzzle" class="view">
-            <div class="header-glass">
-                <h2>Memory Game 🎮</h2>
-                <p>Match the hearts</p>
-            </div>
-            <div class="puzzle-game">
-                <div class="puzzle-grid" id="puzzleGrid"></div>
-                <div class="puzzle-stats">
-                    <div class="stat-box">
-                        <div class="number" id="moves">0</div>
-                        <div class="label">Moves</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number" id="matches">0</div>
-                        <div class="label">Matches</div>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="resetPuzzle()">New Game 🔄</button>
-            </div>
-        </section>
+    <section class="memory reveal">
+      <p>You became familiar before you became close.</p>
+    </section>
 
-        <section id="calculator" class="view">
-            <div class="header-glass">
-                <h2>Love Calculator 💕</h2>
-                <p>Our love percentage</p>
-            </div>
-            <div class="calculator-container">
-                <div class="heart-animation">
-                    <div class="heart-beat">❤️</div>
-                </div>
-                <div class="percentage-display">
-                    <div class="percentage-number" id="lovePercent">0%</div>
-                </div>
-                <div class="love-message" id="loveMessage"></div>
-                <button class="btn-primary" onclick="calculateLove()">Calculate Love ✨</button>
-            </div>
-        </section>
+    <section class="memory reveal">
+      <p>Still connected. Still choosing.</p>
+    </section>
 
-        <section id="fortune" class="view">
-            <div class="header-glass">
-                <h2>Fortune Wheel 🎡</h2>
-                <p>Spin for a surprise</p>
-            </div>
-            <div class="wheel-container">
-                <div class="wheel-pointer">👇</div>
-                <div class="wheel" id="fortuneWheel">
-                    <canvas id="wheelCanvas" width="280" height="280"></canvas>
-                </div>
-                <button class="spin-button" id="spinBtn" onclick="spinWheel()">SPIN THE WHEEL</button>
-                <div class="fortune-result">
-                    <div class="fortune-text" id="fortuneText">Tap to spin!</div>
-                </div>
-            </div>
-        </section>
+  </main>
 
-        <section id="trivia" class="view">
-            <div class="header-glass">
-                <h2>Love Trivia 🎯</h2>
-                <p>Test your knowledge about us</p>
-            </div>
-            <div class="trivia-container">
-                <div class="trivia-card">
-                    <div class="trivia-question" id="triviaQuestion">Loading...</div>
-                    <div class="trivia-options" id="triviaOptions"></div>
-                </div>
-                <div class="trivia-score" id="triviaScore">Score: 0/0</div>
-                <button class="btn-primary" onclick="nextTrivia()">Next Question 🎲</button>
-            </div>
-        </section>
-
-        <section id="snake" class="view">
-            <div class="header-glass">
-                <h2>Love Snake 🐍</h2>
-                <p>Collect hearts!</p>
-            </div>
-            <div class="snake-game">
-                <canvas class="snake-canvas" id="snakeCanvas"></canvas>
-                <div class="puzzle-stats">
-                    <div class="stat-box">
-                        <div class="number" id="snakeScore">0</div>
-                        <div class="label">Hearts</div>
-                    </div>
-                </div>
-                <div class="game-controls">
-                    <button class="control-btn" onclick="changeDir('up')">↑</button>
-                    <button class="control-btn" onclick="changeDir('left')">←</button>
-                    <button class="control-btn" onclick="changeDir('right')">→</button>
-                    <button class="control-btn" onclick="changeDir('down')">↓</button>
-                </div>
-                <button class="btn-primary" onclick="resetSnake()">New Game 🔄</button>
-            </div>
-        </section>
-
-        <section id="timeline" class="view">
-            <div class="header-glass">
-                <h2>Our Story 📖</h2>
-                <p>Beautiful moments together</p>
-            </div>
-            <div class="timeline-container" id="timelineContainer">
-                <div class="timeline-item">
-                    <div class="timeline-date">January 1, 2023</div>
-                    <div class="timeline-text">The day our journey began ✨</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">March 14, 2023</div>
-                    <div class="timeline-text">Our first adventure together 🌟</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">July 20, 2023</div>
-                    <div class="timeline-text">That unforgettable summer day ☀️</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">December 25, 2023</div>
-                    <div class="timeline-text">A magical holiday together 🎄</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Today</div>
-                    <div class="timeline-text">Still falling for you every day 💖</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="mood" class="view">
-            <div class="header-glass">
-                <h2>Mood Tracker 😊</h2>
-                <p>How are you feeling today?</p>
-            </div>
-            <div class="mood-tracker">
-                <div class="mood-grid">
-                    <div class="mood-item" onclick="selectMood(0)">
-                        <div class="mood-emoji">😊</div>
-                        <div class="mood-label">Happy</div>
-                    </div>
-                    <div class="mood-item" onclick="selectMood(1)">
-                        <div class="mood-emoji">💕</div>
-                        <div class="mood-label">Loved</div>
-                    </div>
-                    <div class="mood-item" onclick="selectMood(2)">
-                        <div class="mood-emoji">🌟</div>
-                        <div class="mood-label">Excited</div>
-                    </div>
-                    <div class="mood-item" onclick="selectMood(3)">
-                        <div class="mood-emoji">😌</div>
-                        <div class="mood-label">Peaceful</div>
-                    </div>
-                    <div class="mood-item" onclick="selectMood(4)">
-                        <div class="mood-emoji">💭</div>
-                        <div class="mood-label">Thoughtful</div>
-                    </div>
-                    <div class="mood-item" onclick="selectMood(5)">
-                        <div class="mood-emoji">🥰</div>
-                        <div class="mood-label">Grateful</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <div class="letter-modal" id="letterModal" onclick="closeLetter(event)">
-        <div class="letter-content" onclick="event.stopPropagation()">
-            <button class="close-letter" onclick="closeLetter()">×</button>
-            <h3 id="letterTitle"></h3>
-            <div id="letterBody"></div>
-        </div>
-    </div>
-
-    <nav class="glass-dock">
-        <button class="dock-item active" onclick="nav('home')">🏠</button>
-        <button class="dock-item" onclick="nav('scratch')">✨</button>
-        <button class="dock-item" onclick="nav('wishes')">🌌</button>
-        <button class="dock-item" onclick="nav('journal')">📔</button>
-        <button class="dock-item" onclick="nav('letters')">💌</button>
-        <button class="dock-item" onclick="nav('puzzle')">🎮</button>
-        <button class="dock-item" onclick="nav('calculator')">💕</button>
-        <button class="dock-item" onclick="nav('fortune')">🎡</button>
-        <button class="dock-item" onclick="nav('trivia')">🎯</button>
-        <button class="dock-item" onclick="nav('snake')">🐍</button>
-        <button class="dock-item" onclick="nav('timeline')">📖</button>
-        <button class="dock-item" onclick="nav('mood')">😊</button>
-    </nav>
-
-    <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
