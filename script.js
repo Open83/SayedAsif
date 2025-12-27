@@ -1,78 +1,73 @@
-const canvas = document.getElementById('threadCanvas');
-const ctx = canvas.getContext('2d');
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("threadCanvas");
 
-let w, h, dpr;
+  // 🚨 SAFETY CHECK
+  if (!canvas) {
+    console.error("Canvas with id 'threadCanvas' not found.");
+    return;
+  }
 
-function resize() {
-  dpr = window.devicePixelRatio || 1;
-  w = window.innerWidth;
-  h = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    console.error("2D context not supported.");
+    return;
+  }
 
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
+  let w, h, dpr;
 
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    w = window.innerWidth;
+    h = window.innerHeight;
 
-window.addEventListener('resize', resize);
-resize();
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
 
-/* SOUL POINTS */
-let a = { x: w * 0.3, y: h * 0.4, vx: 0.25, vy: 0.18 };
-let b = { x: w * 0.7, y: h * 0.6, vx: -0.22, vy: -0.16 };
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
 
-function updatePoint(p) {
-  p.x += p.vx;
-  p.y += p.vy;
+  window.addEventListener("resize", resize);
+  resize();
 
-  if (p.x < 80 || p.x > w - 80) p.vx *= -1;
-  if (p.y < 80 || p.y > h - 80) p.vy *= -1;
-}
+  // SOUL POINTS
+  const a = { x: w * 0.3, y: h * 0.4, vx: 0.25, vy: 0.18 };
+  const b = { x: w * 0.7, y: h * 0.6, vx: -0.22, vy: -0.16 };
 
-/* THREAD DRAW */
-function drawThread() {
-  ctx.clearRect(0, 0, w, h);
+  function updatePoint(p) {
+    p.x += p.vx;
+    p.y += p.vy;
 
-  const midX = (a.x + b.x) / 2;
-  const midY = (a.y + b.y) / 2 - 50;
+    if (p.x < 80 || p.x > w - 80) p.vx *= -1;
+    if (p.y < 80 || p.y > h - 80) p.vy *= -1;
+  }
 
-  ctx.beginPath();
-  ctx.moveTo(a.x, a.y);
-  ctx.quadraticCurveTo(midX, midY, b.x, b.y);
+  function drawThread() {
+    ctx.clearRect(0, 0, w, h);
 
-  ctx.strokeStyle = 'rgba(200,190,120,0.6)';
-  ctx.lineWidth = 1.3;
-  ctx.shadowBlur = 16;
-  ctx.shadowColor = 'rgba(200,190,120,0.6)';
-  ctx.stroke();
+    const midX = (a.x + b.x) / 2;
+    const midY = (a.y + b.y) / 2 - 50;
 
-  ctx.shadowBlur = 0;
-}
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(midX, midY, b.x, b.y);
 
-/* LOOP */
-function animate() {
-  updatePoint(a);
-  updatePoint(b);
-  drawThread();
-  requestAnimationFrame(animate);
-}
-animate();
+    ctx.strokeStyle = "rgba(200,190,120,0.6)";
+    ctx.lineWidth = 1.3;
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = "rgba(200,190,120,0.6)";
+    ctx.stroke();
 
-/* REVEAL LOGIC */
-const reveals = document.querySelectorAll('.reveal');
+    ctx.shadowBlur = 0;
+  }
 
-const observer = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.35 }
-);
+  function animate() {
+    updatePoint(a);
+    updatePoint(b);
+    drawThread();
+    requestAnimationFrame(animate);
+  }
 
-reveals.forEach(el => observer.observe(el));
+  animate();
+});
