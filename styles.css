@@ -7,6 +7,14 @@
   box-sizing: border-box;
 }
 
+.hero-date {
+  font-size: 1.2rem;
+  color: var(--color-text-dim);
+  margin-top: 20px;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 3px;
+}
+
 :root {
   --color-bg-dark: #0a0e14;
   --color-bg-mid: #1a1f2e;
